@@ -7,6 +7,9 @@ from src.tools.data_inspection import inspect_csv
 from src.tools.ingestion import(ingest_csv, quarantine_csv,reject_csv,)
 from src.tools.data_profiling import profile_csv
 from src.tools.ingestion_decision import determine_ingestion_decision
+from src.tools.gold_transformation import build_sales_gold
+from src.tools.silver_transformation import transform_to_silver
+
 
 tools = [
     {
@@ -198,6 +201,61 @@ tools = [
             "additionalProperties": False
         }
     },
+    {
+        "type": "function",
+        "name": "transform_to_silver",
+        "description": (
+            "Transforme un fichier Parquet Bronze en fichier Parquet Silver. "
+            "Ajoute les transformations nécessaires aux données de ventes, "
+            "notamment le calcul de line_amount."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "bronze_file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Bronze."
+                },
+                "silver_file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Silver."
+                }
+            },
+            "required": [
+                "bronze_file_path",
+                "silver_file_path"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+    "type": "function",
+    "name": "build_sales_gold",
+    "description": (
+        "Construit la couche Gold des ventes à partir "
+        "de la couche Silver. Agrège les ventes par produit "
+        "et calcule les quantités, ventes totales, prix moyen "
+        "et nombre de lignes."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "silver_file_path": {
+                "type": "string",
+                "description": "Chemin du fichier Silver."
+            },
+            "output_file_path": {
+                "type": "string",
+                "description": "Chemin du fichier Gold."
+            }
+        },
+        "required": [
+            "silver_file_path",
+            "output_file_path"
+        ],
+        "additionalProperties": False
+    }
+},
 ]
 
 
@@ -241,6 +299,18 @@ def execute_tool(name, arguments):
             arguments["file_path"],
             arguments["reason"]
         )
+    if name == "transform_to_silver":
+        return transform_to_silver(
+            arguments["bronze_file_path"],
+            arguments["silver_file_path"]
+        )
+
+
+    if name == "build_sales_gold":
+        return build_sales_gold(
+        arguments["silver_file_path"],
+        arguments["output_file_path"]
+    )
 
     raise ValueError(f"Outil inconnu : {name}")
 
@@ -298,6 +368,59 @@ def run_agent(user_request: str):
             
             "Ne modifie jamais la décision produite par "
             "determine_ingestion_decision."
+
+            "Après une décision INGEST, si ingest_csv réussit, "
+            "transforme le fichier Bronze en Silver, puis construis "
+            "la couche Gold à partir du fichier Silver. "
+
+            "Utilise les chemins suivants pour le dataset sales : "
+            "Bronze = data/bronze/sales.parquet, "
+            "Silver = data/silver/sales.parquet, "
+            "Gold = data/gold/sales_by_product.parquet. "
+
+            "Ne construis jamais Silver ou Gold si la décision "
+            "d'ingestion est REJECT ou QUARANTINE. "
+
+            "Si ingest_csv retourne SKIPPED parce que le fichier "
+            "est déjà ingéré, tu peux continuer avec Silver et Gold "
+            "uniquement si les fichiers nécessaires existent."
+
+            "Après determine_ingestion_decision : "
+
+            "Si la décision est INGEST, appelle ingest_csv. "
+
+            "Après ingest_csv, même si son statut est SKIPPED parce "
+            "que le fichier est déjà ingéré, poursuis le pipeline si "
+            "le fichier Bronze existe. "
+
+            "Après INGEST ou SKIPPED, appelle "
+            "transform_to_silver avec : "
+            "bronze_file_path='data/bronze/sales.parquet' et "
+            "silver_file_path='data/silver/sales.parquet'. "
+
+            "Après la transformation Bronze vers Silver, appelle "
+            "build_sales_gold avec : "
+            "silver_file_path='data/silver/sales.parquet' et "
+            "output_file_path='data/gold/sales_by_product.parquet'. "
+
+            "Ne t'arrête pas après ingest_csv. "
+
+            "Pour une décision QUARANTINE ou REJECT, n'appelle "
+            "ni ingest_csv, ni transform_to_silver, ni "
+            "build_sales_gold."
+
+            "Pour une transformation Bronze vers Silver, utilise "
+            "l'outil transform_to_silver. "
+            "Si l'utilisateur fournit le chemin Bronze et le chemin Silver, "
+            "utilise directement ces chemins sans demander de confirmation. "
+
+            "Pour une transformation Silver vers Gold, utilise "
+            "l'outil build_sales_gold. "
+            "Si l'utilisateur fournit le chemin Silver et le chemin Gold, "
+            "utilise directement ces chemins sans demander de confirmation. "
+
+            "Ne demande pas à l'utilisateur un chemin qui est déjà présent "
+            "dans sa demande. "
         ),
         input=user_request,
         tools=tools,
@@ -369,41 +492,37 @@ def run_agent(user_request: str):
         response = client.responses.create(
             model="gpt-5.6",
             instructions=(
-                "Les outils ont été exécutés. "
+                "Les outils viennent d'être exécutés. "
                 "Utilise leurs résultats comme source de vérité. "
-        
+
                 "N'invente aucune donnée. "
-        
-                "Ne rappelle pas un outil déjà exécuté avec "
-                "les mêmes arguments. "
-        
-                "Si les informations nécessaires sont disponibles, "
-                "produis maintenant la réponse finale en français. "
-        
-                "Pour une décision d'ingestion, utilise strictement "
-                "le résultat de determine_ingestion_decision."
 
-                "Si determine_ingestion_decision retourne INGEST "
-                "et que ingest_csv n'a pas encore été exécuté, "
-                "exécute ingest_csv. "
-                
+                "Ne rappelle jamais un outil déjà exécuté avec "
+                "exactement les mêmes arguments. "
+
+                "Si determine_ingestion_decision retourne INGEST, "
+                "le pipeline doit continuer après ingest_csv. "
+
+                "Même si ingest_csv retourne SKIPPED parce que le fichier "
+                "a déjà été ingéré, considère l'étape Bronze comme disponible "
+                "et continue le pipeline. "
+
+                "Après ingest_csv, appelle obligatoirement "
+                "transform_to_silver avec : "
+                "bronze_file_path='data/bronze/sales.parquet' et "
+                "silver_file_path='data/silver/sales.parquet'. "
+
+                "Après transform_to_silver, appelle obligatoirement "
+                "build_sales_gold avec : "
+                "silver_file_path='data/silver/sales.parquet' et "
+                "output_file_path='data/gold/sales_by_product.parquet'. "
+
                 "Si la décision est QUARANTINE ou REJECT, "
-                "arrête l'ingestion."
+                "n'appelle pas les transformations Silver ou Gold. "
 
-                "Si determine_ingestion_decision retourne INGEST "
-                "et que ingest_csv n'a pas encore été exécuté, exécute ingest_csv. "
-                
-                "Si la décision est QUARANTINE "
-                "et que quarantine_csv n'a pas encore été exécuté, "
-                "exécute quarantine_csv. "
-                
-                "Si la décision est REJECT "
-                "et que reject_csv n'a pas encore été exécuté, "
-                "exécute reject_csv. "
-                
-                "Une fois l'action correspondant à la décision exécutée, "
-                "produis la réponse finale."
-            ),
+                "Lorsque Silver et Gold ont été construits, "
+                "produis la réponse finale en français."
+    ),
             previous_response_id=response.id,
             input=[
                 {

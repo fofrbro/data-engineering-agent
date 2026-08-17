@@ -1,5 +1,17 @@
+# Environnement Python
 .venv/
 .env
+
+# Python
 __pycache__/
 *.pyc
+
+# IDE
 .vscode/
+
+# Données générées par le pipeline
+data/bronze/
+data/silver/
+data/gold/
+data/quarantine/
+data/rejected/
