@@ -1,0 +1,430 @@
+import json
+
+from src.llm import client
+from src.tools.contract_validation import validate_contract
+from src.tools.data_validation import validate_csv
+from src.tools.data_inspection import inspect_csv
+from src.tools.ingestion import(ingest_csv, quarantine_csv,reject_csv,)
+from src.tools.data_profiling import profile_csv
+from src.tools.ingestion_decision import determine_ingestion_decision
+
+tools = [
+    {
+        "type": "function",
+        "name": "inspect_csv",
+        "description": (
+            "Inspecte la structure d'un fichier CSV : "
+            "nombre de lignes, colonnes, types, valeurs nulles "
+            "et doublons."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "profile_csv",
+        "description": (
+            "Produit un profil statistique des colonnes numériques "
+            "d'un fichier CSV : minimum, maximum, moyenne et médiane."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "validate_csv",
+        "description": (
+            "Valide la qualité d'un fichier CSV en vérifiant "
+            "les valeurs nulles, les doublons, les quantités invalides, "
+            "les prix négatifs et les produits vides."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "validate_contract",
+        "description": (
+            "Compare un fichier CSV avec un contrat de données JSON. "
+            "Vérifie les colonnes manquantes ou supplémentaires, "
+            "les types, les valeurs nulles et les contraintes minimales."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                },
+                "contract_path": {
+                    "type": "string",
+                    "description": "Chemin du contrat JSON."
+                }
+            },
+            "required": ["file_path", "contract_path"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "determine_ingestion_decision",
+        "description": (
+            "Détermine si un fichier doit être INGEST, "
+            "QUARANTINE ou REJECT à partir des résultats "
+            "du Data Contract et des contrôles de qualité."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "contract_result": {
+                    "type": "object",
+                    "description": "Résultat de la validation du Data Contract."
+                },
+                "quality_result": {
+                    "type": "object",
+                    "description": "Résultat de la validation de qualité."
+                }
+            },
+            "required": [
+                "contract_result",
+                "quality_result"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+        "type": "function",
+        "name": "ingest_csv",
+        "description": (
+            "Ingère un fichier CSV validé dans la zone Bronze "
+            "au format Parquet. Utilise cet outil uniquement "
+            "si la décision d'ingestion est INGEST."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV à ingérer."
+                },
+                "dataset": {
+                    "type": "string",
+                    "description": "Nom du dataset."
+                }
+            },
+            "required": [
+                "file_path",
+                "dataset"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+        "type": "function",
+        "name": "quarantine_csv",
+        "description": (
+            "Place un fichier CSV dans la zone de quarantaine. "
+            "Utiliser uniquement lorsque la décision est QUARANTINE."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "Raison de la mise en quarantaine."
+                }
+            },
+            "required": [
+                "file_path",
+                "reason"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+        "type": "function",
+        "name": "reject_csv",
+        "description": (
+            "Place un fichier CSV dans la zone des fichiers rejetés. "
+            "Utiliser uniquement lorsque la décision est REJECT."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier CSV."
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "Raison du rejet."
+                }
+            },
+            "required": [
+                "file_path",
+                "reason"
+            ],
+            "additionalProperties": False
+        }
+    },
+]
+
+
+def execute_tool(name, arguments):
+
+    if name == "inspect_csv":
+        return inspect_csv(arguments["file_path"])
+
+    if name == "profile_csv":
+        return profile_csv(arguments["file_path"])
+
+    if name == "validate_csv":
+        return validate_csv(arguments["file_path"])
+        
+    if name == "validate_contract":
+        return validate_contract(
+            arguments["file_path"],
+            arguments["contract_path"]
+        )
+
+    if name == "determine_ingestion_decision":
+        return determine_ingestion_decision(
+            arguments["contract_result"],
+            arguments["quality_result"]
+        )
+
+    if name == "ingest_csv":
+        return ingest_csv(
+            arguments["file_path"],
+            arguments["dataset"]
+        )
+
+    if name == "quarantine_csv":
+        return quarantine_csv(
+            arguments["file_path"],
+            arguments["reason"]
+        )
+    
+    if name == "reject_csv":
+        return reject_csv(
+            arguments["file_path"],
+            arguments["reason"]
+        )
+
+    raise ValueError(f"Outil inconnu : {name}")
+
+
+def run_agent(user_request: str):
+
+    response = client.responses.create(
+        model="gpt-5.6",
+        instructions=(
+            "Tu es un Data Engineer senior spécialisé dans "
+            "la préparation, la qualité et l'ingestion des données. "
+
+            "Tu disposes d'outils déterministes permettant d'inspecter, "
+            "profiler et valider les données. "
+
+            "Utilise les résultats réels des outils comme source de vérité. "
+
+            "N'invente jamais de colonnes, de lignes, de valeurs, "
+            "de statistiques ou de résultats qui ne figurent pas "
+            "dans les résultats des outils. "
+
+            "Ne répète pas un outil avec exactement les mêmes arguments "
+            "si son résultat est déjà disponible. "
+
+            "Lorsque toutes les informations nécessaires sont disponibles, "
+            "arrête l'utilisation des outils et produis immédiatement "
+            "la réponse finale en français. "
+
+            "Pour une décision d'ingestion, utilise les résultats "
+            "de validate_contract et validate_csv. "
+
+            "La décision INGEST, QUARANTINE ou REJECT doit provenir "
+            "du résultat de determine_ingestion_decision."
+
+            "Après determine_ingestion_decision, "
+            "si la décision est INGEST, appelle ingest_csv. "
+            
+            "Si la décision est QUARANTINE ou REJECT, "
+            "n'appelle jamais ingest_csv. "
+            
+            "Pour ingest_csv, utilise exactement le file_path "
+            "du fichier analysé et le nom du dataset fourni par "
+            "le Data Contract."
+
+            "Après determine_ingestion_decision, "
+            "exécute exactement l'action correspondant à la décision. "
+            
+            "Si la décision est INGEST, appelle ingest_csv. "
+            
+            "Si la décision est QUARANTINE, appelle quarantine_csv "
+            "et n'appelle jamais ingest_csv. "
+            
+            "Si la décision est REJECT, appelle reject_csv "
+            "et n'appelle jamais ingest_csv. "
+            
+            "Ne modifie jamais la décision produite par "
+            "determine_ingestion_decision."
+        ),
+        input=user_request,
+        tools=tools,
+    )
+
+    MAX_ITERATIONS = 8
+    executed_calls = set()
+
+    for iteration in range(MAX_ITERATIONS):
+
+        function_calls = [
+            item
+            for item in response.output
+            if item.type == "function_call"
+        ]
+
+        # Aucun outil supplémentaire : réponse finale
+        if not function_calls:
+
+            for item in response.output:
+
+                if item.type == "message":
+
+                    for content in item.content:
+
+                        if content.type == "output_text":
+                            return content.text
+
+            return response.output_text
+
+        tool_outputs = []
+
+        for item in function_calls:
+
+            arguments = json.loads(item.arguments)
+
+            call_signature = (
+                item.name,
+                json.dumps(arguments, sort_keys=True)
+            )
+
+            if call_signature in executed_calls:
+                raise RuntimeError(
+                    f"L'agent tente de répéter inutilement "
+                    f"l'outil {item.name} avec les mêmes arguments."
+                )
+
+            executed_calls.add(call_signature)
+
+            print(f"\nOutil appelé : {item.name}")
+            print(f"Arguments : {arguments}")
+
+            result = execute_tool(
+                item.name,
+                arguments
+            )
+
+            tool_outputs.append(
+                {
+                    "type": "function_call_output",
+                    "call_id": item.call_id,
+                    "output": json.dumps(
+                        result,
+                        ensure_ascii=False
+                    ),
+                }
+            )
+
+        response = client.responses.create(
+            model="gpt-5.6",
+            instructions=(
+                "Les outils ont été exécutés. "
+                "Utilise leurs résultats comme source de vérité. "
+        
+                "N'invente aucune donnée. "
+        
+                "Ne rappelle pas un outil déjà exécuté avec "
+                "les mêmes arguments. "
+        
+                "Si les informations nécessaires sont disponibles, "
+                "produis maintenant la réponse finale en français. "
+        
+                "Pour une décision d'ingestion, utilise strictement "
+                "le résultat de determine_ingestion_decision."
+
+                "Si determine_ingestion_decision retourne INGEST "
+                "et que ingest_csv n'a pas encore été exécuté, "
+                "exécute ingest_csv. "
+                
+                "Si la décision est QUARANTINE ou REJECT, "
+                "arrête l'ingestion."
+
+                "Si determine_ingestion_decision retourne INGEST "
+                "et que ingest_csv n'a pas encore été exécuté, exécute ingest_csv. "
+                
+                "Si la décision est QUARANTINE "
+                "et que quarantine_csv n'a pas encore été exécuté, "
+                "exécute quarantine_csv. "
+                
+                "Si la décision est REJECT "
+                "et que reject_csv n'a pas encore été exécuté, "
+                "exécute reject_csv. "
+                
+                "Une fois l'action correspondant à la décision exécutée, "
+                "produis la réponse finale."
+            ),
+            previous_response_id=response.id,
+            input=[
+                {
+                    "role": "user",
+                    "content": user_request,
+                },
+                *tool_outputs,
+            ],
+            tools=tools,
+        )
+
+    raise RuntimeError(
+        f"L'agent a atteint la limite de {MAX_ITERATIONS} "
+        "itérations sans produire de réponse finale."
+    )
+
+if __name__ == "__main__":
+
+    request = input("Que voulez-vous que je fasse ? ")
+
+    result = run_agent(request)
+
+    print("\nRéponse de l'agent :")
+    print(result)

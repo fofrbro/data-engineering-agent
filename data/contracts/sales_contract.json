@@ -1,0 +1,25 @@
+{
+    "dataset": "sales",
+    "version": "1.0",
+    "description": "Contrat de données pour les ventes",
+    "columns": {
+        "customer_id": {
+            "type": "integer",
+            "nullable": false
+        },
+        "product": {
+            "type": "string",
+            "nullable": false
+        },
+        "quantity": {
+            "type": "integer",
+            "nullable": false,
+            "min": 1
+        },
+        "price": {
+            "type": "decimal",
+            "nullable": false,
+            "min": 0
+        }
+    }
+}
