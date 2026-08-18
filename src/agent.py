@@ -10,6 +10,7 @@ from src.tools.ingestion_decision import determine_ingestion_decision
 from src.tools.gold_transformation import build_sales_gold
 from src.tools.silver_transformation import transform_to_silver
 from src.pipeline_planner import generate_pipeline_plan
+from src.pipeline_orchestrator import execute_pipeline
 
 
 tools = [
@@ -585,6 +586,23 @@ def run_agent_planned(user_request: str):
         print("- reject_csv")
 
     return plan
+
+
+def run_agent_orchestrated(user_request: str):
+    """
+    Génère un PipelinePlan avec le LLM puis l'exécute
+    avec l'orchestrateur déterministe.
+    """
+
+    plan = generate_pipeline_plan(
+        client,
+        user_request,
+    )
+
+    return execute_pipeline(
+        plan,
+        execute_tool,
+    )
 
 
 if __name__ == "__main__":

@@ -374,3 +374,83 @@ def test_run_agent_planned(monkeypatch):
 
     assert plan.quarantine is False
     assert plan.reject is False
+
+
+
+def test_run_agent_orchestrated(monkeypatch):
+
+    planned_data = {
+        "file_path": "data/sales.csv",
+        "contract_path": "data/contracts/sales_contract.json",
+        "inspect": True,
+        "profile": True,
+        "validate_quality": True,
+        "validate_contract": True,
+        "decision": True,
+        "ingest": True,
+        "transform_to_silver": True,
+        "build_gold": True,
+        "quarantine": False,
+        "reject": False,
+        "steps": [],
+    }
+
+    from src.pipeline_plan import build_pipeline_plan
+
+    fake_plan = build_pipeline_plan(planned_data)
+
+    monkeypatch.setattr(
+        agent,
+        "generate_pipeline_plan",
+        lambda client, request: fake_plan,
+    )
+
+    calls = []
+
+    def fake_execute_tool(name, arguments):
+        calls.append(name)
+
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        return {
+            "status": "OK",
+        }
+
+    monkeypatch.setattr(
+        agent,
+        "execute_tool",
+        fake_execute_tool,
+    )
+
+    result = agent.run_agent_orchestrated(
+        "Analyse et ingère data/sales.csv."
+    )
+
+    assert result["decision"]["decision"] == "INGEST"
+
+    assert calls == [
+        "inspect_csv",
+        "profile_csv",
+        "validate_csv",
+        "validate_contract",
+        "determine_ingestion_decision",
+        "ingest_csv",
+        "transform_to_silver",
+        "build_sales_gold",
+    ]
