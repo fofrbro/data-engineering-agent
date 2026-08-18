@@ -201,3 +201,137 @@ def test_orchestrator_continues_after_skipped_ingestion():
         "transform_to_silver",
         "build_sales_gold",
     ]
+
+
+def test_orchestrator_audit_success():
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        if name == "ingest_csv":
+            return {
+                "status": "INGESTED",
+            }
+
+        return {
+            "status": "TRANSFORMED",
+        }
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    audit = result["audit"]
+
+    assert audit["run_id"]
+    assert audit["source_file"] == "data/sales.csv"
+    assert audit["contract_path"] == (
+        "data/contracts/sales_contract.json"
+    )
+    assert audit["decision"] == "INGEST"
+    assert audit["final_status"] == "SUCCESS"
+    assert audit["finished_at"] is not None
+    assert audit["error"] is None
+
+    step_names = [
+        step["name"]
+        for step in audit["steps"]
+    ]
+
+    assert "validate_csv" in step_names
+    assert "validate_contract" in step_names
+    assert "determine_ingestion_decision" in step_names
+    assert "ingest_csv" in step_names
+
+
+def test_orchestrator_audit_quarantine():
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": False,
+                "issues_count": 1,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "QUARANTINE",
+            }
+
+        return {
+            "status": "QUARANTINED",
+        }
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    audit = result["audit"]
+
+    assert audit["decision"] == "QUARANTINE"
+    assert audit["final_status"] == "QUARANTINED"
+
+    assert audit["steps"][-1]["name"] == "quarantine_csv"
+
+
+def test_orchestrator_audit_reject():
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": False,
+                "errors_count": 1,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": False,
+                "issues_count": 1,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "REJECT",
+            }
+
+        return {
+            "status": "REJECTED",
+        }
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    audit = result["audit"]
+
+    assert audit["decision"] == "REJECT"
+    assert audit["final_status"] == "REJECTED"
+
+    assert audit["steps"][-1]["name"] == "reject_csv"
