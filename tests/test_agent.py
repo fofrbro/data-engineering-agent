@@ -1,0 +1,312 @@
+import json
+from types import SimpleNamespace
+
+import src.agent as agent
+
+
+def make_function_call(name, arguments, call_id):
+    return SimpleNamespace(
+        type="function_call",
+        name=name,
+        arguments=json.dumps(arguments),
+        call_id=call_id,
+    )
+
+
+def make_final_message(text):
+    content = SimpleNamespace(
+        type="output_text",
+        text=text,
+    )
+
+    return SimpleNamespace(
+        type="message",
+        content=[content],
+    )
+
+
+def make_response(response_id, output):
+    return SimpleNamespace(
+        id=response_id,
+        output=output,
+        output_text="",
+    )
+
+
+def run_scenario(monkeypatch, responses, tool_results, user_request):
+    """
+    Exécute un scénario d'agent avec OpenAI et les outils simulés.
+    """
+
+    responses = list(responses)
+    create_calls = []
+    executed_tools = []
+
+    def fake_create(*args, **kwargs):
+        create_calls.append(kwargs)
+        return responses.pop(0)
+
+    def fake_execute_tool(name, arguments):
+        executed_tools.append((name, arguments))
+
+        key = name
+
+        if key not in tool_results:
+            raise AssertionError(
+                f"Résultat simulé manquant pour l'outil {name}"
+            )
+
+        result = tool_results[key]
+
+        if callable(result):
+            return result(arguments)
+
+        return result
+
+    monkeypatch.setattr(
+        agent.client.responses,
+        "create",
+        fake_create,
+    )
+
+    monkeypatch.setattr(
+        agent,
+        "execute_tool",
+        fake_execute_tool,
+    )
+
+    result = agent.run_agent(user_request)
+
+    return result, executed_tools, create_calls
+
+
+def test_agent_ingest_pipeline(monkeypatch):
+    responses = [
+        make_response(
+            "resp_1",
+            [
+                make_function_call(
+                    "determine_ingestion_decision",
+                    {
+                        "contract_result": {
+                            "valid": True,
+                            "errors_count": 0,
+                        },
+                        "quality_result": {
+                            "valid": True,
+                            "issues_count": 0,
+                        },
+                    },
+                    "call_1",
+                )
+            ],
+        ),
+        make_response(
+            "resp_2",
+            [
+                make_function_call(
+                    "ingest_csv",
+                    {
+                        "file_path": "data/sales.csv",
+                        "dataset": "sales",
+                    },
+                    "call_2",
+                )
+            ],
+        ),
+        make_response(
+            "resp_3",
+            [
+                make_function_call(
+                    "transform_to_silver",
+                    {
+                        "bronze_file_path": "data/bronze/sales.parquet",
+                        "silver_file_path": "data/silver/sales.parquet",
+                    },
+                    "call_3",
+                )
+            ],
+        ),
+        make_response(
+            "resp_4",
+            [
+                make_function_call(
+                    "build_sales_gold",
+                    {
+                        "silver_file_path": "data/silver/sales.parquet",
+                        "output_file_path": "data/gold/sales_by_product.parquet",
+                    },
+                    "call_4",
+                )
+            ],
+        ),
+        make_response(
+            "resp_5",
+            [
+                make_final_message("Pipeline terminé.")
+            ],
+        ),
+    ]
+
+    tool_results = {
+        "determine_ingestion_decision": {
+            "decision": "INGEST"
+        },
+        "ingest_csv": {
+            "status": "INGESTED"
+        },
+        "transform_to_silver": {
+            "status": "TRANSFORMED"
+        },
+        "build_sales_gold": {
+            "status": "TRANSFORMED"
+        },
+    }
+
+    result, executed_tools, _ = run_scenario(
+        monkeypatch,
+        responses,
+        tool_results,
+        "Analyse et ingère sales.csv.",
+    )
+
+    assert result == "Pipeline terminé."
+
+    assert [name for name, _ in executed_tools] == [
+        "determine_ingestion_decision",
+        "ingest_csv",
+        "transform_to_silver",
+        "build_sales_gold",
+    ]
+
+
+def test_agent_quarantine_pipeline(monkeypatch):
+    responses = [
+        make_response(
+            "resp_1",
+            [
+                make_function_call(
+                    "determine_ingestion_decision",
+                    {
+                        "contract_result": {
+                            "valid": True,
+                            "errors_count": 0,
+                        },
+                        "quality_result": {
+                            "valid": False,
+                            "issues_count": 1,
+                        },
+                    },
+                    "call_1",
+                )
+            ],
+        ),
+        make_response(
+            "resp_2",
+            [
+                make_function_call(
+                    "quarantine_csv",
+                    {
+                        "file_path": "data/test_quarantine.csv",
+                        "reason": "Problème de qualité.",
+                    },
+                    "call_2",
+                )
+            ],
+        ),
+        make_response(
+            "resp_3",
+            [
+                make_final_message("Fichier mis en quarantaine.")
+            ],
+        ),
+    ]
+
+    tool_results = {
+        "determine_ingestion_decision": {
+            "decision": "QUARANTINE"
+        },
+        "quarantine_csv": {
+            "status": "QUARANTINED"
+        },
+    }
+
+    result, executed_tools, _ = run_scenario(
+        monkeypatch,
+        responses,
+        tool_results,
+        "Analyse le fichier avant ingestion.",
+    )
+
+    assert result == "Fichier mis en quarantaine."
+
+    assert [name for name, _ in executed_tools] == [
+        "determine_ingestion_decision",
+        "quarantine_csv",
+    ]
+
+
+def test_agent_reject_pipeline(monkeypatch):
+    responses = [
+        make_response(
+            "resp_1",
+            [
+                make_function_call(
+                    "determine_ingestion_decision",
+                    {
+                        "contract_result": {
+                            "valid": False,
+                            "errors_count": 1,
+                        },
+                        "quality_result": {
+                            "valid": False,
+                            "issues_count": 1,
+                        },
+                    },
+                    "call_1",
+                )
+            ],
+        ),
+        make_response(
+            "resp_2",
+            [
+                make_function_call(
+                    "reject_csv",
+                    {
+                        "file_path": "data/test_contract.csv",
+                        "reason": "Data Contract non respecté.",
+                    },
+                    "call_2",
+                )
+            ],
+        ),
+        make_response(
+            "resp_3",
+            [
+                make_final_message("Fichier rejeté.")
+            ],
+        ),
+    ]
+
+    tool_results = {
+        "determine_ingestion_decision": {
+            "decision": "REJECT"
+        },
+        "reject_csv": {
+            "status": "REJECTED"
+        },
+    }
+
+    result, executed_tools, _ = run_scenario(
+        monkeypatch,
+        responses,
+        tool_results,
+        "Analyse le fichier avant ingestion.",
+    )
+
+    assert result == "Fichier rejeté."
+
+    assert [name for name, _ in executed_tools] == [
+        "determine_ingestion_decision",
+        "reject_csv",
+    ]
