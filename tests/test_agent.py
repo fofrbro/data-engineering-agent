@@ -310,3 +310,67 @@ def test_agent_reject_pipeline(monkeypatch):
         "determine_ingestion_decision",
         "reject_csv",
     ]
+
+
+def test_run_agent_planned(monkeypatch):
+
+    planned_data = {
+        "file_path": "data/sales.csv",
+        "contract_path": "data/contracts/sales_contract.json",
+        "inspect": True,
+        "profile": True,
+        "validate_quality": True,
+        "validate_contract": True,
+        "decision": True,
+        "ingest": True,
+        "transform_to_silver": True,
+        "build_gold": True,
+        "quarantine": False,
+        "reject": False,
+        "steps": [
+            "inspect",
+            "profile",
+            "validate_quality",
+            "validate_contract",
+            "decision",
+            "ingest",
+            "transform_to_silver",
+            "build_gold",
+        ],
+    }
+
+    class FakePlan:
+        file_path = planned_data["file_path"]
+        contract_path = planned_data["contract_path"]
+        inspect = planned_data["inspect"]
+        profile = planned_data["profile"]
+        validate_quality = planned_data["validate_quality"]
+        validate_contract = planned_data["validate_contract"]
+        decision = planned_data["decision"]
+        ingest = planned_data["ingest"]
+        transform_to_silver = planned_data["transform_to_silver"]
+        build_gold = planned_data["build_gold"]
+        quarantine = planned_data["quarantine"]
+        reject = planned_data["reject"]
+
+    monkeypatch.setattr(
+        agent,
+        "generate_pipeline_plan",
+        lambda client, request: FakePlan(),
+    )
+
+    plan = agent.run_agent_planned(
+        "Analyse et ingère data/sales.csv."
+    )
+
+    assert plan.file_path == "data/sales.csv"
+    assert plan.contract_path == (
+        "data/contracts/sales_contract.json"
+    )
+
+    assert plan.ingest is True
+    assert plan.transform_to_silver is True
+    assert plan.build_gold is True
+
+    assert plan.quarantine is False
+    assert plan.reject is False

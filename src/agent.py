@@ -9,6 +9,7 @@ from src.tools.data_profiling import profile_csv
 from src.tools.ingestion_decision import determine_ingestion_decision
 from src.tools.gold_transformation import build_sales_gold
 from src.tools.silver_transformation import transform_to_silver
+from src.pipeline_planner import generate_pipeline_plan
 
 
 tools = [
@@ -538,6 +539,53 @@ def run_agent(user_request: str):
         f"L'agent a atteint la limite de {MAX_ITERATIONS} "
         "itérations sans produire de réponse finale."
     )
+
+
+def run_agent_planned(user_request: str):
+
+    plan = generate_pipeline_plan(
+        client,
+        user_request,
+    )
+
+    print("\nPlan d'exécution validé :")
+    print(f"Fichier : {plan.file_path}")
+    print(f"Contrat : {plan.contract_path}")
+
+    print("\nÉtapes :")
+
+    if plan.inspect:
+        print("- inspect_csv")
+
+    if plan.profile:
+        print("- profile_csv")
+
+    if plan.validate_quality:
+        print("- validate_csv")
+
+    if plan.validate_contract:
+        print("- validate_contract")
+
+    if plan.decision:
+        print("- determine_ingestion_decision")
+
+    if plan.ingest:
+        print("- ingest_csv")
+
+    if plan.transform_to_silver:
+        print("- transform_to_silver")
+
+    if plan.build_gold:
+        print("- build_sales_gold")
+
+    if plan.quarantine:
+        print("- quarantine_csv")
+
+    if plan.reject:
+        print("- reject_csv")
+
+    return plan
+
 
 if __name__ == "__main__":
 
