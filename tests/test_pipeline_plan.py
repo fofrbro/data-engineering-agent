@@ -78,3 +78,39 @@ def test_reject_cannot_build_silver():
 
     with pytest.raises(ValueError):
         plan.validate()
+
+
+
+def test_decision_without_quality_validation_is_invalid():
+    plan = PipelinePlan(
+        file_path="data/sales.csv",
+        contract_path="data/contracts/sales_contract.json",
+        validate_contract=True,
+        decision=True,
+    )
+
+    with pytest.raises(ValueError, match="qualité"):
+        plan.validate()
+
+
+def test_decision_without_contract_validation_is_invalid():
+    plan = PipelinePlan(
+        file_path="data/sales.csv",
+        contract_path="data/contracts/sales_contract.json",
+        validate_quality=True,
+        decision=True,
+    )
+
+    with pytest.raises(ValueError, match="Data Contract"):
+        plan.validate()
+
+
+def test_ingest_without_decision_is_invalid():
+    plan = PipelinePlan(
+        file_path="data/sales.csv",
+        contract_path="data/contracts/sales_contract.json",
+        ingest=True,
+    )
+
+    with pytest.raises(ValueError, match="décision"):
+        plan.validate()

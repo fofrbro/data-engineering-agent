@@ -47,6 +47,21 @@ class PipelinePlan:
                 "action terminale : INGEST, QUARANTINE ou REJECT."
             )
 
+        if self.decision and not self.validate_contract:
+            raise ValueError(
+                "La décision nécessite la validation du Data Contract."
+            )
+
+        if self.decision and not self.validate_quality:
+            raise ValueError(
+                "La décision nécessite la validation de la qualité."
+            )
+
+        if self.ingest and not self.decision:
+            raise ValueError(
+                "INGEST nécessite l'étape de décision."
+            )
+
         # Silver nécessite l'ingestion.
         if self.transform_to_silver and not self.ingest:
             raise ValueError(

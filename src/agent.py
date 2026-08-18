@@ -588,16 +588,32 @@ def run_agent_planned(user_request: str):
     return plan
 
 
-def run_agent_orchestrated(user_request: str):
-    """
+"""def run_agent_orchestrated(user_request: str):
+    
     Génère un PipelinePlan avec le LLM puis l'exécute
     avec l'orchestrateur déterministe.
-    """
+    
 
     plan = generate_pipeline_plan(
         client,
         user_request,
     )
+
+    return execute_pipeline(
+        plan,
+        execute_tool,
+    )"""
+
+
+def run_agent_orchestrated(user_request: str):
+
+    plan = generate_pipeline_plan(
+        client,
+        user_request,
+    )
+
+    print("\n=== PIPELINE PLAN ===")
+    print(plan)
 
     return execute_pipeline(
         plan,
@@ -609,7 +625,18 @@ if __name__ == "__main__":
 
     request = input("Que voulez-vous que je fasse ? ")
 
-    result = run_agent(request)
+    mode = input(
+        "Mode [classic/orchestrated] : "
+    ).strip().lower()
 
-    print("\nRéponse de l'agent :")
-    print(result)
+    if mode == "orchestrated":
+        result = run_agent_orchestrated(request)
+
+        print("\nRésultat du pipeline orchestré :")
+        print(result)
+
+    else:
+        result = run_agent(request)
+
+        print("\nRéponse de l'agent :")
+        print(result)
