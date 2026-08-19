@@ -441,3 +441,62 @@ def test_audit_storage_failure_does_not_fail_pipeline(monkeypatch):
 
     assert result["decision"]["decision"] == "INGEST"
     assert result["audit"]["final_status"] == "SUCCESS"
+
+
+
+def test_orchestrator_decision_only_ingest():
+
+    calls = []
+
+    def fake_tool(name, arguments):
+        calls.append(name)
+
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        return {
+            "status": "OK",
+        }
+
+    plan = make_plan(
+        ingest=False,
+        transform_to_silver=False,
+        build_gold=False,
+    )
+
+    result = execute_pipeline(
+        plan,
+        fake_tool,
+    )
+
+    assert result["decision"]["decision"] == "INGEST"
+
+    assert calls == [
+        "inspect_csv",
+        "profile_csv",
+        "validate_csv",
+        "validate_contract",
+        "determine_ingestion_decision",
+    ]
+
+    assert "ingest_csv" not in calls
+    assert "transform_to_silver" not in calls
+    assert "build_sales_gold" not in calls
+
+    assert result["audit"]["decision"] == "INGEST"
+    assert result["audit"]["final_status"] == "SUCCESS"

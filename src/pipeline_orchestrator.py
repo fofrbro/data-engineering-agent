@@ -224,11 +224,22 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 "Le Data Contract ne fournit pas de dataset."
             )
 
+        # Mode "decision only" :
+        # le fichier est éligible à l'ingestion,
+        # mais l'utilisateur n'a pas demandé son ingestion.
         if not plan.ingest:
-            raise ValueError(
-                "La décision INGEST exige ingest=True dans le plan."
+            audit = finish_audit(
+                audit,
+                status="SUCCESS",
+                decision=decision,
             )
 
+            results["audit"] = audit
+            persist_audit()
+
+            return results
+
+        # Ingestion réellement demandée.
         results["ingest"] = execute_step(
             "ingest_csv",
             {
@@ -259,6 +270,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 path=silver_file,
                 layer="silver",
             )
+
 
         # ------------------------------
         # Gold
