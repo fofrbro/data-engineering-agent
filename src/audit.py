@@ -23,6 +23,7 @@ def create_audit_record(
         "contract_path": contract_path,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "finished_at": None,
+        "duration_seconds": None,
         "decision": None,
         "final_status": "RUNNING",
         "steps": [],
@@ -79,15 +80,22 @@ def finish_audit(
     error: str | None = None,
 ) -> dict:
     """
-    Termine l'enregistrement d'audit.
+    Termine l'enregistrement d'audit et calcule la durée.
     """
 
-    audit["finished_at"] = datetime.now(
-        timezone.utc
-    ).isoformat()
+    finished_at = datetime.now(timezone.utc)
 
+    audit["finished_at"] = finished_at.isoformat()
     audit["final_status"] = status
     audit["decision"] = decision
     audit["error"] = error
+
+    started_at = datetime.fromisoformat(
+        audit["started_at"]
+    )
+
+    audit["duration_seconds"] = (
+        finished_at - started_at
+    ).total_seconds()
 
     return audit
