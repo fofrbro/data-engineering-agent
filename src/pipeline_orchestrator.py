@@ -6,6 +6,7 @@ from src.audit import (
     record_step,
 )
 from src.pipeline_plan import PipelinePlan
+from src.audit_store import append_audit
 
 
 def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
@@ -23,6 +24,17 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
         source_file=plan.file_path,
         contract_path=plan.contract_path,
     )
+
+    def persist_audit() -> None:
+        """
+        Persiste l'audit sans jamais faire échouer le pipeline métier.
+        """
+        try:
+            append_audit(audit)
+        except Exception:
+            # L'audit est important, mais ne doit pas bloquer
+            # l'exécution du pipeline.
+            pass
 
     results = {}
 
@@ -112,6 +124,8 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             )
 
             results["audit"] = audit
+            persist_audit()
+
             return results
 
         if "contract" not in results:
@@ -162,6 +176,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             )
 
             results["audit"] = audit
+            persist_audit()
 
             return results
 
@@ -189,6 +204,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             )
 
             results["audit"] = audit
+            persist_audit()
 
             return results
 
@@ -275,6 +291,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
         )
 
         results["audit"] = audit
+        persist_audit()
 
         return results
 
@@ -287,5 +304,6 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
         )
 
         results["audit"] = audit
-
+        persist_audit()    
+        
         raise

@@ -1,5 +1,7 @@
 from src.pipeline_orchestrator import execute_pipeline
 from src.pipeline_plan import PipelinePlan
+from src.audit_store import append_audit
+
 
 
 def make_plan(
@@ -335,3 +337,107 @@ def test_orchestrator_audit_reject():
     assert audit["final_status"] == "REJECTED"
 
     assert audit["steps"][-1]["name"] == "reject_csv"
+
+
+def test_orchestrator_persists_audit(monkeypatch, tmp_path):
+
+    audit_file = tmp_path / "pipeline_runs.jsonl"
+
+    monkeypatch.setattr(
+        "src.pipeline_orchestrator.append_audit",
+        lambda audit: append_audit(
+            audit,
+            audit_file,
+        ),
+    )
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        if name == "ingest_csv":
+            return {
+                "status": "SKIPPED",
+            }
+
+        return {
+            "status": "TRANSFORMED",
+        }
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    assert result["audit"]["final_status"] == "SUCCESS"
+    assert audit_file.exists()
+
+    lines = audit_file.read_text(
+        encoding="utf-8"
+    ).splitlines()
+
+    assert len(lines) == 1
+
+    assert result["audit"]["run_id"]
+
+
+def test_audit_storage_failure_does_not_fail_pipeline(monkeypatch):
+
+    def failing_append_audit(audit):
+        raise OSError("Erreur disque simulée")
+
+    monkeypatch.setattr(
+        "src.pipeline_orchestrator.append_audit",
+        failing_append_audit,
+    )
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        if name == "ingest_csv":
+            return {
+                "status": "INGESTED",
+            }
+
+        return {
+            "status": "TRANSFORMED",
+        }
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    assert result["decision"]["decision"] == "INGEST"
+    assert result["audit"]["final_status"] == "SUCCESS"
