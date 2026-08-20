@@ -149,3 +149,70 @@ def normalize_step_table(
     table["status"] = table["status"].astype("string")
 
     return table
+
+
+
+
+def export_structured_audit_to_parquet(
+    input_path=None,
+    runs_output_path: str | Path = "data/audit/pipeline_runs_structured.parquet",
+    steps_output_path: str | Path = "data/audit/pipeline_steps_structured.parquet",
+) -> tuple[Path, Path]:
+    """
+    Exporte uniquement les audits structurés vers Parquet.
+
+    Les anciens audits sans execution_mode sont exclus.
+    """
+
+    from src.audit_analysis import filter_structured_runs
+
+    pipeline_runs, pipeline_steps = load_audit_tables(
+        input_path
+    )
+
+    structured_runs = filter_structured_runs(
+        pipeline_runs
+    )
+
+    structured_run_ids = set(
+        structured_runs["run_id"]
+    )
+
+    structured_steps = pipeline_steps[
+        pipeline_steps["run_id"].isin(
+            structured_run_ids
+        )
+    ].copy()
+
+    structured_runs = normalize_run_table(
+        structured_runs
+    )
+
+    structured_steps = normalize_step_table(
+        structured_steps
+    )
+
+    runs_path = Path(runs_output_path)
+    steps_path = Path(steps_output_path)
+
+    runs_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    steps_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    structured_runs.to_parquet(
+        runs_path,
+        index=False,
+    )
+
+    structured_steps.to_parquet(
+        steps_path,
+        index=False,
+    )
+
+    return runs_path, steps_path
