@@ -50,6 +50,25 @@ def load_audit_tables(input_path=None):
     return pipeline_runs, pipeline_steps
 
 
+
+def filter_structured_runs(
+    pipeline_runs: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Retourne uniquement les runs produits avec le nouveau
+    modèle d'audit disposant d'un execution_mode valide.
+    """
+
+    valid_modes = {
+        "ASSESS_ONLY",
+        "INGEST",
+    }
+
+    return pipeline_runs[
+        pipeline_runs["execution_mode"].isin(valid_modes)
+    ].copy()
+
+
 def calculate_pipeline_kpis(
     pipeline_runs: pd.DataFrame,
 ) -> dict:
@@ -62,15 +81,24 @@ def calculate_pipeline_kpis(
     if total_runs == 0:
         return {
             "total_runs": 0,
+            "assess_only_runs": 0,
+            "ingest_runs": 0,
+            "quarantine_runs": 0,
+            "reject_runs": 0,
             "success_rate": 0.0,
             "quarantine_rate": 0.0,
             "reject_rate": 0.0,
             "average_duration_seconds": 0.0,
         }
 
-    success_count = (
-        pipeline_runs["final_status"]
-        == "SUCCESS"
+    assess_only_count = (
+        pipeline_runs["execution_mode"]
+        == "ASSESS_ONLY"
+    ).sum()
+
+    ingest_count = (
+        pipeline_runs["execution_mode"]
+        == "INGEST"
     ).sum()
 
     quarantine_count = (
@@ -83,11 +111,24 @@ def calculate_pipeline_kpis(
         == "REJECT"
     ).sum()
 
+    success_count = (
+        pipeline_runs["final_status"]
+        == "SUCCESS"
+    ).sum()
+
     return {
         "total_runs": total_runs,
+        "assess_only_runs": int(assess_only_count),
+        "ingest_runs": int(ingest_count),
+        "quarantine_runs": int(quarantine_count),
+        "reject_runs": int(reject_count),
         "success_rate": success_count / total_runs,
-        "quarantine_rate": quarantine_count / total_runs,
-        "reject_rate": reject_count / total_runs,
+        "quarantine_rate": (
+            quarantine_count / total_runs
+        ),
+        "reject_rate": (
+            reject_count / total_runs
+        ),
         "average_duration_seconds": (
             pipeline_runs["duration_seconds"]
             .mean()
