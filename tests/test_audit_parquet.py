@@ -5,6 +5,12 @@ from src.audit_parquet import (
     read_audit_parquet,
 )
 from src.audit_store import append_audit
+from src.audit_parquet import (
+    export_audit_to_parquet,
+    normalize_run_table,
+    normalize_step_table,
+    read_audit_parquet,
+)
 
 
 def create_test_audits(path):
@@ -130,3 +136,66 @@ def test_export_empty_audit(tmp_path):
 
     assert runs.empty
     assert steps.empty
+
+
+def test_normalize_run_table():
+    table = pd.DataFrame(
+        [
+            {
+                "run_id": "run-001",
+                "decision": "INGEST",
+                "execution_mode": "ASSESS_ONLY",
+                "final_status": "SUCCESS",
+                "duration_seconds": "0.25",
+            }
+        ]
+    )
+
+    normalized = normalize_run_table(table)
+
+    assert list(normalized.columns) == [
+        "run_id",
+        "source_file",
+        "contract_path",
+        "decision",
+        "execution_mode",
+        "final_status",
+        "started_at",
+        "finished_at",
+        "duration_seconds",
+        "error",
+    ]
+
+    assert str(
+        normalized["run_id"].dtype
+    ) == "string"
+
+    assert normalized[
+        "duration_seconds"
+    ].iloc[0] == 0.25
+
+
+def test_normalize_step_table():
+    table = pd.DataFrame(
+        [
+            {
+                "run_id": "run-001",
+                "step_order": "1",
+                "step_name": "validate_csv",
+                "status": "SUCCESS",
+            }
+        ]
+    )
+
+    normalized = normalize_step_table(table)
+
+    assert list(normalized.columns) == [
+        "run_id",
+        "step_order",
+        "step_name",
+        "status",
+    ]
+
+    assert normalized[
+        "step_order"
+    ].iloc[0] == 1
