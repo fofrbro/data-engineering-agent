@@ -28,6 +28,7 @@ def load_audit_tables(input_path=None):
             "source_file",
             "contract_path",
             "decision",
+            "execution_mode",
             "final_status",
             "started_at",
             "finished_at",

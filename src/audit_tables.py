@@ -8,6 +8,7 @@ def audit_to_run_row(audit: dict) -> dict:
         "source_file": audit.get("source_file"),
         "contract_path": audit.get("contract_path"),
         "decision": audit.get("decision"),
+        "execution_mode": audit.get("execution_mode"),
         "final_status": audit.get("final_status"),
         "started_at": audit.get("started_at"),
         "finished_at": audit.get("finished_at"),

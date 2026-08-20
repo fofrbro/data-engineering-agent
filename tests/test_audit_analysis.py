@@ -19,6 +19,7 @@ def create_test_audits(path):
             "finished_at": "2026-08-19T10:00:05+00:00",
             "duration_seconds": 5.0,
             "error": None,
+            "execution_mode": "INGEST",
             "steps": [
                 {
                     "name": "validate_csv",
@@ -39,6 +40,7 @@ def create_test_audits(path):
             "source_file": "data/test_quarantine.csv",
             "contract_path": "data/contracts/sales_contract.json",
             "decision": "QUARANTINE",
+            "execution_mode": "ASSESS_ONLY",
             "final_status": "QUARANTINED",
             "started_at": "2026-08-19T11:00:00+00:00",
             "finished_at": "2026-08-19T11:00:10+00:00",
@@ -64,6 +66,7 @@ def create_test_audits(path):
             "source_file": "data/test_contract.csv",
             "contract_path": "data/contracts/sales_contract.json",
             "decision": "REJECT",
+            "execution_mode": "ASSESS_ONLY",
             "final_status": "REJECTED",
             "started_at": "2026-08-19T12:00:00+00:00",
             "finished_at": "2026-08-19T12:00:20+00:00",
@@ -104,6 +107,7 @@ def test_load_audit_tables(tmp_path):
         "source_file",
         "contract_path",
         "decision",
+        "execution_mode",
         "final_status",
         "started_at",
         "finished_at",
