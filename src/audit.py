@@ -25,6 +25,7 @@ def create_audit_record(
         "finished_at": None,
         "duration_seconds": None,
         "decision": None,
+        "execution_mode": None,
         "final_status": "RUNNING",
         "steps": [],
         "outputs": [],
@@ -77,6 +78,7 @@ def finish_audit(
     *,
     status: str,
     decision: str | None = None,
+    execution_mode: str | None = None,
     error: str | None = None,
 ) -> dict:
     """
@@ -88,6 +90,7 @@ def finish_audit(
     audit["finished_at"] = finished_at.isoformat()
     audit["final_status"] = status
     audit["decision"] = decision
+    audit["execution_mode"] = execution_mode
     audit["error"] = error
 
     started_at = datetime.fromisoformat(

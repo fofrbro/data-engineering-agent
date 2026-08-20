@@ -90,3 +90,20 @@ def test_finish_audit():
     assert result["decision"] == "INGEST"
     assert result["finished_at"] is not None
     assert result["error"] is None
+
+
+def test_finish_audit_records_execution_mode():
+    audit = create_audit_record(
+        run_id="run-mode",
+        source_file="data/sales.csv",
+        contract_path="data/contracts/sales_contract.json",
+    )
+
+    result = finish_audit(
+        audit,
+        status="SUCCESS",
+        decision="INGEST",
+        execution_mode="ASSESS_ONLY",
+    )
+
+    assert result["execution_mode"] == "ASSESS_ONLY"

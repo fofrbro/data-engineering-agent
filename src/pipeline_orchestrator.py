@@ -25,6 +25,14 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
         contract_path=plan.contract_path,
     )
 
+    execution_mode = (
+        "INGEST"
+        if plan.ingest
+        else "ASSESS_ONLY"
+    )
+
+    audit["execution_mode"] = execution_mode
+
     def persist_audit() -> None:
         """
         Persiste l'audit sans jamais faire échouer le pipeline métier.
@@ -173,6 +181,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 audit,
                 status="REJECTED",
                 decision=decision,
+                execution_mode=execution_mode,
             )
 
             results["audit"] = audit
@@ -201,6 +210,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 audit,
                 status="QUARANTINED",
                 decision=decision,
+                execution_mode=execution_mode,
             )
 
             results["audit"] = audit
@@ -232,6 +242,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 audit,
                 status="SUCCESS",
                 decision=decision,
+                execution_mode=execution_mode,
             )
 
             results["audit"] = audit
@@ -300,6 +311,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             audit,
             status="SUCCESS",
             decision=decision,
+            execution_mode=execution_mode,
         )
 
         results["audit"] = audit
@@ -312,6 +324,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             audit,
             status="FAILED",
             decision=audit.get("decision"),
+            execution_mode=execution_mode,
             error=str(exc),
         )
 

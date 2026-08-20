@@ -500,3 +500,78 @@ def test_orchestrator_decision_only_ingest():
 
     assert result["audit"]["decision"] == "INGEST"
     assert result["audit"]["final_status"] == "SUCCESS"
+
+
+def test_orchestrator_assess_only_sets_execution_mode():
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        return {"status": "OK"}
+
+    plan = make_plan(
+        ingest=False,
+        transform_to_silver=False,
+        build_gold=False,
+    )
+
+    result = execute_pipeline(
+        plan,
+        fake_tool,
+    )
+
+    assert result["audit"]["execution_mode"] == (
+        "ASSESS_ONLY"
+    )
+
+
+def test_orchestrator_ingest_sets_execution_mode():
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+            }
+
+        if name == "validate_csv":
+            return {
+                "valid": True,
+                "issues_count": 0,
+            }
+
+        if name == "determine_ingestion_decision":
+            return {
+                "decision": "INGEST",
+            }
+
+        if name == "ingest_csv":
+            return {
+                "status": "INGESTED",
+            }
+
+        return {"status": "TRANSFORMED"}
+
+    result = execute_pipeline(
+        make_plan(),
+        fake_tool,
+    )
+
+    assert result["audit"]["execution_mode"] == "INGEST"
