@@ -263,3 +263,50 @@ def test_export_structured_audit_to_parquet(
         "INGEST",
         "ASSESS_ONLY",
     }
+
+
+def test_normalize_run_table_converts_timestamps():
+    table = pd.DataFrame(
+        [
+            {
+                "run_id": "run-001",
+                "started_at": "2026-08-20T10:00:00+00:00",
+                "finished_at": "2026-08-20T10:00:05+00:00",
+            }
+        ]
+    )
+
+    normalized = normalize_run_table(table)
+
+    assert isinstance(
+        normalized["started_at"].dtype,
+        pd.DatetimeTZDtype,
+    )
+
+    assert isinstance(
+        normalized["finished_at"].dtype,
+        pd.DatetimeTZDtype,
+    )
+
+
+
+def test_normalize_run_table_handles_invalid_timestamps():
+    table = pd.DataFrame(
+        [
+            {
+                "run_id": "run-invalid",
+                "started_at": "not-a-date",
+                "finished_at": None,
+            }
+        ]
+    )
+
+    normalized = normalize_run_table(table)
+
+    assert pd.isna(
+        normalized["started_at"].iloc[0]
+    )
+
+    assert pd.isna(
+        normalized["finished_at"].iloc[0]
+    )

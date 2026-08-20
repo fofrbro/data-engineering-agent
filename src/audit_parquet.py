@@ -114,8 +114,18 @@ def normalize_run_table(
     table["decision"] = table["decision"].astype("string")
     table["execution_mode"] = table["execution_mode"].astype("string")
     table["final_status"] = table["final_status"].astype("string")
-    table["started_at"] = table["started_at"].astype("string")
-    table["finished_at"] = table["finished_at"].astype("string")
+
+    table["started_at"] = pd.to_datetime(
+        table["started_at"],
+        errors="coerce",
+        utc=True,
+    )
+
+    table["finished_at"] = pd.to_datetime(
+        table["finished_at"],
+        errors="coerce",
+        utc=True,
+    )
     table["duration_seconds"] = pd.to_numeric(
         table["duration_seconds"],
         errors="coerce",
