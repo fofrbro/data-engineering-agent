@@ -134,8 +134,13 @@ class PipelineRecommendation:
         }
 
 
-def _snake_case(name: str) -> str:
+def silver_column_name(name: str) -> str:
+    """Nom d'une colonne source dans Silver (snake_case)."""
+
     return "_".join(name_tokens(name)) or name
+
+
+_snake_case = silver_column_name
 
 
 class _Context:
