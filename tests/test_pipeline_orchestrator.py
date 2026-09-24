@@ -575,3 +575,54 @@ def test_orchestrator_ingest_sets_execution_mode():
     )
 
     assert result["audit"]["execution_mode"] == "INGEST"
+
+
+def test_orchestrator_audits_policy_decision_for_proposed_contract():
+    from src.tools.ingestion_decision import determine_ingestion_decision
+
+    received = {}
+
+    def fake_tool(name, arguments):
+        if name == "validate_contract":
+            return {
+                "dataset": "sales",
+                "valid": True,
+                "errors_count": 0,
+                "contract_status": "PROPOSED",
+            }
+
+        if name == "validate_csv":
+            return {"valid": True, "issues_count": 0}
+
+        if name == "determine_ingestion_decision":
+            return determine_ingestion_decision(**arguments)
+
+        if name == "quarantine_csv":
+            received.update(arguments)
+            return {"status": "QUARANTINED"}
+
+        return {"status": "OK"}
+
+    result = execute_pipeline(make_plan(), fake_tool)
+    audit = result["audit"]
+
+    assert audit["decision"] == "QUARANTINE"
+    assert audit["final_status"] == "QUARANTINED"
+    assert audit["policy_rule"] == "CONTRACT_NOT_VALIDATED"
+    assert "PROPOSED" in audit["decision_reason"]
+    assert received["reason"] == audit["decision_reason"]
+    assert "ingest_csv" not in [step["name"] for step in audit["steps"]]
+
+
+def test_orchestrator_audit_without_decision_keeps_empty_policy_fields():
+    def fake_tool(name, arguments):
+        return {"valid": True, "issues_count": 0, "errors_count": 0}
+
+    audit = execute_pipeline(
+        make_plan(decision=False, ingest=False,
+                  transform_to_silver=False, build_gold=False),
+        fake_tool,
+    )["audit"]
+
+    assert audit["policy_rule"] is None
+    assert audit["decision_reason"] is None

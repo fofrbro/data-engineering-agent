@@ -159,6 +159,8 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
         decision = decision_result["decision"]
 
         audit["decision"] = decision
+        audit["policy_rule"] = decision_result.get("policy_rule")
+        audit["decision_reason"] = decision_result.get("reason")
 
         # ------------------------------
         # REJECT
@@ -170,9 +172,10 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 "reject_csv",
                 {
                     "file_path": plan.file_path,
-                    "reason": (
+                    "reason": decision_result.get(
+                        "reason",
                         "Le fichier ne respecte pas "
-                        "le Data Contract."
+                        "le Data Contract.",
                     ),
                 },
             )
@@ -199,9 +202,10 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 "quarantine_csv",
                 {
                     "file_path": plan.file_path,
-                    "reason": (
+                    "reason": decision_result.get(
+                        "reason",
                         "Le fichier respecte le Data Contract "
-                        "mais présente des problèmes de qualité."
+                        "mais présente des problèmes de qualité.",
                     ),
                 },
             )

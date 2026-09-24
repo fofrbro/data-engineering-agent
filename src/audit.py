@@ -25,6 +25,8 @@ def create_audit_record(
         "finished_at": None,
         "duration_seconds": None,
         "decision": None,
+        "policy_rule": None,
+        "decision_reason": None,
         "execution_mode": None,
         "final_status": "RUNNING",
         "steps": [],
