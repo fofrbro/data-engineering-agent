@@ -178,3 +178,55 @@ def test_null_measure_warning_is_not_marked_corrected(tmp_path, contracts_dir):
     # Une mesure nulle n'est jamais imputée.
     assert warnings["amount"]["correction"] is None
     assert warnings["amount"]["corrected"] is False
+
+
+def test_validated_contract_of_the_dataset_is_reused(tmp_path, contracts_dir):
+    first = plan_file("data/sales.csv", contracts_dir=contracts_dir)
+    approve_plan_contract(first, "cheikhou")
+
+    second = plan_file("data/sales.csv", contracts_dir=contracts_dir)
+
+    assert first.contract_origin == "PROPOSED"
+    assert second.contract_origin == "REUSED"
+    assert second.contract_path == (contracts_dir / "sales.json").as_posix()
+    assert validation_status(second)["ready_to_execute"] is True
+    assert "contrat validé existant réutilisé" in render_plan_preview(second)
+
+
+def test_reused_contract_still_checks_the_new_file(tmp_path, contracts_dir):
+    approve_plan_contract(plan_file("data/sales.csv", contracts_dir=contracts_dir), "cheikhou")
+    changed = tmp_path / "sales.csv"
+    changed.write_text("customer_id,product,quantity,price\n1,Laptop,-2,850\n", encoding="utf-8")
+
+    plan = plan_file(str(changed), contracts_dir=contracts_dir)
+
+    assert plan.contract_origin == "REUSED"
+    assert plan.decision_preview["decision"] == "REJECT"
+
+
+def test_non_validated_contract_at_dataset_path_is_not_reused(contracts_dir):
+    contracts_dir.mkdir(parents=True)
+    (contracts_dir / "sales.json").write_text(
+        json.dumps({"dataset": "sales", "version": "1.0", "status": "REJECTED", "columns": {}}),
+        encoding="utf-8",
+    )
+
+    plan = plan_file("data/sales.csv", contracts_dir=contracts_dir)
+
+    assert plan.contract_origin == "PROPOSED"
+    assert plan.contract_status == "PROPOSED"
+
+
+def test_provided_contract_takes_precedence(contracts_dir):
+    first = plan_file("data/sales.csv", contracts_dir=contracts_dir)
+    approve_plan_contract(first, "cheikhou")
+    other = contracts_dir / "other.json"
+    other.write_text(
+        json.dumps({"dataset": "other", "version": "1.0", "status": "VALIDATED", "columns": {}}),
+        encoding="utf-8",
+    )
+
+    plan = plan_file("data/sales.csv", contract_path=str(other), contracts_dir=contracts_dir)
+
+    assert plan.contract_origin == "PROVIDED"
+    assert plan.dataset == "other"

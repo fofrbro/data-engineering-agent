@@ -53,6 +53,11 @@ BLOCKED = "BLOCKED"
 
 DEFAULT_CONTRACTS_DIR = Path("data/contracts")
 
+# Origine du contrat utilisé par un plan.
+CONTRACT_PROVIDED = "PROVIDED"
+CONTRACT_REUSED = "REUSED"
+CONTRACT_PROPOSED = "PROPOSED"
+
 
 class WorkflowError(ValueError):
     """Action de workflow impossible dans l'état actuel du plan."""
@@ -73,6 +78,7 @@ class AgentPlan:
     kpis: KpiRecommendation
     dashboard: DashboardPlan
     contracts_dir: str
+    contract_origin: str = CONTRACT_PROPOSED
     enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
@@ -238,18 +244,37 @@ def plan_file(
     """
     PLAN : analyse le fichier et propose tout ce qui est nécessaire
     à son traitement. Les enrichissements déclaratifs demandés
-    deviennent des transformations Silver. Sans contrat fourni, un contrat PROPOSED est
-    généré dans <contracts_dir>/proposed/.
+    deviennent des transformations Silver.
+
+    Contrat utilisé, par ordre de priorité :
+    1. le contrat fourni ;
+    2. le contrat VALIDATED existant du dataset
+       (<contracts_dir>/<dataset>.json), réutilisé tel quel ;
+    3. sinon, un contrat PROPOSED généré dans <contracts_dir>/proposed/.
+    Un contrat réutilisé est confronté au nouveau fichier comme tout
+    autre : s'il ne correspond plus, la décision sera REJECT.
     """
 
     discovery = discover_dataset(file_path)
     semantics = profile_semantics(discovery.schema)
+    contract_origin = CONTRACT_PROVIDED
+
+    if not contract_path:
+        dataset = dataset or dataset_name_from_path(file_path)
+        existing = Path(contracts_dir) / f"{dataset}.json"
+
+        if existing.is_file():
+            _, candidate = load_contract_file(existing, contracts_dir)
+
+            if contract_status(candidate) == VALIDATED:
+                contract_path = existing.as_posix()
+                contract_origin = CONTRACT_REUSED
 
     if contract_path:
         _, contract = load_contract_file(contract_path, contracts_dir)
         dataset = dataset or contract.get("dataset")
     else:
-        dataset = dataset or dataset_name_from_path(file_path)
+        contract_origin = CONTRACT_PROPOSED
         contract = generate_contract(
             discovery.schema,
             semantics,
@@ -277,6 +302,7 @@ def plan_file(
         kpis=kpis,
         dashboard=plan_dashboard(kpis, discovery.schema, semantics),
         contracts_dir=str(contracts_dir),
+        contract_origin=contract_origin,
         enrichments=list(enrichments or []),
     )
     _refresh(plan)
@@ -394,6 +420,13 @@ def validation_status(plan: AgentPlan) -> dict:
     }
 
 
+CONTRACT_ORIGIN_LABELS = {
+    CONTRACT_PROVIDED: "fourni",
+    CONTRACT_REUSED: "contrat validé existant réutilisé",
+    CONTRACT_PROPOSED: "proposé par l'agent",
+}
+
+
 def render_plan_preview(plan: AgentPlan) -> str:
     """Aperçu complet du plan, à présenter avant toute validation."""
 
@@ -406,7 +439,8 @@ def render_plan_preview(plan: AgentPlan) -> str:
         f"{schema.row_count} lignes, {schema.column_count} colonnes)",
         f"Dataset : {plan.dataset}",
         f"Métier détecté : {plan.recommendation.domain}",
-        f"Contrat : {plan.contract_path} ({plan.contract_status})",
+        f"Contrat : {plan.contract_path} ({plan.contract_status}, "
+        f"{CONTRACT_ORIGIN_LABELS[plan.contract_origin]})",
         f"Décision prévisionnelle : {decision['decision']} "
         f"({decision['policy_rule']}) - {decision['reason']}",
         "",

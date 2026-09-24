@@ -66,6 +66,7 @@ class WorkflowService:
             "file": plan.file_path,
             "contract_path": plan.contract_path,
             "contract_status": plan.contract_status,
+            "contract_origin": plan.contract_origin,
             "decision_preview": plan.decision_preview,
             "validation": validation_status(plan),
             "preview": render_plan_preview(plan),

@@ -796,7 +796,7 @@
                         (${escapeHtml(d.policy_rule)}) - ${escapeHtml(d.reason)}
                     </p>
                     <ul style="list-style: none; margin-top: 12px;">
-                        ${item(v.contract_validated, `Data Contract : ${escapeHtml(view.contract_path)} (${escapeHtml(view.contract_status)})`, contractAction)}
+                        ${item(v.contract_validated, `Data Contract : ${escapeHtml(view.contract_path)} (${escapeHtml(view.contract_status)}${view.contract_origin === 'REUSED' ? ', contrat validé existant réutilisé' : ''})`, contractAction)}
                         ${destructive}
                         ${warnings}
                         ${item(dashboardDone, `Tableau de bord : ${escapeHtml(view.dashboard.title)} (${escapeHtml(view.dashboard.status)})`, dashboardActions)}

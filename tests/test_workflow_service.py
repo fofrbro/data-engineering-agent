@@ -88,3 +88,14 @@ def test_analysis_failure_does_not_change_the_run_result(service, monkeypatch):
     assert result["final_status"] == "SUCCESS"
     assert result["analysis_report"] is None
     assert result["analysis_error"] == "analyse impossible"
+
+
+def test_second_file_of_a_dataset_runs_without_new_contract_approval(service):
+    first = service.create_plan("data/sales.csv")["plan_id"]
+    service.approve_contract(first, "cheikhou")
+    service.execute(first)
+
+    second = service.create_plan("data/sales.csv")
+
+    assert second["contract_origin"] == "REUSED"
+    assert service.execute(second["plan_id"])["final_status"] == "SUCCESS"
