@@ -483,6 +483,10 @@
                     <button class="btn-primary" id="executeBtn" onclick="executePipeline()" disabled>
                         🚀 Lancer le Pipeline
                     </button>
+
+                    <button class="btn-primary" id="agentBtn" onclick="createAgentPlan()" disabled style="margin-top: 10px;">
+                        🤖 Préparer avec l'agent (plan à valider)
+                    </button>
                 </div>
             </div>
         </div>
@@ -496,7 +500,19 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="files" onclick="switchTab('files')">Fichiers</button>
                 <button class="tab-btn" data-tab="execution" onclick="switchTab('execution')">Exécutions</button>
+                <button class="tab-btn" data-tab="agent" onclick="switchTab('agent')">Agent</button>
                 <button class="tab-btn" data-tab="docs" onclick="switchTab('docs')">Documentation</button>
+            </div>
+
+            <!-- Onglet Agent : PLAN -> VALIDATE -> EXECUTE -->
+            <div id="agent" class="tab-content">
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="reviewerName">Relecteur (nom enregistré dans chaque validation)</label>
+                    <input type="text" id="reviewerName" placeholder="Votre nom" onchange="saveReviewerName()">
+                </div>
+                <div id="agentPanel">
+                    <p style="color: #999;">Uploadez un fichier puis cliquez sur « Préparer avec l'agent ».</p>
+                </div>
             </div>
 
             <!-- Onglet Fichiers -->
@@ -555,6 +571,20 @@
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 Application démarrée');
             await loadUploadedFiles();
+
+            try {
+                document.getElementById('reviewerName').value = localStorage.getItem('reviewerName') || '';
+            } catch (error) {
+                // Stockage indisponible : le nom sera simplement ressaisi.
+            }
+
+            // ?agent=<file_id> : reprendre un fichier déjà uploadé.
+            const agentFileId = new URLSearchParams(window.location.search).get('agent');
+            if (agentFileId) {
+                currentFileId = agentFileId;
+                document.getElementById('agentBtn').disabled = false;
+                document.getElementById('executeBtn').disabled = false;
+            }
 
             const resumeFileId = new URLSearchParams(window.location.search).get('resume');
             const pendingPipeline = resumeFileId
@@ -632,6 +662,7 @@
                     currentFileId = data.file_id;
                     showMessage(`✓ ${files.length} fichier(s) uploadé(s) et archivé(s)`, 'success');
                     document.getElementById('executeBtn').disabled = false;
+                    document.getElementById('agentBtn').disabled = false;
                     await loadUploadedFiles();
                 } else {
                     showMessage(formatApiError(data, 'Erreur lors de l\'upload'), 'error');
@@ -827,6 +858,181 @@
 
             executionList.innerHTML = html;
             switchTab('execution');
+        }
+
+        // ============================================
+        // Workflow agent : PLAN -> VALIDATE -> EXECUTE
+        // ============================================
+
+        let currentPlanId = null;
+
+        function saveReviewerName() {
+            try {
+                localStorage.setItem('reviewerName', document.getElementById('reviewerName').value.trim());
+            } catch (error) {
+                // Stockage indisponible : sans effet.
+            }
+        }
+
+        function reviewerName() {
+            const reviewer = document.getElementById('reviewerName').value.trim();
+            if (!reviewer) {
+                showMessage('Indiquez le nom du relecteur avant de valider.', 'warning');
+                switchTab('agent');
+                return null;
+            }
+            return reviewer;
+        }
+
+        async function workflowRequest(url, body) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body || {})
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(formatApiError(data, 'Action refusée'));
+            }
+            return data;
+        }
+
+        async function createAgentPlan() {
+            if (!currentFileId) {
+                showMessage("Veuillez d'abord uploader un fichier", 'error');
+                return;
+            }
+            try {
+                showMessage("L'agent analyse le fichier...", 'info');
+                const view = await workflowRequest('/api/workflow/plan', {
+                    file_id: currentFileId,
+                    contract_path: document.getElementById('contractPath').value.trim() || null,
+                    dataset_name: document.getElementById('datasetName').value.trim() || null
+                });
+                currentPlanId = view.plan_id;
+                showMessage('✓ Plan proposé : il doit être validé avant exécution.', 'success');
+                renderAgentPlan(view);
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        async function agentAction(action, body) {
+            try {
+                const view = await workflowRequest(`/api/workflow/${currentPlanId}/${action}`, body);
+                renderAgentPlan(view);
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        function approveAgentContract() {
+            const reviewer = reviewerName();
+            if (reviewer) agentAction('approve-contract', { reviewer });
+        }
+
+        function approveAgentTransformations() {
+            const reviewer = reviewerName();
+            if (reviewer) agentAction('approve-transformations', { reviewer });
+        }
+
+        function reviewAgentDashboard(action) {
+            const reviewer = reviewerName();
+            if (!reviewer) return;
+            let comment = null;
+            if (action === 'REJECT') {
+                comment = window.prompt('Motif du rejet du tableau de bord :');
+                if (!comment) return;
+            }
+            agentAction('dashboard', { action, reviewer, comment });
+        }
+
+        async function executeAgentPlan() {
+            try {
+                showMessage('Exécution du plan...', 'info');
+                const result = await workflowRequest(`/api/workflow/${currentPlanId}/execute`);
+                showMessage(`Exécution terminée : ${result.final_status}`, result.final_status === 'SUCCESS' ? 'success' : 'warning');
+                // Le statut du plan a changé côté serveur (EXECUTED, BLOCKED...).
+                const view = await (await fetch(`/api/workflow/${currentPlanId}`)).json();
+                renderAgentPlan(view);
+                renderAgentExecution(result);
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        const smallButton = 'class="btn-primary" style="width:auto;padding:6px 12px;margin-left:8px;"';
+
+        function renderAgentPlan(view) {
+            const v = view.validation;
+            const d = view.decision_preview;
+            const item = (ok, label, action = '') => `
+                <li style="margin: 8px 0;">${ok ? '✅' : '⏳'} ${label} ${action}</li>`;
+
+            const destructive = v.destructive_transformations.length
+                ? item(
+                    v.destructive_approved,
+                    `Transformations destructives : ${escapeHtml(v.destructive_transformations.join(', '))}`
+                        + (v.destructive_approved ? ' (approuvées)' : ' (ignorées tant que non approuvées)'),
+                    v.destructive_approved ? '' : `<button ${smallButton} onclick="approveAgentTransformations()">Approuver</button>`
+                )
+                : '';
+
+            const warnings = v.uncorrected_warnings.length
+                ? `<li style="margin: 8px 0;">⚠️ Avertissements qualité non corrigés : ${escapeHtml(v.uncorrected_warnings.map(w => w.message).join(' ; '))}</li>`
+                : '';
+
+            const dashboardDone = view.dashboard.status !== 'PROPOSED';
+            const dashboardActions = dashboardDone ? '' : `
+                <button ${smallButton} onclick="reviewAgentDashboard('APPROVE')">Approuver</button>
+                <button ${smallButton} onclick="reviewAgentDashboard('REJECT')">Rejeter</button>`;
+
+            const contractAction = v.contract_validated
+                ? ''
+                : `<button ${smallButton} onclick="approveAgentContract()">Valider le contrat</button>`;
+
+            document.getElementById('agentPanel').innerHTML = `
+                <div class="result-item">
+                    <h3>Plan agent - ${escapeHtml(view.dataset)}</h3>
+                    <span class="status">${escapeHtml(view.status)}</span>
+                    <p style="margin-top: 12px;">
+                        Décision prévisionnelle : <strong>${escapeHtml(d.decision)}</strong>
+                        (${escapeHtml(d.policy_rule)}) - ${escapeHtml(d.reason)}
+                    </p>
+                    <ul style="list-style: none; margin-top: 12px;">
+                        ${item(v.contract_validated, `Data Contract : ${escapeHtml(view.contract_path)} (${escapeHtml(view.contract_status)})`, contractAction)}
+                        ${destructive}
+                        ${warnings}
+                        ${item(dashboardDone, `Tableau de bord : ${escapeHtml(view.dashboard.title)} (${escapeHtml(view.dashboard.status)})`, dashboardActions)}
+                    </ul>
+                    ${v.blockers.length ? `<p style="color:#b42318;">${escapeHtml(v.blockers.join(' '))}</p>` : ''}
+                    <button class="btn-primary" id="agentExecuteBtn" onclick="executeAgentPlan()" ${v.ready_to_execute && view.status === 'PLANNED' ? '' : 'disabled'}>
+                        ▶️ Exécuter le plan validé
+                    </button>
+                    <details style="margin-top: 15px;">
+                        <summary>Aperçu complet du plan</summary>
+                        <pre>${escapeHtml(view.preview)}</pre>
+                    </details>
+                </div>
+                <div id="agentExecution"></div>
+            `;
+            switchTab('agent');
+        }
+
+        function renderAgentExecution(result) {
+            const checks = result.verification.map(c => `
+                <li>${c.passed ? '✅' : '❌'} ${escapeHtml(c.check)} - ${escapeHtml(c.detail)}</li>`).join('');
+
+            document.getElementById('agentExecuteBtn').disabled = true;
+            document.getElementById('agentExecution').innerHTML = `
+                <div class="result-item">
+                    <h3>Exécution ${escapeHtml(result.run_id)}</h3>
+                    <span class="status ${result.final_status === 'SUCCESS' ? 'completed' : 'error'}">${escapeHtml(result.final_status)}</span>
+                    ${checks ? `<p style="margin-top: 12px;"><strong>Vérifications :</strong></p><ul style="list-style: none;">${checks}</ul>` : ''}
+                    <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>
+                    <pre>${escapeHtml(result.explanation)}</pre>
+                </div>
+            `;
         }
 
         // ============================================
