@@ -43,6 +43,11 @@ from src.recommendation.dashboard_review import DashboardReviewError
 from src.workflow.agent_workflow import WorkflowError
 from src.workflow.workflow_service import WorkflowService
 from src.contract.contract_generator import dataset_name_from_path
+from src.llm import client as llm_client
+from src.workflow.request_interpreter import (
+    RequestInterpretationError,
+    handle_request,
+)
 from src.tools.fabric_connector import (
     configure_fabric_session,
     publish_to_fabric as publish_dataset_to_fabric,
@@ -133,6 +138,12 @@ class WorkflowPlanRequest(BaseModel):
     file_id: str
     contract_path: Optional[str] = None
     dataset_name: Optional[str] = None
+
+
+class WorkflowAskRequest(BaseModel):
+    """Demande en langage naturel, éventuellement liée à un fichier uploadé."""
+    message: str
+    file_id: Optional[str] = None
 
 
 class WorkflowReviewRequest(BaseModel):
@@ -690,6 +701,41 @@ async def create_workflow_plan(request: WorkflowPlanRequest):
             dataset,
         )
     )
+
+
+@app.post("/api/workflow/ask")
+async def ask_workflow(request: WorkflowAskRequest):
+    """
+    Le LLM traduit la demande en intention (planifier un fichier ou
+    expliquer un run). Il ne peut ni valider ni exécuter.
+    """
+    file_path = None
+    dataset = None
+
+    if request.file_id:
+        if request.file_id not in sessions:
+            raise HTTPException(status_code=404, detail="Fichier non trouvé")
+        files = sessions[request.file_id]["files"]
+        if len(files) != 1:
+            raise HTTPException(
+                status_code=400,
+                detail="Le workflow agent traite un fichier à la fois.",
+            )
+        file_path = files[0]["file_path"]
+        dataset = dataset_name_from_path(files[0]["file_name"])
+
+    try:
+        return _workflow_call(
+            lambda: handle_request(
+                llm_client,
+                request.message,
+                workflow_service,
+                file_path=file_path,
+                dataset=dataset,
+            )
+        )
+    except RequestInterpretationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
 
 @app.get("/api/workflow/{plan_id}")
