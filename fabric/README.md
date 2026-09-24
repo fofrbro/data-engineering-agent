@@ -21,8 +21,11 @@ Agent -> Parquet (data/audit/*_structured.parquet)
 - `notebooks/incremental_load_audit_tables.py` : chargement incrémental
   (anti-join sur `run_id`, puis sur `run_id` + `step_order`). Logique
   testée localement via `src/fabric/incremental_load.py`
-  (`tests/test_fabric_incremental_load.py`). **Pas encore exécuté dans
-  Fabric.**
+  (`tests/test_fabric_incremental_load.py`).
+  Exécuté dans Fabric le 2026-09-24 : crée les tables Delta
+  `pipeline_runs` et `pipeline_steps` et la vue `pipeline_observability`
+  (type VIEW confirmé). **Non encore confirmé dans Fabric : une seconde
+  exécution n'ajoute aucun run (idempotence).**
 - `sql/pipeline_observability.sql` : vue d'observabilité (volumes, décisions,
   succès, échecs, taux, durée moyenne). Le notebook incrémental en embarque
   une copie exacte. `tests/test_fabric_observability_view.py` exécute ce SQL

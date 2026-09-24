@@ -9,7 +9,8 @@
 #   se rattrape au passage suivant ;
 # - les étapes sont écrites avant les runs.
 #
-# ATTENTION : ce notebook n'a pas encore été exécuté dans Fabric.
+# Exécuté dans Fabric le 2026-09-24 (tables et vue créées).
+# Idempotence d'une seconde exécution : pas encore confirmée dans Fabric.
 
 # %%
 from pyspark.sql import functions as F
