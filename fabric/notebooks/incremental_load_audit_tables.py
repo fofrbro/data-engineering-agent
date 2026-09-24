@@ -1,0 +1,95 @@
+# Fabric notebook - chargement incrémental des tables d'audit.
+#
+# Remplace le chargement complet (overwrite) de load_audit_tables.py.
+# Même logique que src/fabric/incremental_load.py, testée localement :
+# - pipeline_runs  : anti-join sur run_id, les anciens runs ne sont
+#   jamais réécrits ;
+# - pipeline_steps : anti-join sur (run_id, step_order), uniquement
+#   pour des runs présents dans la source ; un chargement interrompu
+#   se rattrape au passage suivant ;
+# - les étapes sont écrites avant les runs.
+#
+# ATTENTION : ce notebook n'a pas encore été exécuté dans Fabric.
+
+# %%
+from pyspark.sql import functions as F
+
+spark.conf.set("spark.sql.session.timeZone", "UTC")
+
+RUN_COLUMNS = [
+    "run_id",
+    "source_file",
+    "contract_path",
+    "decision",
+    "execution_mode",
+    "final_status",
+    "started_at",
+    "finished_at",
+    "duration_seconds",
+    "error",
+]
+
+STEP_COLUMNS = [
+    "run_id",
+    "step_order",
+    "step_name",
+    "status",
+]
+
+RUNS_SOURCE = "Files/audit/pipeline_runs_structured.parquet"
+STEPS_SOURCE = "Files/audit/pipeline_steps_structured.parquet"
+
+# %%
+source_runs = (
+    spark.read.parquet(RUNS_SOURCE)
+    .select(*RUN_COLUMNS)
+    .dropDuplicates(["run_id"])
+)
+
+source_steps = (
+    spark.read.parquet(STEPS_SOURCE)
+    .select(*STEP_COLUMNS)
+    .join(source_runs.select("run_id"), "run_id", "left_semi")
+    .dropDuplicates(["run_id", "step_order"])
+)
+
+# %%
+if spark.catalog.tableExists("pipeline_steps"):
+    new_steps = source_steps.join(
+        spark.table("pipeline_steps").select("run_id", "step_order"),
+        ["run_id", "step_order"],
+        "left_anti",
+    )
+else:
+    new_steps = source_steps
+
+if spark.catalog.tableExists("pipeline_runs"):
+    new_runs = source_runs.join(
+        spark.table("pipeline_runs").select("run_id"),
+        "run_id",
+        "left_anti",
+    )
+else:
+    new_runs = source_runs
+
+# Les compteurs sont calculés avant l'écriture : après l'ajout,
+# un DataFrame issu d'un anti-join serait réévalué à vide.
+inserted_steps = new_steps.count()
+inserted_runs = new_runs.count()
+
+# %%
+new_steps.select(*STEP_COLUMNS).write \
+    .mode("append") \
+    .format("delta") \
+    .saveAsTable("pipeline_steps")
+
+new_runs.select(*RUN_COLUMNS).write \
+    .mode("append") \
+    .format("delta") \
+    .saveAsTable("pipeline_runs")
+
+# %%
+print(f"Runs ajoutés    : {inserted_runs}")
+print(f"Étapes ajoutées : {inserted_steps}")
+print(f"Total runs      : {spark.table('pipeline_runs').count()}")
+print(f"Total étapes    : {spark.table('pipeline_steps').count()}")

@@ -18,3 +18,8 @@ Agent -> Parquet (data/audit/*_structured.parquet)
 
 - `notebooks/load_audit_tables.py` : notebook d'origine, chargement complet
   (overwrite) et création de la vue.
+- `notebooks/incremental_load_audit_tables.py` : chargement incrémental
+  (anti-join sur `run_id`, puis sur `run_id` + `step_order`). Logique
+  testée localement via `src/fabric/incremental_load.py`
+  (`tests/test_fabric_incremental_load.py`). **Pas encore exécuté dans
+  Fabric.**
