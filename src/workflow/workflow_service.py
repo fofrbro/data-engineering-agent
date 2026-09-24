@@ -6,10 +6,12 @@ VALIDATE et EXECUTE sous forme de dictionnaires sérialisables.
 Chaque validation exige un relecteur explicite.
 """
 
+import json
 from pathlib import Path
 
 from src.audit_store import DEFAULT_AUDIT_PATH
 from src.fabric.gold_export import export_gold_for_fabric
+from src.tools.data_analyst import DataAnalyst, analyze_gold_data
 from src.recommendation.dashboard_review import (
     APPROVE,
     MODIFY,
@@ -39,11 +41,13 @@ class WorkflowService:
         output_root: str | Path = "data",
         audit_path: str | Path = DEFAULT_AUDIT_PATH,
         fabric_export_root: str | Path = "data/fabric_export",
+        results_dir: str | Path = "results",
     ):
         self.contracts_dir = contracts_dir
         self.output_root = output_root
         self.audit_path = audit_path
         self.fabric_export_root = fabric_export_root
+        self.results_dir = Path(results_dir)
         self._plans: dict[str, AgentPlan] = {}
 
     def get(self, plan_id: str) -> AgentPlan:
@@ -118,6 +122,33 @@ class WorkflowService:
 
         return self.view(plan_id)
 
+    def _analyze(self, plan: AgentPlan, silver_path: str) -> dict:
+        """
+        Rapport Data Analyst sur Silver. Un échec d'analyse ne change
+        pas le résultat du run, déjà vérifié et audité : il est signalé.
+        """
+
+        try:
+            analysis = analyze_gold_data(silver_path, dataset_name=plan.dataset)
+            report = DataAnalyst().generate_analysis_report(analysis)
+        except Exception as exc:
+            return {"analysis_report": None, "analysis_files": None, "analysis_error": str(exc)}
+
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        text_path = self.results_dir / f"{plan.dataset}_analysis.txt"
+        json_path = self.results_dir / f"{plan.dataset}_analysis.json"
+        text_path.write_text(report, encoding="utf-8")
+        json_path.write_text(
+            json.dumps(analysis, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8",
+        )
+
+        return {
+            "analysis_report": report,
+            "analysis_files": {"text": text_path.as_posix(), "json": json_path.as_posix()},
+            "analysis_error": None,
+        }
+
     def execute(self, plan_id: str) -> dict:
         plan = self.get(plan_id)
         result = execute_plan(
@@ -126,11 +157,17 @@ class WorkflowService:
             audit_path=self.audit_path,
         )
 
-        # Seule une exécution vérifiée est préparée pour Fabric.
+        # Seule une exécution vérifiée est préparée pour Fabric et analysée.
+        succeeded = result.final_status == "SUCCESS"
         fabric_export = (
             export_gold_for_fabric(plan, result, self.fabric_export_root).as_posix()
-            if result.final_status == "SUCCESS"
+            if succeeded
             else None
+        )
+        analysis = (
+            self._analyze(plan, result.outputs["silver"])
+            if succeeded
+            else {"analysis_report": None, "analysis_files": None, "analysis_error": None}
         )
 
         return {
@@ -142,4 +179,5 @@ class WorkflowService:
             "verification": result.verification,
             "explanation": result.explanation,
             "fabric_export": fabric_export,
+            **analysis,
         }

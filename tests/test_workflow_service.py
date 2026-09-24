@@ -14,6 +14,7 @@ def service(tmp_path):
         output_root=tmp_path / "lake",
         audit_path=tmp_path / "runs.jsonl",
         fabric_export_root=tmp_path / "fabric_export",
+        results_dir=tmp_path / "results",
     )
 
 
@@ -35,6 +36,9 @@ def test_full_workflow_through_the_service(service):
     assert result["final_status"] == "SUCCESS"
     assert result["decision"] == "INGEST"
     assert result["fabric_export"].endswith("fabric_export/gold/sales")
+    assert "sales" in result["analysis_report"]
+    assert result["analysis_files"]["text"].endswith("results/sales_analysis.txt")
+    assert result["analysis_error"] is None
     assert service.view(plan_id)["status"] == "EXECUTED"
     assert [entry["action"] for entry in service.view(plan_id)["history"]] == [
         "APPROVE_CONTRACT", "APPROVE_DASHBOARD",
@@ -67,3 +71,20 @@ def test_dashboard_modify_and_reject(service):
 def test_unknown_plan(service):
     with pytest.raises(KeyError):
         service.view("missing")
+
+
+def test_analysis_failure_does_not_change_the_run_result(service, monkeypatch):
+    import src.workflow.workflow_service as module
+
+    def broken(*args, **kwargs):
+        raise RuntimeError("analyse impossible")
+
+    monkeypatch.setattr(module, "analyze_gold_data", broken)
+    plan_id = service.create_plan("data/sales.csv")["plan_id"]
+    service.approve_contract(plan_id, "cheikhou")
+
+    result = service.execute(plan_id)
+
+    assert result["final_status"] == "SUCCESS"
+    assert result["analysis_report"] is None
+    assert result["analysis_error"] == "analyse impossible"

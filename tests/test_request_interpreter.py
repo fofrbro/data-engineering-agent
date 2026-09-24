@@ -43,6 +43,7 @@ def service(tmp_path):
         output_root=tmp_path / "lake",
         audit_path=tmp_path / "runs.jsonl",
         fabric_export_root=tmp_path / "fabric_export",
+        results_dir=tmp_path / "results",
     )
 
 
