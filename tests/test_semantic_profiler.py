@@ -161,3 +161,61 @@ def test_existing_sales_file_end_to_end():
     assert payload["measures"] == ["quantity", "price"]
     assert payload["dimensions"] == ["product"]
     assert profile.column("price").business_role == "PRICE"
+
+
+def relationship(profile, column):
+    return next(r for r in profile.relationships if r.column == column)
+
+
+def test_primary_and_foreign_key_candidates():
+    frame = orders_frame()
+    frame["store_id"] = [7, 8] * 6
+
+    profile = semantics_of(frame)
+
+    order_key = relationship(profile, "order_id")
+    customer_key = relationship(profile, "customer_id")
+    store_key = relationship(profile, "store_id")
+
+    assert order_key.relationship_type == "PRIMARY_KEY_CANDIDATE"
+    assert order_key.referenced_entity == "ORDER"
+    assert customer_key.relationship_type == "FOREIGN_KEY_CANDIDATE"
+    assert customer_key.referenced_entity == "CUSTOMER"
+    assert store_key.referenced_entity == "STORE"
+    assert store_key.confidence < customer_key.confidence
+    assert {r.column for r in profile.relationships} == {
+        "order_id", "customer_id", "store_id",
+    }
+
+
+def test_small_unique_sample_is_not_a_primary_key():
+    profile = profile_semantics(discover_dataset("data/sales.csv").schema)
+
+    customer_key = relationship(profile, "customer_id")
+
+    assert customer_key.relationship_type == "FOREIGN_KEY_CANDIDATE"
+    assert "petit échantillon" in customer_key.evidence[-1]
+
+
+def test_sales_domain_detected():
+    profile = semantics_of(orders_frame())
+
+    assert profile.domain.name == "SALES"
+    assert 0.5 < profile.domain.confidence < 1
+    assert "mesure PRICE" in profile.domain.evidence
+    assert profile.entities == ["CUSTOMER", "ORDER", "PRODUCT"]
+
+
+def test_unknown_domain_without_monetary_measure():
+    frame = pd.DataFrame(
+        {
+            "sensor": ["A", "B"] * 6,
+            "temperature": [20.5, 21.0] * 6,
+            "quantity": [1, 2] * 6,
+        }
+    )
+
+    domain = semantics_of(frame).domain
+
+    assert domain.name == "UNKNOWN"
+    assert domain.confidence == 0.0

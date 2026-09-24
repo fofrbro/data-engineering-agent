@@ -13,14 +13,22 @@ from src.discovery.schema_profiler import (
     BOOLEAN,
     DECIMAL,
     EMPTY,
+    IDENTIFIER_MIN_ROWS,
     IDENTIFIER_TOKENS,
     ColumnProfile,
     SchemaProfile,
     name_tokens,
 )
 from src.semantic.vocabulary import (
+    AMOUNT,
     ATTRIBUTE,
+    CUSTOMER,
     DATE,
+    ORDER,
+    PRICE,
+    PRODUCT,
+    QUANTITY,
+    TRANSACTION,
     DIMENSION,
     DIMENSION_KEYWORDS,
     ENTITY_KEYWORDS,
@@ -52,6 +60,13 @@ CONFIDENCE_EMPTY = 0.3
 
 TIME_PATTERN = re.compile(r"[T ](\d{1,2}):(\d{2})(?::(\d{2}))?")
 
+PRIMARY_KEY_CANDIDATE = "PRIMARY_KEY_CANDIDATE"
+FOREIGN_KEY_CANDIDATE = "FOREIGN_KEY_CANDIDATE"
+
+SALES_DOMAIN = "SALES"
+UNKNOWN_DOMAIN = "UNKNOWN"
+SALES_ENTITIES = {CUSTOMER, PRODUCT, ORDER, TRANSACTION}
+
 
 @dataclass
 class ColumnSemantics:
@@ -67,8 +82,37 @@ class ColumnSemantics:
 
 
 @dataclass
+class Relationship:
+    """
+    Clé potentielle : PRIMARY_KEY_CANDIDATE identifie une ligne,
+    FOREIGN_KEY_CANDIDATE référence une entité externe.
+    """
+
+    column: str
+    relationship_type: str
+    referenced_entity: str | None
+    confidence: float
+    evidence: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass
+class DomainInference:
+    name: str
+    confidence: float
+    evidence: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass
 class SemanticProfile:
     columns: list[ColumnSemantics]
+    relationships: list[Relationship] = field(default_factory=list)
+    domain: DomainInference | None = None
 
     def column(self, name: str) -> ColumnSemantics:
         for semantics in self.columns:
@@ -100,8 +144,20 @@ class SemanticProfile:
     def temporal_columns(self) -> list[str]:
         return self._names(TEMPORAL)
 
+    @property
+    def entities(self) -> list[str]:
+        return sorted(
+            {
+                semantics.entity
+                for semantics in self.columns
+                if semantics.entity
+            }
+        )
+
     def to_dict(self) -> dict:
         return {
+            "domain": self.domain.to_dict() if self.domain else None,
+            "entities": self.entities,
             "identifiers": self.identifiers,
             "measures": self.measures,
             "dimensions": self.dimensions,
@@ -109,6 +165,10 @@ class SemanticProfile:
             "columns": [
                 semantics.to_dict()
                 for semantics in self.columns
+            ],
+            "relationships": [
+                relationship.to_dict()
+                for relationship in self.relationships
             ],
         }
 
@@ -369,14 +429,142 @@ def infer_column_semantics(profile: ColumnProfile) -> ColumnSemantics:
     return _infer_text(profile, entity, dimension)
 
 
+def _entity_from_name(name: str) -> str | None:
+    """
+    Déduit l'entité référencée par un identifiant d'après son nom :
+    "store_id" -> "STORE".
+    """
+
+    tokens = [
+        token
+        for token in name_tokens(name)
+        if token not in IDENTIFIER_TOKENS
+    ]
+
+    return "_".join(tokens).upper() or None
+
+
+def detect_relationships(
+    schema: SchemaProfile,
+    columns: list[ColumnSemantics],
+) -> list[Relationship]:
+    """
+    Détecte les clés primaires et étrangères candidates
+    parmi les colonnes identifiants.
+    """
+
+    profiles = {column.name: column for column in schema.columns}
+    relationships = []
+
+    for semantics in columns:
+        if semantics.semantic_role != IDENTIFIER:
+            continue
+
+        profile = profiles[semantics.column]
+        entity = semantics.entity or _entity_from_name(profile.name)
+
+        if (
+            profile.is_unique
+            and schema.row_count >= IDENTIFIER_MIN_ROWS
+        ):
+            relationships.append(
+                Relationship(
+                    column=profile.name,
+                    relationship_type=PRIMARY_KEY_CANDIDATE,
+                    referenced_entity=entity,
+                    confidence=semantics.confidence,
+                    evidence=["valeurs uniques et non nulles"],
+                )
+            )
+            continue
+
+        if "name" not in profile.identifier_reasons:
+            continue
+
+        evidence = ["nom évoquant un identifiant"]
+
+        if not profile.is_unique:
+            evidence.append("valeurs répétées entre les lignes")
+        else:
+            evidence.append(
+                "unicité non significative sur un petit échantillon"
+            )
+
+        relationships.append(
+            Relationship(
+                column=profile.name,
+                relationship_type=FOREIGN_KEY_CANDIDATE,
+                referenced_entity=entity,
+                confidence=(
+                    CONFIDENCE_DATA_ONLY
+                    if semantics.entity
+                    else CONFIDENCE_DEFAULT
+                ),
+                evidence=evidence,
+            )
+        )
+
+    return relationships
+
+
+def infer_domain(columns: list[ColumnSemantics]) -> DomainInference:
+    """
+    Déduit le métier du dataset.
+
+    Seul le domaine SALES est reconnu pour l'instant : il exige une
+    mesure monétaire (montant ou prix) et au moins un autre indice
+    (quantité ou entité commerciale).
+    """
+
+    business_roles = {
+        semantics.business_role
+        for semantics in columns
+        if semantics.semantic_role == MEASURE
+    }
+    entities = {
+        semantics.entity
+        for semantics in columns
+        if semantics.entity
+    }
+
+    monetary = business_roles & {AMOUNT, PRICE}
+    signals = [
+        f"mesure {role}"
+        for role in sorted(monetary | (business_roles & {QUANTITY}))
+    ] + [
+        f"entité {entity}"
+        for entity in sorted(entities & SALES_ENTITIES)
+    ]
+
+    if not monetary or len(signals) < 2:
+        return DomainInference(
+            name=UNKNOWN_DOMAIN,
+            confidence=0.0,
+            evidence=["aucun ensemble d'indices métier suffisant"],
+        )
+
+    return DomainInference(
+        name=SALES_DOMAIN,
+        confidence=min(
+            CONFIDENCE_CONFIRMED,
+            0.5 + 0.1 * len(signals),
+        ),
+        evidence=signals,
+    )
+
+
 def profile_semantics(schema: SchemaProfile) -> SemanticProfile:
     """
     Produit le profil sémantique d'un dataset.
     """
 
+    columns = [
+        infer_column_semantics(column)
+        for column in schema.columns
+    ]
+
     return SemanticProfile(
-        columns=[
-            infer_column_semantics(column)
-            for column in schema.columns
-        ],
+        columns=columns,
+        relationships=detect_relationships(schema, columns),
+        domain=infer_domain(columns),
     )
