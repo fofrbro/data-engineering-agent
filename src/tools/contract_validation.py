@@ -3,6 +3,8 @@ import warnings
 
 import pandas as pd
 
+from src.contract.contract_lifecycle import contract_status
+
 
 BOOLEAN_TEXT_VALUES = {"true", "false"}
 
@@ -93,6 +95,7 @@ def validate_contract(
         return {
             "dataset": None,
             "contract_version": "inferred",
+            "contract_status": None,
             "file": file_path,
             "valid": True,
             "errors_count": 0,
@@ -283,6 +286,7 @@ def validate_contract(
     return {
         "dataset": contract.get("dataset"),
         "contract_version": contract.get("version"),
+        "contract_status": contract_status(contract),
         "file": file_path,
         "valid": len(errors) == 0,
         "errors_count": len(errors),
