@@ -71,3 +71,9 @@ def read_dataset(
         ) from exc
 
     return file_info, format_info, frame
+
+
+def read_dataframe(path: str | Path) -> pd.DataFrame:
+    """Lit n'importe quel format pris en charge en DataFrame."""
+
+    return read_dataset(path)[2]

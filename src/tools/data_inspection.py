@@ -1,5 +1,7 @@
 import pandas as pd
 
+from src.discovery.readers import read_dataframe
+
 
 def inspect_csv(file_path: str) -> dict:
     """
@@ -7,7 +9,7 @@ def inspect_csv(file_path: str) -> dict:
     utiles pour le Data Engineering.
     """
 
-    df = pd.read_csv(file_path)
+    df = read_dataframe(file_path)
 
     return {
         "file": file_path,

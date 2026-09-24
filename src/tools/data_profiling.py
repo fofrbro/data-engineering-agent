@@ -1,12 +1,14 @@
 import pandas as pd
 
+from src.discovery.readers import read_dataframe
+
 
 def profile_csv(file_path: str) -> dict:
     """
     Produit un profil statistique simple d'un fichier CSV.
     """
 
-    df = pd.read_csv(file_path)
+    df = read_dataframe(file_path)
 
     numeric_columns = df.select_dtypes(
         include="number"

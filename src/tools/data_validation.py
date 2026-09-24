@@ -1,5 +1,7 @@
 import pandas as pd
 
+from src.discovery.readers import read_dataframe
+
 
 def validate_csv(file_path: str) -> dict:
     """
@@ -9,7 +11,7 @@ def validate_csv(file_path: str) -> dict:
     Toute anomalie doit être retournée dans 'issues'.
     """
 
-    df = pd.read_csv(file_path)
+    df = read_dataframe(file_path)
 
     issues = []
 

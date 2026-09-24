@@ -3,6 +3,8 @@ import warnings
 
 import pandas as pd
 
+from src.discovery.readers import read_dataframe
+
 from src.contract.contract_lifecycle import contract_status
 
 
@@ -87,7 +89,7 @@ def validate_contract(
     avec un contrat de données JSON.
     """
 
-    df = pd.read_csv(file_path)
+    df = read_dataframe(file_path)
 
     # Un contrat absent signifie que le schéma est accepté après inspection.
     # Les contrôles de qualité généraux restent exécutés séparément.
