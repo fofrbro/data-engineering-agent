@@ -31,3 +31,8 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   une copie exacte. `tests/test_fabric_observability_view.py` exécute ce SQL
   dans SQLite et vérifie qu'il donne les mêmes KPI que
   `calculate_pipeline_kpis()`, y compris sur une table vide.
+- `sql/pipeline_step_observability.sql` : vue par étape (exécutions, échecs,
+  taux de succès, durée moyenne). Une étape réussie est une étape terminée
+  sans erreur ; la durée moyenne reste NULL tant qu'aucune durée n'est
+  connue. Même vérification SQLite contre `calculate_step_kpis()`.
+  **Pas encore exécutée dans Fabric.**

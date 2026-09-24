@@ -147,3 +147,67 @@ def calculate_pipeline_kpis(
             .mean()
         ),
     }
+
+
+def _mean_or_none(values: pd.Series) -> float | None:
+    """Moyenne des valeurs connues ; None si aucune n'est connue."""
+
+    known = pd.to_numeric(values, errors="coerce").dropna()
+
+    return float(known.mean()) if len(known) else None
+
+
+def calculate_step_kpis(
+    pipeline_steps: pd.DataFrame,
+) -> dict:
+    """
+    KPI des étapes. Une étape réussie est une étape terminée
+    sans erreur (statut différent de FAILED) : une mise en
+    quarantaine ou un rejet sont des actions réussies.
+
+    La durée moyenne ignore les étapes sans horodatage (audits
+    antérieurs) et vaut None si aucune durée n'est connue.
+    """
+
+    if "duration_seconds" not in pipeline_steps.columns:
+        pipeline_steps = pipeline_steps.assign(duration_seconds=None)
+
+    total = len(pipeline_steps)
+
+    if total == 0:
+        return {
+            "total_steps": 0,
+            "failed_steps": 0,
+            "step_success_rate": 0.0,
+            "average_step_duration_seconds": None,
+            "by_step": [],
+        }
+
+    failed = pipeline_steps["status"] == "FAILED"
+
+    by_step = []
+
+    for step_name, group in pipeline_steps.groupby("step_name", sort=True):
+        group_failed = int((group["status"] == "FAILED").sum())
+
+        by_step.append(
+            {
+                "step_name": step_name,
+                "executions": len(group),
+                "failed_executions": group_failed,
+                "success_rate": (len(group) - group_failed) / len(group),
+                "average_duration_seconds": _mean_or_none(
+                    group["duration_seconds"]
+                ),
+            }
+        )
+
+    return {
+        "total_steps": total,
+        "failed_steps": int(failed.sum()),
+        "step_success_rate": float((~failed).sum() / total),
+        "average_step_duration_seconds": _mean_or_none(
+            pipeline_steps["duration_seconds"]
+        ),
+        "by_step": by_step,
+    }

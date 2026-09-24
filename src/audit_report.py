@@ -1,5 +1,6 @@
 from src.audit_analysis import (
     calculate_pipeline_kpis,
+    calculate_step_kpis,
     filter_structured_runs,
     load_audit_tables,
 )
@@ -23,12 +24,14 @@ def build_observability_report(input_path=None) -> dict:
         structured_runs
     )
 
+    structured_steps = pipeline_steps[
+        pipeline_steps["run_id"].isin(
+            structured_runs["run_id"]
+        )
+    ]
+
     step_summary = (
-        pipeline_steps[
-            pipeline_steps["run_id"].isin(
-                structured_runs["run_id"]
-            )
-        ]
+        structured_steps
         .groupby(
             ["step_name", "status"]
         )
@@ -40,4 +43,5 @@ def build_observability_report(input_path=None) -> dict:
         "kpis": kpis,
         "runs": structured_runs,
         "steps": step_summary,
+        "step_kpis": calculate_step_kpis(structured_steps),
     }

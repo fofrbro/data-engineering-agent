@@ -90,6 +90,10 @@ def test_build_observability_report(tmp_path):
 
     assert report["steps"]["count"].sum() == 4
 
+    # Étapes des runs structurés uniquement, sans horodatage ici.
+    assert report["step_kpis"]["total_steps"] == 4
+    assert report["step_kpis"]["average_step_duration_seconds"] is None
+
 
 def test_observability_report_filters_old_runs(
     tmp_path,

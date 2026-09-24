@@ -140,6 +140,26 @@ FROM pipeline_runs
 """)
 
 # %%
+# Copie exacte de fabric/sql/pipeline_step_observability.sql
+# (vérifiée par tests/test_fabric_observability_view.py).
+spark.sql("""
+CREATE OR REPLACE VIEW pipeline_step_observability AS
+SELECT
+    step_name,
+
+    COUNT(*) AS executions,
+
+    COALESCE(SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END), 0) AS failed_executions,
+
+    COALESCE(1.0 * SUM(CASE WHEN status = 'FAILED' THEN 0 ELSE 1 END) / NULLIF(COUNT(*), 0), 0.0) AS success_rate,
+
+    AVG(duration_seconds) AS average_duration_seconds
+
+FROM pipeline_steps
+GROUP BY step_name
+""")
+
+# %%
 print(f"Runs ajoutés    : {inserted_runs}")
 print(f"Étapes ajoutées : {inserted_steps}")
 print(f"Total runs      : {spark.table('pipeline_runs').count()}")
