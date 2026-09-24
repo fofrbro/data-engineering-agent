@@ -128,3 +128,35 @@ def test_decision_on_real_files_with_proposed_then_validated_contract(tmp_path):
     assert before_review["decision"] == "QUARANTINE"
     assert after_review["decision"] == "INGEST"
     assert without_contract["decision"] == "QUARANTINE"
+
+
+def test_quality_warnings_only_lead_to_ingest_with_warnings():
+    result = determine_ingestion_decision(
+        {"valid": True, "errors_count": 0, "contract_status": "VALIDATED"},
+        {"valid": True, "issues_count": 1, "warnings_count": 1},
+    )
+
+    assert result["decision"] == "INGEST"
+    assert result["policy_rule"] == "PASSED_WITH_WARNINGS"
+    assert result["quality_warnings"] == 1
+    assert "1 avertissement(s)" in result["reason"]
+
+
+def test_duplicate_file_is_ingested_with_warnings_under_validated_contract(tmp_path):
+    from src.contract.contract_generator import propose_contract_for_file
+    from src.contract.contract_lifecycle import approve_contract, save_contract
+    from src.tools.contract_validation import validate_contract
+    from src.tools.data_validation import validate_csv
+
+    contract = save_contract(
+        approve_contract(propose_contract_for_file("data/test_quarantine.csv"), "cheikhou"),
+        tmp_path / "contract.json",
+    )
+
+    result = determine_ingestion_decision(
+        validate_contract("data/test_quarantine.csv", str(contract)),
+        validate_csv("data/test_quarantine.csv", str(contract)),
+    )
+
+    assert result["decision"] == "INGEST"
+    assert result["policy_rule"] == "PASSED_WITH_WARNINGS"

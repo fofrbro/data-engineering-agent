@@ -114,15 +114,9 @@ def test_decision_is_recomputed_at_execution(tmp_path, workspace):
     assert read_audits(workspace)[-1]["steps"][-1]["name"] == "reject_file"
 
 
-def test_destructive_steps_follow_approval(tmp_path, workspace, monkeypatch):
-    import src.workflow.plan_executor as executor
-
-    # Avec la politique actuelle, validate_csv met en QUARANTINE tout
-    # fichier contenant nulls ou doublons : on simule ici un contrôle
-    # qualité conforme pour tester le chemin d'exécution Silver.
-    monkeypatch.setattr(
-        executor, "validate_csv", lambda path: {"valid": True, "issues_count": 0},
-    )
+def test_destructive_steps_follow_approval(tmp_path, workspace):
+    # Doublon exact et statut nul sur une colonne nullable :
+    # avertissements qualité, le fichier est ingéré et corrigé en Silver.
     path = tmp_path / "orders.csv"
     frame = pd.DataFrame(
         {"order_id": [1, 2, 3], "status": ["paid", None, "paid"], "amount": [10.0, 20.0, 30.0]}
@@ -137,6 +131,8 @@ def test_destructive_steps_follow_approval(tmp_path, workspace, monkeypatch):
     applied = execute(plan, workspace)
     silver_applied = pd.read_parquet(applied.outputs["silver"])
 
+    assert skipped.decision == "INGEST"
+    assert read_audits(workspace)[0]["policy_rule"] == "PASSED_WITH_WARNINGS"
     assert len(silver_skipped) == 4
     assert silver_skipped["status"].isna().sum() == 1
     assert len(silver_applied) == 3

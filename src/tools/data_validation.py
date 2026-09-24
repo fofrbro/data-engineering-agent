@@ -1,17 +1,50 @@
 import pandas as pd
 
 from src.discovery.readers import read_dataframe
+from src.tools.contract_validation import load_contract
 
 
-def validate_csv(file_path: str) -> dict:
+BLOCKING = "BLOCKING"
+WARNING = "WARNING"
+
+
+def _severity(issue: dict, contract_columns: dict) -> str:
     """
-    Vérifie les règles de qualité d'un fichier CSV.
+    Qualité graduée :
+    - doublons exacts : avertissement, corrigés en Silver ;
+    - nulls sur une colonne déclarée nullable par le contrat :
+      avertissement ;
+    - tout le reste (nulls sans contrat ou sur une colonne non
+      nullable, valeurs métier invalides) : bloquant.
+    """
+
+    if issue["rule"] == "no_duplicates":
+        return WARNING
+
+    if issue["rule"] == "no_nulls":
+        rules = contract_columns.get(issue["column"], {})
+        return WARNING if rules.get("nullable") is True else BLOCKING
+
+    return BLOCKING
+
+
+def validate_csv(file_path: str, contract_path: str | None = None) -> dict:
+    """
+    Vérifie les règles de qualité d'un fichier.
 
     L'outil ne doit jamais planter à cause d'une donnée invalide.
-    Toute anomalie doit être retournée dans 'issues'.
+    Toute anomalie doit être retournée dans 'issues', avec sa
+    sévérité ; seules les anomalies BLOCKING rendent le fichier
+    invalide. Le contrat, s'il est fourni, indique les colonnes
+    autorisées à être nulles.
     """
 
     df = read_dataframe(file_path)
+    contract_columns = (
+        load_contract(contract_path).get("columns", {})
+        if contract_path
+        else {}
+    )
 
     issues = []
 
@@ -150,10 +183,19 @@ def validate_csv(file_path: str) -> dict:
                 )
             })
 
+    for issue in issues:
+        issue["severity"] = _severity(issue, contract_columns)
+
+    blocking_count = sum(
+        1 for issue in issues if issue["severity"] == BLOCKING
+    )
+
     return {
         "file": file_path,
         "rows": len(df),
-        "valid": len(issues) == 0,
+        "valid": blocking_count == 0,
         "issues_count": len(issues),
+        "blocking_count": blocking_count,
+        "warnings_count": len(issues) - blocking_count,
         "issues": issues,
     }

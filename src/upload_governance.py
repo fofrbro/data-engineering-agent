@@ -32,7 +32,10 @@ DEFAULT_PROPOSED_CONTRACTS_DIR = Path("data/contracts/proposed")
 ASSESSMENT_TOOLS = {
     "inspect_csv": lambda args: inspect_csv(args["file_path"]),
     "profile_csv": lambda args: profile_csv(args["file_path"]),
-    "validate_csv": lambda args: validate_csv(args["file_path"]),
+    "validate_csv": lambda args: validate_csv(
+        args["file_path"],
+        args.get("contract_path"),
+    ),
     "validate_contract": lambda args: validate_contract(
         args["file_path"],
         args.get("contract_path"),

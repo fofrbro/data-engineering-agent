@@ -5,6 +5,7 @@ RULE_CONTRACT_VIOLATION = "CONTRACT_VIOLATION"
 RULE_CONTRACT_NOT_VALIDATED = "CONTRACT_NOT_VALIDATED"
 RULE_QUALITY_ISSUES = "QUALITY_ISSUES"
 RULE_ALL_CHECKS_PASSED = "ALL_CHECKS_PASSED"
+RULE_PASSED_WITH_WARNINGS = "PASSED_WITH_WARNINGS"
 
 
 def _untrusted_contract_reason(contract_status) -> str:
@@ -31,8 +32,9 @@ def determine_ingestion_decision(
     Règles, dans l'ordre :
     1. contrat violé                      -> REJECT
     2. contrat non VALIDATED (ou absent)  -> QUARANTINE
-    3. problèmes de qualité               -> QUARANTINE
-    4. sinon                              -> INGEST
+    3. problèmes de qualité bloquants     -> QUARANTINE
+    4. avertissements qualité seulement   -> INGEST (PASSED_WITH_WARNINGS)
+    5. sinon                              -> INGEST
 
     Un résultat de contrat sans contract_status est traité
     comme non validé : l'absence d'information ne permet
@@ -45,6 +47,7 @@ def determine_ingestion_decision(
     contract_errors = contract_result["errors_count"]
     quality_issues = quality_result["issues_count"]
     contract_status = contract_result.get("contract_status")
+    quality_warnings = quality_result.get("warnings_count", 0)
 
     def decide(decision: str, rule: str, reason: str) -> dict:
         return {
@@ -53,7 +56,8 @@ def determine_ingestion_decision(
             "reason": reason,
             "contract_status": contract_status,
             "contract_errors": contract_errors,
-            "quality_issues": quality_issues
+            "quality_issues": quality_issues,
+            "quality_warnings": quality_warnings,
         }
 
     # ---------------------------------------------
@@ -91,6 +95,17 @@ def determine_ingestion_decision(
     # ---------------------------------------------
     # INGEST
     # ---------------------------------------------
+
+    if quality_warnings:
+        return decide(
+            "INGEST",
+            RULE_PASSED_WITH_WARNINGS,
+            (
+                "Le fichier respecte le Data Contract ; "
+                f"{quality_warnings} avertissement(s) qualité "
+                "non bloquant(s), à corriger en Silver."
+            ),
+        )
 
     return decide(
         "INGEST",

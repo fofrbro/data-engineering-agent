@@ -101,7 +101,7 @@ def _preview_decision(file_path: str, contract_path: str) -> dict:
 
     return determine_ingestion_decision(
         validate_contract(file_path, contract_path),
-        validate_csv(file_path),
+        validate_csv(file_path, contract_path),
     )
 
 

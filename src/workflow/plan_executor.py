@@ -239,7 +239,10 @@ def execute_plan(
     verification: dict = {}
 
     try:
-        quality = run.step("validate_csv", lambda: validate_csv(plan.file_path))
+        quality = run.step(
+            "validate_csv",
+            lambda: validate_csv(plan.file_path, plan.contract_path),
+        )
         contract = run.step(
             "validate_contract",
             lambda: validate_contract(plan.file_path, plan.contract_path),

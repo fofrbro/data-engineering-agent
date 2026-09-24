@@ -125,6 +125,7 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
                 "validate_csv",
                 {
                     "file_path": plan.file_path,
+                    "contract_path": plan.contract_path,
                 },
             )
 

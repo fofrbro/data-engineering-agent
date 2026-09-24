@@ -70,7 +70,9 @@ tools = [
         "description": (
             "Valide la qualité d'un fichier CSV en vérifiant "
             "les valeurs nulles, les doublons, les quantités invalides, "
-            "les prix négatifs et les produits vides."
+            "les prix négatifs et les produits vides. "
+            "Le contrat, s'il est fourni, indique les colonnes "
+            "autorisées à être nulles."
         ),
         "parameters": {
             "type": "object",
@@ -78,6 +80,10 @@ tools = [
                 "file_path": {
                     "type": "string",
                     "description": "Chemin du fichier CSV."
+                },
+                "contract_path": {
+                    "type": "string",
+                    "description": "Chemin du contrat JSON."
                 }
             },
             "required": ["file_path"],
@@ -339,7 +345,10 @@ def execute_tool(name, arguments):
         return profile_csv(arguments["file_path"])
 
     if name == "validate_csv":
-        return validate_csv(arguments["file_path"])
+        return validate_csv(
+            arguments["file_path"],
+            arguments.get("contract_path")
+        )
         
     if name == "validate_contract":
         return validate_contract(
