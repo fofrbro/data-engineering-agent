@@ -95,5 +95,4 @@ def test_kpi_values_match_executed_gold_tables():
 def test_divide_by_zero_is_blank():
     formula = parse_formula("SUM(amount) / COUNT(*)")
 
-
     assert evaluate(formula, pd.DataFrame({"amount": []})) is None

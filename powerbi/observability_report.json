@@ -1,0 +1,216 @@
+{
+  "report": "Data Engineering Agent",
+  "pages": [
+    {
+      "name": "agent_observability",
+      "title": "AGENT OBSERVABILITY",
+      "visuals": [
+        {
+          "visual_type": "card",
+          "title": "Total Runs",
+          "fields": {
+            "values": [
+              "[Total Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Successful Runs",
+          "fields": {
+            "values": [
+              "[Successful Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Assess Only Runs",
+          "fields": {
+            "values": [
+              "[Assess Only Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Ingest Runs",
+          "fields": {
+            "values": [
+              "[Ingest Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Quarantine Runs",
+          "fields": {
+            "values": [
+              "[Quarantine Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Reject Runs",
+          "fields": {
+            "values": [
+              "[Reject Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Success Rate",
+          "fields": {
+            "values": [
+              "[Success Rate]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Average Duration (s)",
+          "fields": {
+            "values": [
+              "[Average Duration (s)]"
+            ]
+          }
+        },
+        {
+          "visual_type": "donutChart",
+          "title": "Decisions",
+          "fields": {
+            "legend": "pipeline_runs[decision]",
+            "values": [
+              "[Total Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "clusteredColumnChart",
+          "title": "Execution Mode",
+          "fields": {
+            "axis": "pipeline_runs[execution_mode]",
+            "values": [
+              "[Total Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "lineChart",
+          "title": "Runs over time",
+          "fields": {
+            "axis": "pipeline_runs[started_at]",
+            "date_granularity": "day",
+            "values": [
+              "[Total Runs]"
+            ]
+          }
+        }
+      ],
+      "slicers": [
+        {
+          "field": "pipeline_runs[source_file]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[decision]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[execution_mode]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[final_status]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[started_at]",
+          "slicer": "between"
+        }
+      ]
+    },
+    {
+      "name": "pipeline_steps",
+      "title": "PIPELINE STEPS",
+      "visuals": [
+        {
+          "visual_type": "clusteredBarChart",
+          "title": "Executions by step",
+          "fields": {
+            "axis": "pipeline_steps[step_name]",
+            "values": [
+              "[Step Executions]"
+            ]
+          }
+        },
+        {
+          "visual_type": "stackedBarChart",
+          "title": "Step status",
+          "fields": {
+            "axis": "pipeline_steps[step_name]",
+            "legend": "pipeline_steps[status]",
+            "values": [
+              "[Step Executions]"
+            ]
+          }
+        },
+        {
+          "visual_type": "pivotTable",
+          "title": "Step x status",
+          "fields": {
+            "rows": "pipeline_steps[step_name]",
+            "columns": "pipeline_steps[status]",
+            "values": [
+              "[Step Executions]"
+            ]
+          }
+        },
+        {
+          "visual_type": "clusteredBarChart",
+          "title": "Average duration by step",
+          "fields": {
+            "axis": "pipeline_steps[step_name]",
+            "values": [
+              "[Average Step Duration (s)]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Step Success Rate",
+          "fields": {
+            "values": [
+              "[Step Success Rate]"
+            ]
+          }
+        }
+      ],
+      "slicers": [
+        {
+          "field": "pipeline_runs[source_file]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[decision]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[execution_mode]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[final_status]",
+          "slicer": "dropdown"
+        },
+        {
+          "field": "pipeline_runs[started_at]",
+          "slicer": "between"
+        }
+      ]
+    }
+  ],
+  "dataset_measures": []
+}

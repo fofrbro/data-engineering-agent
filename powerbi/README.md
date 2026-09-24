@@ -31,3 +31,20 @@ mesure, ou Tabular Editor). Le fichier est régénéré par :
 sémantique DAX et la compare aux KPI Python (`calculate_pipeline_kpis`,
 `calculate_step_kpis`). Seule différence connue : sur une table vide,
 `AVERAGE` renvoie BLANK en DAX et 0.0 en Python.
+
+## Rapport
+
+`observability_report.json` décrit les pages 1 et 2 : pour chaque visuel,
+son type Power BI, ses champs et ses mesures, plus les segments (fichier,
+décision, mode, statut, date). C'est une référence de construction, pas un
+fichier importable dans Power BI. Il est régénéré par
+`src.powerbi.report_spec.build_report_spec()` et un test le garde à jour.
+
+- **AGENT OBSERVABILITY** : cartes Total Runs, Successful Runs, Assess Only,
+  Ingest, Quarantine, Reject, Success Rate, Average Duration ; Decisions
+  (anneau), Execution Mode (colonnes), Runs over time (courbe par jour).
+- **PIPELINE STEPS** : exécutions par étape, statut par étape (barres
+  empilées), matrice étape × statut, durée moyenne par étape, taux de succès.
+- **DATASET** : produite par `build_report_spec(plan, kpis, table)` à partir
+  d'un `DashboardPlan` **APPROVED** uniquement, avec les mesures DAX des KPI
+  (`src/powerbi/kpi_dax.py`). Un plan non approuvé est refusé.
