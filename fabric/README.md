@@ -24,8 +24,8 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   (`tests/test_fabric_incremental_load.py`).
   Exécuté dans Fabric le 2026-09-24 : crée les tables Delta
   `pipeline_runs` et `pipeline_steps` et la vue `pipeline_observability`
-  (type VIEW confirmé). **Non encore confirmé dans Fabric : une seconde
-  exécution n'ajoute aucun run (idempotence).**
+  (type VIEW confirmé). Seconde exécution : aucun `run_id` en double dans
+  `pipeline_runs` (idempotence confirmée dans Fabric).
 - `sql/pipeline_observability.sql` : vue d'observabilité (volumes, décisions,
   succès, échecs, taux, durée moyenne). Le notebook incrémental en embarque
   une copie exacte. `tests/test_fabric_observability_view.py` exécute ce SQL
