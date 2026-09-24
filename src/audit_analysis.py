@@ -85,6 +85,8 @@ def calculate_pipeline_kpis(
             "ingest_runs": 0,
             "quarantine_runs": 0,
             "reject_runs": 0,
+            "successful_runs": 0,
+            "failed_runs": 0,
             "success_rate": 0.0,
             "quarantine_rate": 0.0,
             "reject_rate": 0.0,
@@ -116,12 +118,19 @@ def calculate_pipeline_kpis(
         == "SUCCESS"
     ).sum()
 
+    failed_count = (
+        pipeline_runs["final_status"]
+        == "FAILED"
+    ).sum()
+
     return {
         "total_runs": total_runs,
         "assess_only_runs": int(assess_only_count),
         "ingest_runs": int(ingest_count),
         "quarantine_runs": int(quarantine_count),
         "reject_runs": int(reject_count),
+        "successful_runs": int(success_count),
+        "failed_runs": int(failed_count),
         "success_rate": success_count / total_runs,
         "quarantine_rate": (
             quarantine_count / total_runs

@@ -168,6 +168,8 @@ def test_calculate_pipeline_kpis():
     assert kpis["ingest_runs"] == 2
     assert kpis["quarantine_runs"] == 1
     assert kpis["reject_runs"] == 1
+    assert kpis["successful_runs"] == 2
+    assert kpis["failed_runs"] == 0
 
 
 def test_calculate_pipeline_kpis_empty():
@@ -190,6 +192,8 @@ def test_calculate_pipeline_kpis_empty():
     "ingest_runs": 0,
     "quarantine_runs": 0,
     "reject_runs": 0,
+    "successful_runs": 0,
+    "failed_runs": 0,
     "success_rate": 0.0,
     "quarantine_rate": 0.0,
     "reject_rate": 0.0,

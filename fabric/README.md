@@ -23,3 +23,8 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   testée localement via `src/fabric/incremental_load.py`
   (`tests/test_fabric_incremental_load.py`). **Pas encore exécuté dans
   Fabric.**
+- `sql/pipeline_observability.sql` : vue d'observabilité (volumes, décisions,
+  succès, échecs, taux, durée moyenne). Le notebook incrémental en embarque
+  une copie exacte. `tests/test_fabric_observability_view.py` exécute ce SQL
+  dans SQLite et vérifie qu'il donne les mêmes KPI que
+  `calculate_pipeline_kpis()`, y compris sur une table vide.
