@@ -1029,6 +1029,7 @@
                     <h3>Exécution ${escapeHtml(result.run_id)}</h3>
                     <span class="status ${result.final_status === 'SUCCESS' ? 'completed' : 'error'}">${escapeHtml(result.final_status)}</span>
                     ${checks ? `<p style="margin-top: 12px;"><strong>Vérifications :</strong></p><ul style="list-style: none;">${checks}</ul>` : ''}
+                    ${result.fabric_export ? `<p style="margin-top: 12px;">Tables Gold prêtes pour Fabric : <code>${escapeHtml(result.fabric_export)}</code> (à déposer dans Files/gold/, puis notebook load_gold_tables).</p>` : ''}
                     <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>
                     <pre>${escapeHtml(result.explanation)}</pre>
                 </div>

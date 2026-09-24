@@ -9,6 +9,7 @@ Chaque validation exige un relecteur explicite.
 from pathlib import Path
 
 from src.audit_store import DEFAULT_AUDIT_PATH
+from src.fabric.gold_export import export_gold_for_fabric
 from src.recommendation.dashboard_review import (
     APPROVE,
     MODIFY,
@@ -37,10 +38,12 @@ class WorkflowService:
         contracts_dir: str | Path = DEFAULT_CONTRACTS_DIR,
         output_root: str | Path = "data",
         audit_path: str | Path = DEFAULT_AUDIT_PATH,
+        fabric_export_root: str | Path = "data/fabric_export",
     ):
         self.contracts_dir = contracts_dir
         self.output_root = output_root
         self.audit_path = audit_path
+        self.fabric_export_root = fabric_export_root
         self._plans: dict[str, AgentPlan] = {}
 
     def get(self, plan_id: str) -> AgentPlan:
@@ -114,10 +117,18 @@ class WorkflowService:
         return self.view(plan_id)
 
     def execute(self, plan_id: str) -> dict:
+        plan = self.get(plan_id)
         result = execute_plan(
-            self.get(plan_id),
+            plan,
             output_root=self.output_root,
             audit_path=self.audit_path,
+        )
+
+        # Seule une exécution vérifiée est préparée pour Fabric.
+        fabric_export = (
+            export_gold_for_fabric(plan, result, self.fabric_export_root).as_posix()
+            if result.final_status == "SUCCESS"
+            else None
         )
 
         return {
@@ -128,4 +139,5 @@ class WorkflowService:
             "outputs": result.outputs,
             "verification": result.verification,
             "explanation": result.explanation,
+            "fabric_export": fabric_export,
         }

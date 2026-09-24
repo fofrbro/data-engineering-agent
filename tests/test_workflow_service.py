@@ -13,6 +13,7 @@ def service(tmp_path):
         contracts_dir=tmp_path / "contracts",
         output_root=tmp_path / "lake",
         audit_path=tmp_path / "runs.jsonl",
+        fabric_export_root=tmp_path / "fabric_export",
     )
 
 
@@ -33,6 +34,7 @@ def test_full_workflow_through_the_service(service):
 
     assert result["final_status"] == "SUCCESS"
     assert result["decision"] == "INGEST"
+    assert result["fabric_export"].endswith("fabric_export/gold/sales")
     assert service.view(plan_id)["status"] == "EXECUTED"
     assert [entry["action"] for entry in service.view(plan_id)["history"]] == [
         "APPROVE_CONTRACT", "APPROVE_DASHBOARD",
