@@ -83,6 +83,7 @@ class DashboardPlan:
     detail_tables: list[Chart]
     dataset: str
     status: str = PROPOSED
+    review_history: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -95,7 +96,23 @@ class DashboardPlan:
             "charts": [chart.to_dict() for chart in self.charts],
             "filters": self.filters,
             "detail_tables": [table.to_dict() for table in self.detail_tables],
+            "review_history": self.review_history,
         }
+
+    @classmethod
+    def from_dict(cls, payload: dict) -> "DashboardPlan":
+        return cls(
+            title=payload["title"],
+            description=payload["description"],
+            audience=payload["audience"],
+            kpis=list(payload["kpis"]),
+            charts=[Chart(**chart) for chart in payload["charts"]],
+            filters=list(payload["filters"]),
+            detail_tables=[Chart(**table) for table in payload["detail_tables"]],
+            dataset=payload["dataset"],
+            status=payload.get("status", PROPOSED),
+            review_history=list(payload.get("review_history", [])),
+        )
 
 
 class _Columns:
