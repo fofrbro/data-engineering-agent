@@ -1,6 +1,10 @@
 import json
+import warnings
 
 import pandas as pd
+
+
+BOOLEAN_TEXT_VALUES = {"true", "false"}
 
 
 def load_contract(contract_path: str) -> dict:
@@ -8,6 +12,68 @@ def load_contract(contract_path: str) -> dict:
 
     with open(contract_path, "r", encoding="utf-8") as file:
         return json.load(file)
+
+
+def _is_datetime_compatible(series: pd.Series) -> bool:
+    if pd.api.types.is_datetime64_any_dtype(series):
+        return True
+
+    if not (
+        pd.api.types.is_string_dtype(series)
+        or series.dtype == object
+    ):
+        return False
+
+    values = series.dropna().astype(str)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        parsed = pd.to_datetime(
+            values,
+            errors="coerce",
+            format="mixed",
+        )
+
+    return bool(parsed.notna().all())
+
+
+def _is_boolean_compatible(series: pd.Series) -> bool:
+    if pd.api.types.is_bool_dtype(series):
+        return True
+
+    values = series.dropna().astype(str).str.lower()
+
+    return bool(values.isin(BOOLEAN_TEXT_VALUES).all())
+
+
+def is_type_compatible(series: pd.Series, expected_type: str) -> bool:
+    """
+    Vérifie qu'une colonne est compatible avec le type du contrat.
+    Un type inconnu n'est jamais compatible.
+    """
+
+    if expected_type == "integer":
+        return pd.api.types.is_integer_dtype(series)
+
+    if expected_type == "decimal":
+        return (
+            pd.api.types.is_integer_dtype(series)
+            or pd.api.types.is_float_dtype(series)
+        )
+
+    if expected_type == "string":
+        return (
+            pd.api.types.is_string_dtype(series)
+            or series.dtype == object
+        )
+
+    if expected_type == "boolean":
+        return _is_boolean_compatible(series)
+
+    if expected_type == "datetime":
+        return _is_datetime_compatible(series)
+
+    return False
 
 
 def validate_contract(
@@ -88,24 +154,7 @@ def validate_contract(
         expected_type = rules["type"]
         actual_type = str(df[column].dtype)
 
-        compatible = False
-
-        if expected_type == "integer":
-            compatible = pd.api.types.is_integer_dtype(df[column])
-
-        elif expected_type == "decimal":
-            compatible = (
-                pd.api.types.is_integer_dtype(df[column])
-                or pd.api.types.is_float_dtype(df[column])
-            )
-
-        elif expected_type == "string":
-            compatible = (
-                pd.api.types.is_string_dtype(df[column])
-                or df[column].dtype == object
-            )
-
-        if not compatible:
+        if not is_type_compatible(df[column], expected_type):
             errors.append({
                 "type": "invalid_type",
                 "column": column,
@@ -142,7 +191,7 @@ def validate_contract(
                 })
 
     # --------------------------------------------------
-    # 5. Vérification des valeurs minimales
+    # 5. Vérification des valeurs minimales et maximales
     # --------------------------------------------------
 
     for column, rules in expected_columns.items():
@@ -150,26 +199,17 @@ def validate_contract(
         if column not in df.columns:
             continue
 
-        if "min" not in rules:
-            continue
-
         # Si le type de la colonne est déjà invalide,
         # on ne tente pas de comparaison numérique.
         expected_type = rules["type"]
 
-        if expected_type in ("integer", "decimal"):
+        if expected_type not in ("integer", "decimal"):
+            continue
 
-            if expected_type == "integer":
-                compatible = pd.api.types.is_integer_dtype(df[column])
+        if not is_type_compatible(df[column], expected_type):
+            continue
 
-            else:
-                compatible = (
-                    pd.api.types.is_integer_dtype(df[column])
-                    or pd.api.types.is_float_dtype(df[column])
-                )
-
-            if not compatible:
-                continue
+        if "min" in rules:
 
             minimum = rules["min"]
 
@@ -188,6 +228,53 @@ def validate_contract(
                         f"sont inférieures à {minimum}."
                     )
                 })
+
+        if "max" in rules:
+
+            maximum = rules["max"]
+
+            invalid_count = int(
+                (df[column] > maximum).sum()
+            )
+
+            if invalid_count > 0:
+                errors.append({
+                    "type": "max_value",
+                    "column": column,
+                    "expected_max": maximum,
+                    "count": invalid_count,
+                    "message": (
+                        f"{invalid_count} valeur(s) de '{column}' "
+                        f"sont supérieures à {maximum}."
+                    )
+                })
+
+    # --------------------------------------------------
+    # 6. Vérification de l'unicité
+    # --------------------------------------------------
+
+    for column, rules in expected_columns.items():
+
+        if column not in df.columns:
+            continue
+
+        if rules.get("unique") is not True:
+            continue
+
+        duplicate_count = int(
+            df[column].dropna().duplicated().sum()
+        )
+
+        if duplicate_count > 0:
+            errors.append({
+                "type": "duplicate_values",
+                "column": column,
+                "count": duplicate_count,
+                "message": (
+                    f"{duplicate_count} valeur(s) dupliquée(s) "
+                    f"dans '{column}', déclarée unique."
+                )
+            })
 
     # --------------------------------------------------
     # Résultat final

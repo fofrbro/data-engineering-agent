@@ -71,3 +71,81 @@ def test_missing_column_contract(tmp_path):
 
     assert len(missing_columns) >= 1
     assert missing_columns[0]["column"] == "price"
+
+
+def write_json(path, payload):
+    import json
+
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return str(path)
+
+
+def error_types(result):
+    return sorted(error["type"] for error in result["errors"])
+
+
+def test_datetime_and_boolean_types(tmp_path):
+    contract = write_json(
+        tmp_path / "contract.json",
+        {
+            "dataset": "events",
+            "version": "1.0",
+            "columns": {
+                "created_at": {"type": "datetime", "nullable": False},
+                "active": {"type": "boolean", "nullable": False},
+            },
+        },
+    )
+    valid_csv = tmp_path / "valid.csv"
+    valid_csv.write_text(
+        "created_at,active\n2026-01-01,True\n2026-01-02 10:00,false\n",
+        encoding="utf-8",
+    )
+    invalid_csv = tmp_path / "invalid.csv"
+    invalid_csv.write_text(
+        "created_at,active\nhier,oui\n",
+        encoding="utf-8",
+    )
+
+    assert validate_contract(str(valid_csv), contract)["valid"] is True
+    assert error_types(
+        validate_contract(str(invalid_csv), contract)
+    ) == ["invalid_type", "invalid_type"]
+
+
+def test_max_and_unique_rules(tmp_path):
+    contract = write_json(
+        tmp_path / "contract.json",
+        {
+            "dataset": "orders",
+            "version": "1.0",
+            "columns": {
+                "order_id": {"type": "integer", "nullable": False, "unique": True},
+                "discount_rate": {"type": "decimal", "nullable": False, "min": 0, "max": 1},
+            },
+        },
+    )
+    csv_file = tmp_path / "orders.csv"
+    csv_file.write_text(
+        "order_id,discount_rate\n1,0.1\n1,1.5\n2,-0.2\n",
+        encoding="utf-8",
+    )
+
+    result = validate_contract(str(csv_file), contract)
+
+    assert error_types(result) == [
+        "duplicate_values", "max_value", "min_value",
+    ]
+
+
+def test_unknown_type_is_still_rejected(tmp_path):
+    contract = write_json(
+        tmp_path / "contract.json",
+        {"dataset": "x", "version": "1.0", "columns": {"a": {"type": "geometry"}}},
+    )
+    csv_file = tmp_path / "x.csv"
+    csv_file.write_text("a\n1\n", encoding="utf-8")
+
+    assert error_types(validate_contract(str(csv_file), contract)) == [
+        "invalid_type",
+    ]
