@@ -39,6 +39,10 @@ from src.contract.contract_lifecycle import (
     reject_contract_file,
 )
 from src.upload_governance import assess_uploads
+from src.recommendation.dashboard_review import DashboardReviewError
+from src.workflow.agent_workflow import WorkflowError
+from src.workflow.workflow_service import WorkflowService
+from src.contract.contract_generator import dataset_name_from_path
 from src.tools.fabric_connector import (
     configure_fabric_session,
     publish_to_fabric as publish_dataset_to_fabric,
@@ -122,6 +126,25 @@ class ContractReviewRequest(BaseModel):
     contract_path: str
     reviewer: str
     comment: Optional[str] = None
+
+
+class WorkflowPlanRequest(BaseModel):
+    """Création d'un plan agent pour un fichier uploadé."""
+    file_id: str
+    contract_path: Optional[str] = None
+    dataset_name: Optional[str] = None
+
+
+class WorkflowReviewRequest(BaseModel):
+    """Validation d'un élément du plan par un relecteur."""
+    reviewer: str
+    comment: Optional[str] = None
+
+
+class DashboardReviewRequest(WorkflowReviewRequest):
+    """Revue du tableau de bord : APPROVE, MODIFY ou REJECT."""
+    action: str
+    changes: Dict[str, Any] = Field(default_factory=dict)
 
 
 class PipelineRequest(BaseModel):
@@ -624,6 +647,85 @@ def run_pipeline_async(
             "completed_at": datetime.now().isoformat()
         }
         session["status"] = "error"
+
+
+# ============================================
+# Workflow agent : PLAN -> VALIDATE -> EXECUTE
+# ============================================
+
+workflow_service = WorkflowService()
+
+
+def _workflow_call(action):
+    """Traduit les erreurs du workflow en réponses HTTP."""
+    try:
+        return action()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc).strip("'"))
+    except (WorkflowError, DashboardReviewError, ContractStatusError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/api/workflow/plan")
+async def create_workflow_plan(request: WorkflowPlanRequest):
+    """PLAN : analyse le fichier et propose contrat, pipeline, KPI et TBO."""
+    if request.file_id not in sessions:
+        raise HTTPException(status_code=404, detail="Fichier non trouvé")
+
+    files = sessions[request.file_id]["files"]
+    if len(files) != 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Le workflow agent traite un fichier à la fois.",
+        )
+
+    # Le fichier stocké est préfixé par son identifiant d'upload :
+    # le dataset est nommé d'après le nom d'origine.
+    dataset = request.dataset_name or dataset_name_from_path(files[0]["file_name"])
+
+    return _workflow_call(
+        lambda: workflow_service.create_plan(
+            files[0]["file_path"],
+            request.contract_path,
+            dataset,
+        )
+    )
+
+
+@app.get("/api/workflow/{plan_id}")
+async def get_workflow_plan(plan_id: str):
+    return _workflow_call(lambda: workflow_service.view(plan_id))
+
+
+@app.post("/api/workflow/{plan_id}/approve-contract")
+async def approve_workflow_contract(plan_id: str, review: WorkflowReviewRequest):
+    return _workflow_call(
+        lambda: workflow_service.approve_contract(plan_id, review.reviewer, review.comment)
+    )
+
+
+@app.post("/api/workflow/{plan_id}/approve-transformations")
+async def approve_workflow_transformations(plan_id: str, review: WorkflowReviewRequest):
+    return _workflow_call(
+        lambda: workflow_service.approve_transformations(
+            plan_id, review.reviewer, review.comment,
+        )
+    )
+
+
+@app.post("/api/workflow/{plan_id}/dashboard")
+async def review_workflow_dashboard(plan_id: str, review: DashboardReviewRequest):
+    return _workflow_call(
+        lambda: workflow_service.review_dashboard(
+            plan_id, review.action, review.reviewer, review.comment, review.changes,
+        )
+    )
+
+
+@app.post("/api/workflow/{plan_id}/execute")
+async def execute_workflow_plan(plan_id: str):
+    """EXECUTE -> VERIFY -> AUDIT ; refusé tant que le contrat n'est pas validé."""
+    return _workflow_call(lambda: workflow_service.execute(plan_id))
 
 
 # ============================================
