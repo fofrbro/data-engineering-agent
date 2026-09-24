@@ -1,0 +1,50 @@
+// Mesures générées par src/powerbi/measures.py - ne pas modifier à la main.
+// Relation attendue : pipeline_steps[run_id] (*) -> pipeline_runs[run_id] (1).
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Total Runs] = COUNTROWS(pipeline_runs)
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Successful Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "SUCCESS")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Failed Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "FAILED")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Assess Only Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "ASSESS_ONLY")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Ingest Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "INGEST")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Quarantine Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "QUARANTINE")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Reject Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "REJECT")
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0.0%
+[Success Rate] = DIVIDE([Successful Runs], [Total Runs], 0)
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0.0%
+[Quarantine Rate] = DIVIDE([Quarantine Runs], [Total Runs], 0)
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0.0%
+[Reject Rate] = DIVIDE([Reject Runs], [Total Runs], 0)
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0.00
+[Average Duration (s)] = AVERAGE(pipeline_runs[duration_seconds])
+
+// Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0
+[Step Executions] = COUNTROWS(pipeline_steps)
+
+// Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0
+[Failed Steps] = CALCULATE(COUNTROWS(pipeline_steps), pipeline_steps[status] = "FAILED")
+
+// Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0
+[Succeeded Steps] = CALCULATE(COUNTROWS(pipeline_steps), pipeline_steps[status] <> "FAILED")
+
+// Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0.0%
+[Step Success Rate] = DIVIDE([Succeeded Steps], [Step Executions], 0)
+
+// Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0.00
+[Average Step Duration (s)] = AVERAGE(pipeline_steps[duration_seconds])
