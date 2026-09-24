@@ -1,23 +1,36 @@
 from src.tools.contract_validation import validate_contract
 
 
-CONTRACT = "data/contracts/sales_contract.json"
+def write_sales_contract(tmp_path):
+    contract = tmp_path / "sales_test_contract.json"
+    contract.write_text(
+        '{"dataset": "sales", "version": "1.0", "columns": {'
+        '"customer_id": {"type": "integer", "nullable": false}, '
+        '"product": {"type": "string", "nullable": false}, '
+        '"quantity": {"type": "integer", "nullable": false, "min": 1}, '
+        '"price": {"type": "decimal", "nullable": false, "min": 0}'
+        '}}',
+        encoding="utf-8",
+    )
+    return str(contract)
 
 
-def test_valid_contract():
+def test_valid_contract(tmp_path):
+    contract = write_sales_contract(tmp_path)
     result = validate_contract(
         "data/sales.csv",
-        CONTRACT,
+        contract,
     )
 
     assert result["valid"] is True
     assert result["errors_count"] == 0
 
 
-def test_invalid_type_contract():
+def test_invalid_type_contract(tmp_path):
+    contract = write_sales_contract(tmp_path)
     result = validate_contract(
         "data/test_contract.csv",
-        CONTRACT,
+        contract,
     )
 
     assert result["valid"] is False
@@ -34,6 +47,7 @@ def test_invalid_type_contract():
 
 
 def test_missing_column_contract(tmp_path):
+    contract = write_sales_contract(tmp_path)
     csv_file = tmp_path / "missing_column.csv"
 
     csv_file.write_text(
@@ -44,7 +58,7 @@ def test_missing_column_contract(tmp_path):
 
     result = validate_contract(
         str(csv_file),
-        CONTRACT,
+        contract,
     )
 
     assert result["valid"] is False

@@ -9,8 +9,18 @@ from src.tools.data_profiling import profile_csv
 from src.tools.ingestion_decision import determine_ingestion_decision
 from src.tools.gold_transformation import build_sales_gold
 from src.tools.silver_transformation import transform_to_silver
+from src.tools.fabric_connector import publish_to_fabric
+from src.tools.data_analyst import analyze_gold_data
 from src.pipeline_planner import generate_pipeline_plan
 from src.pipeline_orchestrator import execute_pipeline
+
+
+class FabricAuthenticationRequired(RuntimeError):
+    """Signal envoyé à l’API quand la publication nécessite une connexion."""
+
+    def __init__(self, details: dict):
+        self.details = details
+        super().__init__(details.get("message", "Authentification Fabric requise"))
 
 
 tools = [
@@ -77,7 +87,8 @@ tools = [
         "type": "function",
         "name": "validate_contract",
         "description": (
-            "Compare un fichier CSV avec un contrat de données JSON. "
+            "Compare un fichier CSV avec un contrat de données JSON si fourni. "
+            "Si aucun contrat n'est fourni, infère le schéma du fichier. "
             "Vérifie les colonnes manquantes ou supplémentaires, "
             "les types, les valeurs nulles et les contraintes minimales."
         ),
@@ -93,7 +104,7 @@ tools = [
                     "description": "Chemin du contrat JSON."
                 }
             },
-            "required": ["file_path", "contract_path"],
+            "required": ["file_path"],
             "additionalProperties": False,
         },
     },
@@ -231,33 +242,90 @@ tools = [
         }
     },
     {
-    "type": "function",
-    "name": "build_sales_gold",
-    "description": (
-        "Construit la couche Gold des ventes à partir "
-        "de la couche Silver. Agrège les ventes par produit "
-        "et calcule les quantités, ventes totales, prix moyen "
-        "et nombre de lignes."
-    ),
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "silver_file_path": {
-                "type": "string",
-                "description": "Chemin du fichier Silver."
+        "type": "function",
+        "name": "build_sales_gold",
+        "description": (
+            "Construit la couche Gold des ventes à partir "
+            "de la couche Silver. Agrège les ventes par produit "
+            "et calcule les quantités, ventes totales, prix moyen "
+            "et nombre de lignes."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "silver_file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Silver."
+                },
+                "output_file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Gold."
+                }
             },
-            "output_file_path": {
-                "type": "string",
-                "description": "Chemin du fichier Gold."
-            }
-        },
-        "required": [
-            "silver_file_path",
-            "output_file_path"
-        ],
-        "additionalProperties": False
-    }
-},
+            "required": [
+                "silver_file_path",
+                "output_file_path"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+        "type": "function",
+        "name": "publish_to_fabric",
+        "description": (
+            "Publie les données Gold vers Microsoft Fabric. "
+            "Uploader un dataset Parquet dans Fabric pour l'analyser avec Power BI. "
+            "Appelle cet outil après build_sales_gold avec succès."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Parquet à publier."
+                },
+                "dataset_name": {
+                    "type": "string",
+                    "description": "Nom du dataset dans Fabric."
+                },
+                "table_name": {
+                    "type": "string",
+                    "description": "Nom de la table (défaut: 'data')."
+                },
+                "mode": {
+                    "type": "string",
+                    "description": "Mode de publication: 'incremental' ou 'full_refresh'."
+                }
+            },
+            "required": [
+                "file_path",
+                "dataset_name"
+            ],
+            "additionalProperties": False
+        }
+    },
+    {
+        "type": "function",
+        "name": "analyze_gold_data",
+        "description": (
+            "Analyse les données Gold comme un Data Analyst. "
+            "Génère: statistiques, qualité, distributions, corrélations, "
+            "anomalies, segments, insights et recommandations. "
+            "Appelle cet outil après avoir publié dans Fabric pour proposer "
+            "des analyses intelligentes à l'utilisateur."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Chemin du fichier Parquet Gold à analyser."
+                }
+            },
+            "required": ["file_path"],
+            "additionalProperties": False
+        }
+    },
 ]
 
 
@@ -275,7 +343,7 @@ def execute_tool(name, arguments):
     if name == "validate_contract":
         return validate_contract(
             arguments["file_path"],
-            arguments["contract_path"]
+            arguments.get("contract_path")
         )
 
     if name == "determine_ingestion_decision":
@@ -310,9 +378,22 @@ def execute_tool(name, arguments):
 
     if name == "build_sales_gold":
         return build_sales_gold(
-        arguments["silver_file_path"],
-        arguments["output_file_path"]
-    )
+            arguments["silver_file_path"],
+            arguments["output_file_path"]
+        )
+
+    if name == "publish_to_fabric":
+        return publish_to_fabric(
+            file_path=arguments["file_path"],
+            dataset_name=arguments["dataset_name"],
+            table_name=arguments.get("table_name", "data"),
+            mode=arguments.get("mode", "incremental")
+        )
+
+    if name == "analyze_gold_data":
+        return analyze_gold_data(
+            file_path=arguments["file_path"]
+        )
 
     raise ValueError(f"Outil inconnu : {name}")
 
@@ -322,17 +403,15 @@ def run_agent(user_request: str):
     response = client.responses.create(
         model="gpt-5.6",
         instructions=(
-            "Tu es un Data Engineer senior spécialisé dans "
-            "la préparation, la qualité et l'ingestion des données. "
+            "Tu es un Data Engineer et Data Analyst senior. "
+            "Tu dois : ingérer les données, les valider, les transformer, "
+            "les publier dans Microsoft Fabric, et proposer des analyses. "
 
-            "Tu disposes d'outils déterministes permettant d'inspecter, "
-            "profiler et valider les données. "
+            "Tu disposes d'outils déterministes pour : inspecter, profiler, "
+            "valider, transformer, publier (Fabric) et analyser les données. "
 
             "Utilise les résultats réels des outils comme source de vérité. "
-
-            "N'invente jamais de colonnes, de lignes, de valeurs, "
-            "de statistiques ou de résultats qui ne figurent pas "
-            "dans les résultats des outils. "
+            "N'invente jamais de données. "
 
             "Ne répète pas un outil avec exactement les mêmes arguments "
             "si son résultat est déjà disponible. "
@@ -341,94 +420,52 @@ def run_agent(user_request: str):
             "arrête l'utilisation des outils et produis immédiatement "
             "la réponse finale en français. "
 
-            "Pour une décision d'ingestion, utilise les résultats "
-            "de validate_contract et validate_csv. "
-
+            "=== INGESTION ET VALIDATION === "
+            "Pour une décision d'ingestion, utilise validate_contract et validate_csv. "
+            "Le contrat est facultatif : sans contrat, accepte le schéma inféré. "
             "La décision INGEST, QUARANTINE ou REJECT doit provenir "
-            "du résultat de determine_ingestion_decision."
+            "de determine_ingestion_decision. "
+            "Après une décision INGEST, appelle ingest_csv. "
+            "Si la décision est QUARANTINE ou REJECT, n'appelle jamais ingest_csv. "
+            "Ne modifie jamais la décision produite par determine_ingestion_decision. "
 
-            "Après determine_ingestion_decision, "
-            "si la décision est INGEST, appelle ingest_csv. "
-            
-            "Si la décision est QUARANTINE ou REJECT, "
-            "n'appelle jamais ingest_csv. "
-            
-            "Pour ingest_csv, utilise exactement le file_path "
-            "du fichier analysé et le nom du dataset fourni par "
-            "le Data Contract."
+            "=== TRANSFORMATION === "
+            "Après INGEST, transforme Bronze → Silver → Gold. "
+            "Utilise des chemins dérivés du nom du dataset. "
+            "Le parcours sales peut calculer line_amount et agréger par produit ; "
+            "pour tout autre schéma, conserve les colonnes et produis une table Gold générique. "
+            "Si ingest_csv retourne SKIPPED (fichier déjà ingéré), "
+            "continue quand même si les fichiers existent. "
+            "Ne construis jamais Silver/Gold si décision = QUARANTINE/REJECT. "
 
-            "Après determine_ingestion_decision, "
-            "exécute exactement l'action correspondant à la décision. "
-            
-            "Si la décision est INGEST, appelle ingest_csv. "
-            
-            "Si la décision est QUARANTINE, appelle quarantine_csv "
-            "et n'appelle jamais ingest_csv. "
-            
-            "Si la décision est REJECT, appelle reject_csv "
-            "et n'appelle jamais ingest_csv. "
-            
-            "Ne modifie jamais la décision produite par "
-            "determine_ingestion_decision."
+            "=== PUBLICATION FABRIC === "
+            "Après build_sales_gold avec succès, publie obligatoirement "
+            "les données dans Microsoft Fabric. "
+            "Utilise publish_to_fabric avec : "
+            "le fichier Gold produit pour le dataset courant, "
+            "avec un nom de dataset Fabric dérivé du dataset courant. "
+            "C'est obligatoire pour exposer les données à Power BI. "
 
-            "Après une décision INGEST, si ingest_csv réussit, "
-            "transforme le fichier Bronze en Silver, puis construis "
-            "la couche Gold à partir du fichier Silver. "
+            "=== ANALYSE DATA === "
+            "Après la publication Fabric, analyse obligatoirement "
+            "les données Gold. "
+            "Utilise analyze_gold_data avec le chemin Gold. "
+            "Cet outil génère : statistiques, qualité, distributions, "
+            "corrélations, anomalies, segments, insights et recommandations. "
+            "Présente-les en langage naturel clair pour l'utilisateur. "
 
-            "Utilise les chemins suivants pour le dataset sales : "
-            "Bronze = data/bronze/sales.parquet, "
-            "Silver = data/silver/sales.parquet, "
-            "Gold = data/gold/sales_by_product.parquet. "
-
-            "Ne construis jamais Silver ou Gold si la décision "
-            "d'ingestion est REJECT ou QUARANTINE. "
-
-            "Si ingest_csv retourne SKIPPED parce que le fichier "
-            "est déjà ingéré, tu peux continuer avec Silver et Gold "
-            "uniquement si les fichiers nécessaires existent."
-
-            "Après determine_ingestion_decision : "
-
-            "Si la décision est INGEST, appelle ingest_csv. "
-
-            "Après ingest_csv, même si son statut est SKIPPED parce "
-            "que le fichier est déjà ingéré, poursuis le pipeline si "
-            "le fichier Bronze existe. "
-
-            "Après INGEST ou SKIPPED, appelle "
-            "transform_to_silver avec : "
-            "bronze_file_path='data/bronze/sales.parquet' et "
-            "silver_file_path='data/silver/sales.parquet'. "
-
-            "Après la transformation Bronze vers Silver, appelle "
-            "build_sales_gold avec : "
-            "silver_file_path='data/silver/sales.parquet' et "
-            "output_file_path='data/gold/sales_by_product.parquet'. "
-
-            "Ne t'arrête pas après ingest_csv. "
-
-            "Pour une décision QUARANTINE ou REJECT, n'appelle "
-            "ni ingest_csv, ni transform_to_silver, ni "
-            "build_sales_gold."
-
-            "Pour une transformation Bronze vers Silver, utilise "
-            "l'outil transform_to_silver. "
-            "Si l'utilisateur fournit le chemin Bronze et le chemin Silver, "
-            "utilise directement ces chemins sans demander de confirmation. "
-
-            "Pour une transformation Silver vers Gold, utilise "
-            "l'outil build_sales_gold. "
-            "Si l'utilisateur fournit le chemin Silver et le chemin Gold, "
-            "utilise directement ces chemins sans demander de confirmation. "
-
-            "Ne demande pas à l'utilisateur un chemin qui est déjà présent "
-            "dans sa demande. "
+            "=== RÈGLES CRITIQUES === "
+            "1. Ne saute aucune étape du pipeline. "
+            "2. Analyse = obligatoire après Fabric. "
+            "3. Utilise exactement les chemins fournis. "
+            "4. Aucune donnée inventée. "
+            "5. Réponds toujours en français. "
         ),
         input=user_request,
         tools=tools,
     )
 
-    MAX_ITERATIONS = 8
+    MAX_ITERATIONS = 15
     executed_calls = set()
 
     for iteration in range(MAX_ITERATIONS):
@@ -480,6 +517,10 @@ def run_agent(user_request: str):
                 arguments
             )
 
+            if item.name == "publish_to_fabric" and isinstance(result, dict):
+                if result.get("status") == "AUTH_REQUIRED":
+                    raise FabricAuthenticationRequired(result)
+
             tool_outputs.append(
                 {
                     "type": "function_call_output",
@@ -496,35 +537,42 @@ def run_agent(user_request: str):
             instructions=(
                 "Les outils viennent d'être exécutés. "
                 "Utilise leurs résultats comme source de vérité. "
-
                 "N'invente aucune donnée. "
 
                 "Ne rappelle jamais un outil déjà exécuté avec "
                 "exactement les mêmes arguments. "
 
+                "=== APRÈS INGESTION === "
                 "Si determine_ingestion_decision retourne INGEST, "
                 "le pipeline doit continuer après ingest_csv. "
+                "Même si ingest_csv retourne SKIPPED (fichier déjà ingéré), "
+                "considère l'étape Bronze comme disponible et continue. "
 
-                "Même si ingest_csv retourne SKIPPED parce que le fichier "
-                "a déjà été ingéré, considère l'étape Bronze comme disponible "
-                "et continue le pipeline. "
+                "=== TRANSFORMATION OBLIGATOIRE === "
+                "Après ingest_csv, appelle obligatoirement transform_to_silver avec les chemins "
+                "Bronze et Silver dérivés du dataset courant. "
 
-                "Après ingest_csv, appelle obligatoirement "
-                "transform_to_silver avec : "
-                "bronze_file_path='data/bronze/sales.parquet' et "
-                "silver_file_path='data/silver/sales.parquet'. "
+                "Après transform_to_silver, appelle obligatoirement build_sales_gold avec les chemins "
+                "Silver et Gold dérivés du dataset courant. "
 
-                "Après transform_to_silver, appelle obligatoirement "
-                "build_sales_gold avec : "
-                "silver_file_path='data/silver/sales.parquet' et "
-                "output_file_path='data/gold/sales_by_product.parquet'. "
+                "=== PUBLICATION FABRIC OBLIGATOIRE === "
+                "Après build_sales_gold avec succès, appelle obligatoirement "
+                "publish_to_fabric avec le fichier Gold et le nom du dataset courant. "
 
+                "=== ANALYSE OBLIGATOIRE === "
+                "Après publish_to_fabric avec succès, appelle obligatoirement "
+                "analyze_gold_data avec le fichier Gold du dataset courant. "
+                "Puis synthétise les insights de cette analyse dans ta réponse finale. "
+
+                "=== CAS QUARANTINE/REJECT === "
                 "Si la décision est QUARANTINE ou REJECT, "
-                "n'appelle pas les transformations Silver ou Gold. "
+                "n'appelle pas les transformations Silver/Gold, "
+                "ni publish_to_fabric, ni analyze_gold_data. "
 
-                "Lorsque Silver et Gold ont été construits, "
-                "produis la réponse finale en français."
-    ),
+                "=== RÉPONSE FINALE === "
+                "Lorsque l'analyse est complète, produis la réponse finale "
+                "en français, incluant les insights analytiques. "
+            ),
             previous_response_id=response.id,
             input=[
                 {

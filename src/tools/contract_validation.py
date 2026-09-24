@@ -12,7 +12,7 @@ def load_contract(contract_path: str) -> dict:
 
 def validate_contract(
     file_path: str,
-    contract_path: str
+    contract_path: str | None
 ) -> dict:
     """
     Compare le schéma et certaines contraintes d'un CSV
@@ -20,6 +20,25 @@ def validate_contract(
     """
 
     df = pd.read_csv(file_path)
+
+    # Un contrat absent signifie que le schéma est accepté après inspection.
+    # Les contrôles de qualité généraux restent exécutés séparément.
+    if not contract_path:
+        return {
+            "dataset": None,
+            "contract_version": "inferred",
+            "file": file_path,
+            "valid": True,
+            "errors_count": 0,
+            "warnings_count": 0,
+            "errors": [],
+            "warnings": [],
+            "inferred_schema": {
+                column: str(dtype)
+                for column, dtype in df.dtypes.items()
+            },
+        }
+
     contract = load_contract(contract_path)
 
     errors = []

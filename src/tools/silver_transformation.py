@@ -31,9 +31,20 @@ def transform_to_silver(file_path: str, output_path: str) -> dict:
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Colonnes obligatoires absentes : {missing_columns}"
-        )
+        # Dataset générique : on conserve le schéma et on nettoie les chaînes.
+        for column in df.select_dtypes(include=["object", "string"]).columns:
+            df[column] = df[column].astype("string").str.strip()
+
+        df.to_parquet(output_path, index=False)
+
+        return {
+            "status": "TRANSFORMED",
+            "mode": "generic",
+            "source_file": file_path,
+            "output_file": output_path,
+            "rows": len(df),
+            "columns": df.columns.tolist(),
+        }
 
     # --------------------------------------------------
     # 1. Nettoyage du produit

@@ -16,3 +16,8 @@ data/gold/
 data/quarantine/
 data/rejected/
 data/audit/
+
+# Application runtime data
+uploads/
+results/
+data/archive/

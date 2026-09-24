@@ -27,9 +27,20 @@ def build_sales_gold(
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Colonnes manquantes dans Silver : {missing_columns}"
+        os.makedirs(
+            os.path.dirname(output_file_path),
+            exist_ok=True
         )
+        df.to_parquet(output_file_path, index=False)
+
+        return {
+            "status": "TRANSFORMED",
+            "mode": "generic",
+            "source_file": silver_file_path,
+            "output_file": output_file_path,
+            "rows": len(df),
+            "columns": df.columns.tolist(),
+        }
 
     gold = (
         df.groupby("product", as_index=False)

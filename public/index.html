@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Engineering Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #172033;
+            background:
+                radial-gradient(circle at 12% 10%, rgba(243, 181, 98, .28), transparent 26%),
+                linear-gradient(135deg, #eef7f5 0%, #f7f8fc 55%, #fff7ed 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            color: #075b58;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            letter-spacing: -0.03em;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #667085;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            border: 1px solid rgba(227, 231, 239, .9);
+            box-shadow: 0 16px 44px rgba(23, 32, 51, .09);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            color: #075b58;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            font-size: 1.5em;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        /* Authentification Fabric */
+        .auth-status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-status.authenticated {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-status.not-authenticated {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .auth-status::before {
+            font-size: 1.5em;
+        }
+
+        .auth-status.authenticated::before {
+            content: "✓";
+        }
+
+        .auth-status.not-authenticated::before {
+            content: "✗";
+        }
+
+        /* Formulaires */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Boutons */
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #0b7a75;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 122, 117, .28);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #0b7a75;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+
+        .upload-area:hover {
+            border-color: #075b58;
+            background: #f0f0f5;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8e8f5;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Résultats */
+        .results-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        .status.uploading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.processing {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status.completed {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #667085;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #0b7a75;
+            border-bottom-color: #0b7a75;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        code {
+            color: #d63384;
+        }
+
+        .insights {
+            padding: 15px;
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .insights h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .insights ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Data Engineering Agent</h1>
+            <p>IA Agentique pour Ingestion, Transformation et Analyse</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Upload & Pipeline -->
+            <div class="card">
+                <h2>📤 Upload & Pipeline</h2>
+
+                <div class="section">
+                    <label>Fichiers de données</label>
+                    <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon">📁</div>
+                        <p><strong>Cliquez ici ou glissez vos fichiers tabulaires</strong></p>
+                        <p style="font-size: 0.9em; color: #666;">CSV, TSV, JSON, JSONL, Excel, Parquet ou TXT · Max 100 MB par fichier</p>
+                    </div>
+                    <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.xlsx,.xls,.parquet,.txt" multiple onchange="handleFileSelect(event)">
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label for="contractPath">Chemin du Contrat JSON (optionnel)</label>
+                        <input type="text" id="contractPath" placeholder="data/contracts/data_contract.json (optionnel)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="datasetName">Nom du Dataset</label>
+                        <input type="text" id="datasetName" placeholder="Nom du fichier si vide">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrichments">Enrichissements JSON (optionnel)</label>
+                        <textarea id="enrichments" rows="5" placeholder='[{"type":"arithmetic","target":"total","left":"quantity","right":"price","operator":"multiply"}]'></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="dropDuplicates" checked>
+                        <label for="dropDuplicates" style="margin: 0;">Supprimer les doublons exacts</label>
+                    </div>
+
+                    <div class="form-group" style="padding: 12px 14px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e5e7eb; color: #475467;">
+                        <strong>Fabric désactivé</strong>
+                        <div style="margin-top: 6px; font-size: 0.95em;">La publication vers Fabric est momentanément désactivée pour garder le pipeline local et autonome.</div>
+                    </div>
+
+                    <button class="btn-primary" id="executeBtn" onclick="executePipeline()" disabled>
+                        🚀 Lancer le Pipeline
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résultats -->
+        <div class="card">
+            <h2>📊 Résultats & Monitoring</h2>
+
+            <div id="messagesContainer"></div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('files')">Fichiers</button>
+                <button class="tab-btn" onclick="switchTab('execution')">Exécutions</button>
+                <button class="tab-btn" onclick="switchTab('docs')">Documentation</button>
+            </div>
+
+            <!-- Onglet Fichiers -->
+            <div id="files" class="tab-content active">
+                <div id="filesList" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- Onglet Exécutions -->
+            <div id="execution" class="tab-content">
+                <div id="executionList" style="margin-top: 20px;">
+                    <p style="color: #999;">Pas d'exécution pour le moment</p>
+                </div>
+            </div>
+
+            <!-- Onglet Documentation -->
+            <div id="docs" class="tab-content">
+                <h3>Guide Rapide</h3>
+                <ol style="margin-left: 20px; line-height: 2;">
+                    <li><strong>Upload</strong> votre fichier CSV</li>
+                    <li><strong>Configurer</strong> le chemin du contrat</li>
+                    <li><strong>Lancer</strong> le pipeline</li>
+                    <li><strong>Analyser</strong> les résultats et insights</li>
+                </ol>
+
+                <h3 style="margin-top: 30px;">Pipeline Automatique</h3>
+                <div class="insights">
+                    <h4>Étapes exécutées :</h4>
+                    <ul>
+                        <li>✓ Inspection & Profiling</li>
+                        <li>✓ Validation (qualité + contrat)</li>
+                        <li>✓ Ingestion (CSV → Bronze Parquet)</li>
+                        <li>✓ Transformation (Bronze → Silver → Gold)</li>
+                        <li>✓ Analyse (Data Analyst IA)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Data Engineering Agent v1.0 • Powered by AI • 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // Variables Globales
+        // ============================================
+
+        let currentFileId = null;
+        let pollingInterval = null;
+
+        // ============================================
+        // Initialisation
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Application démarrée');
+            await loadUploadedFiles();
+
+            const resumeFileId = new URLSearchParams(window.location.search).get('resume');
+            const pendingPipeline = resumeFileId
+                ? JSON.parse(localStorage.getItem('pendingPipeline') || 'null')
+                : null;
+            if (resumeFileId && pendingPipeline?.file_id === resumeFileId) {
+                currentFileId = resumeFileId;
+                document.getElementById('contractPath').value = pendingPipeline.contract_path || '';
+                document.getElementById('datasetName').value = pendingPipeline.dataset_name || '';
+                document.getElementById('enrichments').value = pendingPipeline.enrichments || '';
+                document.getElementById('dropDuplicates').checked = pendingPipeline.drop_duplicates !== false;
+                localStorage.removeItem('pendingPipeline');
+                await executePipeline();
+            }
+        });
+
+        // ============================================
+        // Upload de Fichiers
+        // ============================================
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            document.getElementById('uploadArea').classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect({ target: { files } });
+            }
+        }
+
+        async function handleFileSelect(event) {
+            const files = Array.from(event.target.files || []);
+            if (!files.length) return;
+
+            const supported = ['.csv', '.tsv', '.json', '.jsonl', '.ndjson', '.xlsx', '.xls', '.parquet', '.txt'];
+            const invalidFile = files.find(file => !supported.some(extension => file.name.toLowerCase().endsWith(extension)));
+            if (invalidFile) {
+                showMessage(`${invalidFile.name} n'est pas un format tabulaire supporté`, 'error');
+                return;
+            }
+            const oversizedFile = files.find(file => file.size > 100 * 1024 * 1024);
+            if (oversizedFile) {
+                showMessage(`${oversizedFile.name} dépasse 100 MB`, 'error');
+                return;
+            }
+
+            await uploadFiles(files);
+        }
+
+        async function uploadFiles(files) {
+            try {
+                showMessage(`Upload de ${files.length} fichier(s)...`, 'info');
+
+                const formData = new FormData();
+                files.forEach(file => formData.append('files', file));
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentFileId = data.file_id;
+                    showMessage(`✓ ${files.length} fichier(s) uploadé(s) et archivé(s)`, 'success');
+                    document.getElementById('executeBtn').disabled = false;
+                    await loadUploadedFiles();
+                } else {
+                    showMessage(formatApiError(data, 'Erreur lors de l\'upload'), 'error');
+                }
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================
+        // Exécution du Pipeline
+        // ============================================
+
+        async function executePipeline() {
+            if (!currentFileId) {
+                showMessage('Veuillez d\'abord uploader un fichier', 'error');
+                return;
+            }
+
+            const contractPath = document.getElementById('contractPath').value.trim();
+
+            const datasetName = document.getElementById('datasetName').value;
+            const publishFabric = false;
+            const dropDuplicates = document.getElementById('dropDuplicates').checked;
+            let enrichments = [];
+            try {
+                enrichments = JSON.parse(document.getElementById('enrichments').value || '[]');
+                if (!Array.isArray(enrichments)) throw new Error('Le JSON doit être une liste');
+            } catch (error) {
+                showMessage(`Enrichissements invalides: ${error.message}`, 'error');
+                return;
+            }
+
+            try {
+                showMessage('Pipeline en cours...', 'info');
+
+                const response = await fetch('/api/pipeline/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        file_id: currentFileId,
+                        contract_path: contractPath,
+                        dataset_name: datasetName,
+                        publish_to_fabric: publishFabric,
+                        enrichments,
+                        drop_duplicates: dropDuplicates
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('✓ Pipeline lancé en arrière-plan', 'success');
+                    startPolling(currentFileId);
+                } else if (data.error === 'fabric_auth_required') {
+                    showMessage('⚠️ La publication Fabric est désactivée pour le moment.', 'warning');
+                } else {
+                    showMessage(formatApiError(data, 'Erreur lors de l\'exécution'), 'error');
+                }
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        function startPolling(fileId) {
+            if (pollingInterval) clearInterval(pollingInterval);
+
+            pollingInterval = setInterval(async () => {
+                await checkPipelineStatus(fileId);
+            }, 2000);
+        }
+
+        async function checkPipelineStatus(fileId) {
+            try {
+                const response = await fetch(`/api/pipeline/status?file_id=${fileId}`);
+                const data = await response.json();
+
+                if (data.status === 'completed') {
+                    clearInterval(pollingInterval);
+                    showMessage('✓ Pipeline complété', 'success');
+                    await displayResults(data);
+                } else if (data.status === 'awaiting_fabric_auth') {
+                    clearInterval(pollingInterval);
+                    showMessage('⚠️ La publication Fabric est désactivée pour le moment.', 'warning');
+                } else if (data.status === 'error') {
+                    clearInterval(pollingInterval);
+                    showMessage('❌ Erreur: ' + data.results?.error_message, 'error');
+                }
+            } catch (error) {
+                console.error('Erreur polling:', error);
+            }
+        }
+
+        // ============================================
+        // Affichage des Résultats
+        // ============================================
+
+        async function displayResults(data) {
+            const executionList = document.getElementById('executionList');
+
+            let html = `
+                <div class="result-item">
+                    <h3>${data.file_name}</h3>
+                    <span class="status completed">✓ ${data.status}</span>
+            `;
+
+            if (data.results?.analysis_report) {
+                html += `
+                    <p style="margin-top: 15px;"><strong>Analyse générée par l'agent :</strong></p>
+                    <pre>${escapeHtml(data.results.analysis_report)}</pre>
+                `;
+            }
+
+            if (data.results?.pipeline || data.results?.analysis || data.results?.publication) {
+                const report = {
+                    pipeline: data.results.pipeline,
+                    analysis: data.results.analysis,
+                    publication: data.results.publication
+                };
+                html += `
+                    <p style="margin-top: 15px;"><strong>Détails techniques :</strong></p>
+                    <pre>${escapeHtml(JSON.stringify(report, null, 2))}</pre>
+                `;
+            } else if (data.results?.agent_response) {
+                html += `<pre>${escapeHtml(String(data.results.agent_response))}</pre>`;
+            }
+
+            if (data.results?.status === 'error') {
+                html += `
+                    <div class="alert error" style="margin-top: 15px;">
+                        <strong>Erreur:</strong> ${data.results.error_message}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            executionList.innerHTML = html;
+            switchTab('execution');
+        }
+
+        // ============================================
+        // Utilitaires UI
+        // ============================================
+
+        function showFabricAuthModal() {
+            localStorage.setItem('pendingPipeline', JSON.stringify({
+                file_id: currentFileId,
+                contract_path: document.getElementById('contractPath').value.trim(),
+                dataset_name: document.getElementById('datasetName').value.trim(),
+                enrichments: document.getElementById('enrichments').value,
+                drop_duplicates: document.getElementById('dropDuplicates').checked,
+            }));
+            window.location.href = '/fabric-auth?file_id=' + encodeURIComponent(currentFileId);
+        }
+
+        function formatApiError(data, fallback) {
+            const detail = data?.detail ?? data?.message ?? data;
+
+            if (Array.isArray(detail)) {
+                return detail.map(item => {
+                    if (typeof item === 'string') return item;
+                    if (item?.msg) {
+                        const location = Array.isArray(item.loc)
+                            ? ` (${item.loc.join('.')})`
+                            : '';
+                        return `${item.msg}${location}`;
+                    }
+                    return JSON.stringify(item);
+                }).join('; ');
+            }
+
+            if (typeof detail === 'object' && detail !== null) {
+                return detail.msg || JSON.stringify(detail);
+            }
+
+            return String(detail || fallback);
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messagesContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+
+            container.appendChild(alert);
+
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadUploadedFiles() {
+            try {
+                const response = await fetch('/api/files');
+                const data = await response.json();
+
+                const filesList = document.getElementById('filesList');
+                if (data.files.length === 0) {
+                    filesList.innerHTML = '<p style="color: #999;">Aucun fichier uploadé</p>';
+                    return;
+                }
+
+                let html = '<h3>Fichiers Uploadés</h3>';
+                data.files.forEach(file => {
+                    const fileNames = file.files?.length
+                        ? file.files.map(item => item.file_name).join(', ')
+                        : file.file_name;
+                    html += `
+                        <div class="result-item">
+                            <p><strong>${fileNames}</strong></p>
+                            <span class="status ${file.status}">${file.status}</span>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                                ${new Date(file.created_at).toLocaleString()}
+                            </p>
+                        </div>
+                    `;
+                });
+
+                filesList.innerHTML = html;
+            } catch (error) {
+                console.error('Erreur chargement fichiers:', error);
+            }
+        }
+    </script>
+</body>
+</html>

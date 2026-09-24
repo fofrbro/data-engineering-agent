@@ -1,0 +1,11 @@
+{
+    "dataset": null,
+    "version": "1.0",
+    "description": "Contrat générique pour les fichiers tabulaires",
+    "schema_mode": "open",
+    "columns": {},
+    "rules": {
+        "allow_additional_columns": true,
+        "allow_empty_schema": true
+    }
+}
