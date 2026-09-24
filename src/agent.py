@@ -13,6 +13,7 @@ from src.tools.fabric_connector import publish_to_fabric
 from src.tools.data_analyst import analyze_gold_data
 from src.pipeline_planner import generate_pipeline_plan
 from src.pipeline_orchestrator import execute_pipeline
+from src.agent_guard import ToolCallGuard
 
 
 class FabricAuthenticationRequired(RuntimeError):
@@ -467,6 +468,7 @@ def run_agent(user_request: str):
 
     MAX_ITERATIONS = 15
     executed_calls = set()
+    guard = ToolCallGuard()
 
     for iteration in range(MAX_ITERATIONS):
 
@@ -512,10 +514,19 @@ def run_agent(user_request: str):
             print(f"\nOutil appelé : {item.name}")
             print(f"Arguments : {arguments}")
 
-            result = execute_tool(
+            arguments, blocked_result = guard.prepare(
                 item.name,
                 arguments
             )
+
+            if blocked_result is not None:
+                result = blocked_result
+            else:
+                result = execute_tool(
+                    item.name,
+                    arguments
+                )
+                guard.record(item.name, result)
 
             if item.name == "publish_to_fabric" and isinstance(result, dict):
                 if result.get("status") == "AUTH_REQUIRED":
