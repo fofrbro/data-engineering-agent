@@ -3,11 +3,14 @@ from datetime import datetime, timezone
 
 import pytest
 
+from src.contract.contract_generator import propose_contract_for_file
 from src.contract.contract_lifecycle import (
     ContractStatusError,
     approve_contract,
+    approve_contract_file,
     contract_status,
     reject_contract,
+    reject_contract_file,
     save_contract,
 )
 from src.tools.contract_validation import validate_contract
@@ -100,3 +103,46 @@ def test_validation_result_exposes_contract_status(tmp_path):
     assert validate_contract(str(csv_file), str(proposed))["contract_status"] == "PROPOSED"
     assert validate_contract(str(csv_file), str(legacy))["contract_status"] == "VALIDATED"
     assert validate_contract(str(csv_file), None)["contract_status"] is None
+
+
+def proposed_file(tmp_path):
+    return save_contract(
+        propose_contract_for_file("data/sales.csv"),
+        tmp_path / "contracts" / "proposed" / "sales.json",
+    )
+
+
+def test_approve_contract_file_saves_validated_contract(tmp_path):
+    path = approve_contract_file(
+        proposed_file(tmp_path), "cheikhou", contracts_dir=tmp_path / "contracts",
+    )
+
+    assert path == tmp_path / "contracts" / "sales.json"
+    assert json.loads(path.read_text(encoding="utf-8"))["status"] == "VALIDATED"
+
+
+def test_contract_files_outside_contracts_dir_are_refused(tmp_path):
+    outside = tmp_path / "elsewhere.json"
+    outside.write_text('{"status": "PROPOSED", "dataset": "x"}', encoding="utf-8")
+
+    with pytest.raises(ContractStatusError):
+        approve_contract_file(outside, "cheikhou", contracts_dir=tmp_path / "contracts")
+
+
+def test_approval_never_overwrites_existing_contract(tmp_path):
+    proposed = proposed_file(tmp_path)
+    approve_contract_file(proposed, "cheikhou", contracts_dir=tmp_path / "contracts")
+
+    with pytest.raises(ContractStatusError):
+        approve_contract_file(proposed, "cheikhou", contracts_dir=tmp_path / "contracts")
+
+
+def test_reject_contract_file_in_place(tmp_path):
+    path = reject_contract_file(
+        proposed_file(tmp_path), "cheikhou", "Types erronés",
+        contracts_dir=tmp_path / "contracts",
+    )
+    contract = json.loads(path.read_text(encoding="utf-8"))
+
+    assert contract["status"] == "REJECTED"
+    assert contract["review"]["comment"] == "Types erronés"

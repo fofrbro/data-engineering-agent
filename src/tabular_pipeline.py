@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -14,11 +13,6 @@ SUPPORTED_EXTENSIONS = {
     ".csv", ".tsv", ".json", ".jsonl", ".ndjson", ".xlsx", ".xls",
     ".parquet", ".txt",
 }
-
-
-def _safe_name(value: str) -> str:
-    value = re.sub(r"[^A-Za-z0-9_-]+", "_", value).strip("_")
-    return value[:80] or "dataset"
 
 
 def read_tabular_file(path: str | Path) -> pd.DataFrame:
@@ -114,40 +108,3 @@ def enrich_dataframe(df: pd.DataFrame, operations: list[dict[str, Any]] | None) 
             raise ValueError(f"Type d'enrichissement inconnu : {kind}")
         applied.append({"type": kind, "target": target})
     return enriched, applied
-
-
-def process_uploads(
-    file_paths: list[str],
-    dataset_name: str,
-    enrichment_operations: list[dict[str, Any]] | None = None,
-    drop_duplicates: bool = True,
-) -> dict[str, Any]:
-    frames = [read_tabular_file(path) for path in file_paths]
-    profiles = [profile_dataframe(frame) for frame in frames]
-    combined = pd.concat(frames, ignore_index=True, sort=False)
-    cleaned, cleaning = clean_dataframe(combined, drop_duplicates)
-    enriched, applied = enrich_dataframe(cleaned, enrichment_operations)
-    output_name = _safe_name(dataset_name)
-    silver_path = Path("data/silver") / f"{output_name}.parquet"
-    gold_path = Path("data/gold") / f"{output_name}.parquet"
-    silver_path.parent.mkdir(parents=True, exist_ok=True)
-    gold_path.parent.mkdir(parents=True, exist_ok=True)
-    enriched.to_parquet(silver_path, index=False)
-    gold = enriched.copy()
-    numeric = gold.select_dtypes(include="number").columns
-    if len(numeric):
-        summary = gold[numeric].describe().T.reset_index().rename(columns={"index": "metric"})
-        summary.to_parquet(gold_path, index=False)
-    else:
-        gold.to_parquet(gold_path, index=False)
-    return {
-        "status": "TRANSFORMED",
-        "dataset_name": output_name,
-        "files": file_paths,
-        "profiles": profiles,
-        "combined_profile": profile_dataframe(enriched),
-        "cleaning": cleaning,
-        "enrichments": applied,
-        "silver_file": str(silver_path),
-        "gold_file": str(gold_path),
-    }

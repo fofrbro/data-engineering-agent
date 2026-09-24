@@ -470,21 +470,12 @@
                         <textarea id="enrichments" rows="5" placeholder='[{"type":"arithmetic","target":"total","left":"quantity","right":"price","operator":"multiply"}]'></textarea>
                     </div>
 
-                    <div class="form-group checkbox-group">
-                        <input type="checkbox" id="dropDuplicates" checked>
-                        <label for="dropDuplicates" style="margin: 0;">Supprimer les doublons exacts</label>
-                    </div>
+                    <p style="margin-bottom: 15px; color: #475467; font-size: 0.95em;">
+                        Les doublons exacts et les valeurs manquantes sont signalés dans le plan ;
+                        leur correction est une transformation à approuver.
+                    </p>
 
-                    <div class="form-group" style="padding: 12px 14px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e5e7eb; color: #475467;">
-                        <strong>Fabric désactivé</strong>
-                        <div style="margin-top: 6px; font-size: 0.95em;">La publication vers Fabric est momentanément désactivée pour garder le pipeline local et autonome.</div>
-                    </div>
-
-                    <button class="btn-primary" id="executeBtn" onclick="executePipeline()" disabled>
-                        🚀 Lancer le Pipeline
-                    </button>
-
-                    <button class="btn-primary" id="agentBtn" onclick="createAgentPlan()" disabled style="margin-top: 10px;">
+                    <button class="btn-primary" id="agentBtn" onclick="createAgentPlan()" disabled>
                         🤖 Préparer avec l'agent (plan à valider)
                     </button>
                 </div>
@@ -531,21 +522,21 @@
             <div id="docs" class="tab-content">
                 <h3>Guide Rapide</h3>
                 <ol style="margin-left: 20px; line-height: 2;">
-                    <li><strong>Upload</strong> votre fichier CSV</li>
-                    <li><strong>Configurer</strong> le chemin du contrat</li>
-                    <li><strong>Lancer</strong> le pipeline</li>
-                    <li><strong>Analyser</strong> les résultats et insights</li>
+                    <li><strong>Uploader</strong> un fichier tabulaire</li>
+                    <li><strong>Préparer avec l'agent</strong> : contrat, qualité, pipeline, KPI, tableau de bord</li>
+                    <li><strong>Valider</strong> le contrat (et, si besoin, les transformations destructives)</li>
+                    <li><strong>Exécuter</strong> le plan validé, puis lire les vérifications et l'analyse</li>
                 </ol>
 
                 <h3 style="margin-top: 30px;">Pipeline Automatique</h3>
                 <div class="insights">
                     <h4>Étapes exécutées :</h4>
                     <ul>
-                        <li>✓ Inspection & Profiling</li>
-                        <li>✓ Validation (qualité + contrat)</li>
-                        <li>✓ Ingestion (CSV → Bronze Parquet)</li>
-                        <li>✓ Transformation (Bronze → Silver → Gold)</li>
-                        <li>✓ Analyse (Data Analyst IA)</li>
+                        <li>✓ PLAN : découverte, sémantique, contrat, recommandations</li>
+                        <li>✓ VALIDATE : validations explicites par un relecteur</li>
+                        <li>✓ EXECUTE : décision recalculée, Bronze → Silver → Gold</li>
+                        <li>✓ VERIFY : fichiers, lignes et totaux contrôlés</li>
+                        <li>✓ AUDIT : run tracé et explicable, analyse Data Analyst</li>
                     </ul>
                 </div>
             </div>
@@ -562,7 +553,6 @@
         // ============================================
 
         let currentFileId = null;
-        let pollingInterval = null;
 
         // ============================================
         // Initialisation
@@ -583,22 +573,8 @@
             if (agentFileId) {
                 currentFileId = agentFileId;
                 document.getElementById('agentBtn').disabled = false;
-                document.getElementById('executeBtn').disabled = false;
             }
 
-            const resumeFileId = new URLSearchParams(window.location.search).get('resume');
-            const pendingPipeline = resumeFileId
-                ? JSON.parse(localStorage.getItem('pendingPipeline') || 'null')
-                : null;
-            if (resumeFileId && pendingPipeline?.file_id === resumeFileId) {
-                currentFileId = resumeFileId;
-                document.getElementById('contractPath').value = pendingPipeline.contract_path || '';
-                document.getElementById('datasetName').value = pendingPipeline.dataset_name || '';
-                document.getElementById('enrichments').value = pendingPipeline.enrichments || '';
-                document.getElementById('dropDuplicates').checked = pendingPipeline.drop_duplicates !== false;
-                localStorage.removeItem('pendingPipeline');
-                await executePipeline();
-            }
         });
 
         // ============================================
@@ -661,7 +637,6 @@
                 if (response.ok) {
                     currentFileId = data.file_id;
                     showMessage(`✓ ${files.length} fichier(s) uploadé(s) et archivé(s)`, 'success');
-                    document.getElementById('executeBtn').disabled = false;
                     document.getElementById('agentBtn').disabled = false;
                     await loadUploadedFiles();
                 } else {
@@ -670,194 +645,6 @@
             } catch (error) {
                 showMessage(`Erreur: ${error.message}`, 'error');
             }
-        }
-
-        // ============================================
-        // Exécution du Pipeline
-        // ============================================
-
-        async function executePipeline() {
-            if (!currentFileId) {
-                showMessage('Veuillez d\'abord uploader un fichier', 'error');
-                return;
-            }
-
-            const contractPath = document.getElementById('contractPath').value.trim();
-
-            const datasetName = document.getElementById('datasetName').value;
-            const publishFabric = false;
-            const dropDuplicates = document.getElementById('dropDuplicates').checked;
-            let enrichments = [];
-            try {
-                enrichments = JSON.parse(document.getElementById('enrichments').value || '[]');
-                if (!Array.isArray(enrichments)) throw new Error('Le JSON doit être une liste');
-            } catch (error) {
-                showMessage(`Enrichissements invalides: ${error.message}`, 'error');
-                return;
-            }
-
-            try {
-                showMessage('Pipeline en cours...', 'info');
-
-                const response = await fetch('/api/pipeline/execute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        file_id: currentFileId,
-                        contract_path: contractPath,
-                        dataset_name: datasetName,
-                        publish_to_fabric: publishFabric,
-                        enrichments,
-                        drop_duplicates: dropDuplicates
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showMessage('✓ Pipeline lancé en arrière-plan', 'success');
-                    startPolling(currentFileId);
-                } else if (data.error === 'fabric_auth_required') {
-                    showMessage('⚠️ La publication Fabric est désactivée pour le moment.', 'warning');
-                } else {
-                    showMessage(formatApiError(data, 'Erreur lors de l\'exécution'), 'error');
-                }
-            } catch (error) {
-                showMessage(`Erreur: ${error.message}`, 'error');
-            }
-        }
-
-        function startPolling(fileId) {
-            if (pollingInterval) clearInterval(pollingInterval);
-
-            pollingInterval = setInterval(async () => {
-                await checkPipelineStatus(fileId);
-            }, 2000);
-        }
-
-        async function checkPipelineStatus(fileId) {
-            try {
-                const response = await fetch(`/api/pipeline/status?file_id=${fileId}`);
-                const data = await response.json();
-
-                if (data.status === 'completed') {
-                    clearInterval(pollingInterval);
-                    showMessage('✓ Pipeline complété', 'success');
-                    await displayResults(data);
-                } else if (data.status === 'blocked') {
-                    clearInterval(pollingInterval);
-                    showMessage('⛔ Traitement bloqué par le Policy Engine', 'warning');
-                    displayGovernance(data);
-                } else if (data.status === 'awaiting_fabric_auth') {
-                    clearInterval(pollingInterval);
-                    showMessage('⚠️ La publication Fabric est désactivée pour le moment.', 'warning');
-                } else if (data.status === 'error') {
-                    clearInterval(pollingInterval);
-                    showMessage('❌ Erreur: ' + data.results?.error_message, 'error');
-                }
-            } catch (error) {
-                console.error('Erreur polling:', error);
-            }
-        }
-
-        // ============================================
-        // Affichage des Résultats
-        // ============================================
-
-        function displayGovernance(data) {
-            const governance = data.results?.governance || {};
-            const rows = (governance.assessments || []).map(item => `
-                <li><strong>${escapeHtml(item.file)}</strong> :
-                    ${escapeHtml(item.decision || '')}
-                    (${escapeHtml(item.policy_rule || '')}) —
-                    ${escapeHtml(item.reason || '')}</li>
-            `).join('');
-
-            let html = `
-                <div class="result-item">
-                    <h3>${escapeHtml(data.file_name)}</h3>
-                    <span class="status">⛔ bloqué</span>
-                    <p style="margin-top: 15px;"><strong>Décisions du Policy Engine :</strong></p>
-                    <ul>${rows}</ul>
-            `;
-
-            if (governance.proposed_contract_path) {
-                html += `
-                    <p style="margin-top: 15px;">Un Data Contract a été proposé :
-                        <code>${escapeHtml(governance.proposed_contract_path)}</code>.
-                        Relisez-le, puis approuvez-le pour relancer le pipeline avec ce contrat.</p>
-                    <button class="btn-primary" onclick="approveProposedContract('${escapeHtml(governance.proposed_contract_path)}')">
-                        Approuver le contrat proposé
-                    </button>
-                `;
-            }
-
-            html += '</div>';
-            document.getElementById('executionList').innerHTML = html;
-            switchTab('execution');
-        }
-
-        async function approveProposedContract(contractPath) {
-            const reviewer = window.prompt('Nom du relecteur qui valide ce contrat :');
-            if (!reviewer) return;
-
-            const response = await fetch('/api/contracts/approve', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contract_path: contractPath, reviewer })
-            });
-            const data = await response.json();
-
-            if (response.ok) {
-                document.getElementById('contractPath').value = data.contract_path;
-                showMessage(`✓ Contrat validé : ${data.contract_path}. Relancez le pipeline.`, 'success');
-            } else {
-                showMessage(formatApiError(data, 'Validation du contrat impossible'), 'error');
-            }
-        }
-
-        async function displayResults(data) {
-            const executionList = document.getElementById('executionList');
-
-            let html = `
-                <div class="result-item">
-                    <h3>${data.file_name}</h3>
-                    <span class="status completed">✓ ${data.status}</span>
-            `;
-
-            if (data.results?.analysis_report) {
-                html += `
-                    <p style="margin-top: 15px;"><strong>Analyse générée par l'agent :</strong></p>
-                    <pre>${escapeHtml(data.results.analysis_report)}</pre>
-                `;
-            }
-
-            if (data.results?.pipeline || data.results?.analysis || data.results?.publication) {
-                const report = {
-                    pipeline: data.results.pipeline,
-                    analysis: data.results.analysis,
-                    publication: data.results.publication
-                };
-                html += `
-                    <p style="margin-top: 15px;"><strong>Détails techniques :</strong></p>
-                    <pre>${escapeHtml(JSON.stringify(report, null, 2))}</pre>
-                `;
-            } else if (data.results?.agent_response) {
-                html += `<pre>${escapeHtml(String(data.results.agent_response))}</pre>`;
-            }
-
-            if (data.results?.status === 'error') {
-                html += `
-                    <div class="alert error" style="margin-top: 15px;">
-                        <strong>Erreur:</strong> ${data.results.error_message}
-                    </div>
-                `;
-            }
-
-            html += '</div>';
-
-            executionList.innerHTML = html;
-            switchTab('execution');
         }
 
         // ============================================
@@ -1050,17 +837,6 @@
         // ============================================
         // Utilitaires UI
         // ============================================
-
-        function showFabricAuthModal() {
-            localStorage.setItem('pendingPipeline', JSON.stringify({
-                file_id: currentFileId,
-                contract_path: document.getElementById('contractPath').value.trim(),
-                dataset_name: document.getElementById('datasetName').value.trim(),
-                enrichments: document.getElementById('enrichments').value,
-                drop_duplicates: document.getElementById('dropDuplicates').checked,
-            }));
-            window.location.href = '/fabric-auth?file_id=' + encodeURIComponent(currentFileId);
-        }
 
         function formatApiError(data, fallback) {
             const detail = data?.detail ?? data?.message ?? data;

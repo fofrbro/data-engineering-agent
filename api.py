@@ -8,14 +8,13 @@ Expose l'agent via une API FastAPI avec endpoints pour :
 - Authentification Fabric interactif
 """
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks, Request
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 import os
-import json
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -27,18 +26,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.agent import FabricAuthenticationRequired, run_agent
-from src.tabular_pipeline import (
-    SUPPORTED_EXTENSIONS,
-    process_uploads,
-)
-from src.tools.data_analyst import DataAnalyst, analyze_gold_data
+from src.tabular_pipeline import SUPPORTED_EXTENSIONS
 from src.contract.contract_lifecycle import (
     ContractStatusError,
     approve_contract_file,
     reject_contract_file,
 )
-from src.upload_governance import assess_uploads
 from src.recommendation.dashboard_review import DashboardReviewError
 from src.workflow.agent_workflow import WorkflowError
 from src.workflow.workflow_service import WorkflowService
@@ -48,10 +41,7 @@ from src.workflow.request_interpreter import (
     RequestInterpretationError,
     handle_request,
 )
-from src.tools.fabric_connector import (
-    configure_fabric_session,
-    publish_to_fabric as publish_dataset_to_fabric,
-)
+from src.tools.fabric_connector import configure_fabric_session
 
 # ============================================
 # Configuration
@@ -75,10 +65,8 @@ app.add_middleware(
 # Dossiers de travail
 UPLOAD_DIR = Path("uploads")
 ARCHIVE_DIR = Path("data/archive")
-RESULTS_DIR = Path("results")
 UPLOAD_DIR.mkdir(exist_ok=True)
 ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-RESULTS_DIR.mkdir(exist_ok=True)
 
 # Stockage des sessions et authentification
 FABRIC_ENABLED = os.getenv("FABRIC_ENABLED", "false").lower() == "true"
@@ -159,16 +147,6 @@ class DashboardReviewRequest(WorkflowReviewRequest):
     changes: Dict[str, Any] = Field(default_factory=dict)
 
 
-class PipelineRequest(BaseModel):
-    """Demande d'exécution du pipeline."""
-    file_id: str
-    contract_path: Optional[str] = ""
-    dataset_name: Optional[str] = None
-    publish_to_fabric: bool = False
-    drop_duplicates: bool = True
-    enrichments: List[Dict[str, Any]] = Field(default_factory=list)
-
-
 def _archive_name(filename: str, contents: bytes, uploaded_at: datetime) -> str:
     """Construit un nom d’archive lisible et stable dans le temps."""
     stem = Path(filename).stem.replace("_", " ").replace("-", " ").strip()
@@ -177,38 +155,6 @@ def _archive_name(filename: str, contents: bytes, uploaded_at: datetime) -> str:
     timestamp = uploaded_at.strftime("%Y%m%d_%H%M%S")
     suffix = Path(filename).suffix.lower() or ".bin"
     return f"{readable_name}_{timestamp}{suffix}"
-
-
-def _analysis_file_stem(dataset_name: str) -> str:
-    """Construit un nom de fichier sûr pour les rapports d'analyse."""
-    stem = Path(dataset_name).stem
-    safe_stem = "".join(
-        character if character.isalnum() or character in ("-", "_") else "_"
-        for character in stem
-    ).strip("_")
-    return safe_stem or "dataset"
-
-
-def _save_analysis_reports(
-    dataset_name: str,
-    analysis: Dict[str, Any],
-    analysis_report: str,
-) -> Dict[str, str]:
-    """Enregistre les versions lisible et structurée du rapport d'analyse."""
-    file_stem = _analysis_file_stem(dataset_name)
-    text_path = RESULTS_DIR / f"{file_stem}_analysis.txt"
-    json_path = RESULTS_DIR / f"{file_stem}_analysis.json"
-
-    text_path.write_text(analysis_report, encoding="utf-8")
-    json_path.write_text(
-        json.dumps(analysis, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-
-    return {
-        "text": str(text_path),
-        "json": str(json_path),
-    }
 
 
 # ============================================
@@ -430,105 +376,6 @@ async def upload_file(files: List[UploadFile] = File(...)):
         )
 
 
-@app.post("/api/pipeline/execute")
-async def execute_pipeline(
-    pipeline_request: PipelineRequest,
-    background_tasks: BackgroundTasks
-):
-    """
-    Exécute le pipeline complet pour un fichier.
-    
-    Étapes :
-    1. Validation de l'authentification Fabric (si publish_to_fabric=True)
-    2. Ingestion → Transformation → Publication → Analyse
-    3. Retour des résultats avec insights
-    """
-    try:
-        file_id = pipeline_request.file_id
-        contract_path = pipeline_request.contract_path
-        dataset_name = pipeline_request.dataset_name
-        publish_to_fabric = pipeline_request.publish_to_fabric
-
-        # Vérifie que le fichier existe
-        if file_id not in sessions:
-            raise HTTPException(status_code=404, detail="Fichier non trouvé")
-
-        # Le contrat est facultatif : le schéma peut être inféré.
-        if contract_path and not os.path.exists(contract_path):
-            raise HTTPException(status_code=404, detail="Contrat non trouvé")
-
-        session = sessions[file_id]
-        session["status"] = "executing"
-
-        # Prépare la demande pour l'agent
-        dataset_name = dataset_name or Path(session["file_name"]).stem
-        file_paths = [item["file_path"] for item in session["files"]]
-        file_names = [item["file_name"] for item in session["files"]]
-        # Exécute le pipeline en arrière-plan
-        background_tasks.add_task(
-            run_pipeline_async,
-            file_id,
-            file_paths,
-            dataset_name,
-            publish_to_fabric,
-            pipeline_request.enrichments,
-            pipeline_request.drop_duplicates,
-            contract_path or None,
-        )
-
-        return {
-            "file_id": file_id,
-            "status": "executing",
-            "message": "✓ Pipeline lancé en arrière-plan",
-            "check_status": f"/api/pipeline/status?file_id={file_id}"
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        if "session" in locals():
-            session["status"] = "error"
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/api/pipeline/status")
-async def get_pipeline_status(file_id: str):
-    """Récupère le statut d'exécution du pipeline."""
-    if file_id not in sessions:
-        raise HTTPException(status_code=404, detail="Session non trouvée")
-
-    session = sessions[file_id]
-    return {
-        "file_id": file_id,
-        "file_name": session["file_name"],
-        "status": session["status"],
-        "created_at": session["created_at"],
-        "results": session.get("results")
-    }
-
-
-@app.get("/api/pipeline/results")
-async def get_pipeline_results(file_id: str):
-    """Récupère les résultats complets du pipeline."""
-    if file_id not in sessions:
-        raise HTTPException(status_code=404, detail="Session non trouvée")
-
-    session = sessions[file_id]
-
-    if session["status"] != "completed":
-        return {
-            "status": session["status"],
-            "message": f"Pipeline en cours ({session['status']})..."
-        }
-
-    return {
-        "file_id": file_id,
-        "file_name": session["file_name"],
-        "status": "completed",
-        "results": session.get("results")
-    }
-
-
 # ============================================
 # Interface Web Statique
 # ============================================
@@ -555,110 +402,6 @@ async def health_check():
         "fabric_authenticated": fabric_auth_state["authenticated"],
         "timestamp": datetime.now().isoformat()
     }
-
-
-# ============================================
-# Exécution Asynchrone du Pipeline
-# ============================================
-
-
-def run_pipeline_async(
-    file_id: str,
-    file_paths: list[str],
-    dataset_name: str,
-    publish_to_fabric: bool,
-    enrichments: list[dict[str, Any]],
-    drop_duplicates: bool,
-    contract_path: Optional[str] = None,
-):
-    """Exécute un pipeline tabulaire déterministe dans une tâche de fond."""
-    session = sessions[file_id]
-
-    try:
-        session["status"] = "processing"
-
-        # Le Policy Engine décide avant tout traitement :
-        # seuls les lots entièrement INGEST sont transformés.
-        governance = assess_uploads(
-            file_paths,
-            contract_path,
-            dataset_name,
-        )
-        if not governance["allowed"]:
-            session["results"] = {
-                "status": "blocked",
-                "governance": governance,
-                "completed_at": datetime.now().isoformat(),
-            }
-            session["status"] = "blocked"
-            return
-
-        pipeline = process_uploads(
-            file_paths=file_paths,
-            dataset_name=dataset_name,
-            enrichment_operations=enrichments,
-            drop_duplicates=drop_duplicates,
-        )
-        gold_file = pipeline["gold_file"]
-        analysis = analyze_gold_data(
-            gold_file,
-            dataset_name=dataset_name,
-        )
-        analysis_report = DataAnalyst().generate_analysis_report(analysis)
-        analysis_files = _save_analysis_reports(
-            dataset_name,
-            analysis,
-            analysis_report,
-        )
-        publication = None
-        if FABRIC_ENABLED and publish_to_fabric:
-            publication = publish_dataset_to_fabric(
-                file_path=gold_file,
-                dataset_name=dataset_name,
-                table_name="data",
-                mode="full_refresh",
-            )
-            if publication.get("status") == "AUTH_REQUIRED":
-                raise FabricAuthenticationRequired(publication)
-            if publication.get("status") != "PUBLISHED":
-                raise RuntimeError(publication.get("message", "Publication Fabric échouée"))
-        elif publish_to_fabric and not FABRIC_ENABLED:
-            publication = {
-                "status": "DISABLED",
-                "message": "La publication Fabric est désactivée pour le moment.",
-            }
-        session["results"] = {
-            "status": "success",
-            "governance": governance,
-            "pipeline": pipeline,
-            "analysis": analysis,
-            "analysis_report": analysis_report,
-            "analysis_files": analysis_files,
-            "publication": publication,
-            "fabric_published": bool(publication and publication.get("status") == "PUBLISHED"),
-            "completed_at": datetime.now().isoformat()
-        }
-
-        session["status"] = "completed"
-
-    except FabricAuthenticationRequired as exc:
-        session["results"] = {
-            "status": "auth_required",
-            "fabric_auth_required": True,
-            "message": str(exc),
-            "details": exc.details,
-            "pipeline": locals().get("pipeline"),
-            "completed_at": datetime.now().isoformat()
-        }
-        session["status"] = "awaiting_fabric_auth"
-
-    except Exception as e:
-        session["results"] = {
-            "status": "error",
-            "error_message": str(e),
-            "completed_at": datetime.now().isoformat()
-        }
-        session["status"] = "error"
 
 
 # ============================================
@@ -861,16 +604,21 @@ async def get_api_info():
         "version": "1.0.0",
         "fabric_enabled": FABRIC_ENABLED,
         "features": [
-            "Upload de fichiers CSV",
-            "Ingestion Bronze/Silver/Gold",
-            "Analyse IA intelligente",
-            "Génération d'insights"
+            "Upload de fichiers tabulaires",
+            "Plan agent : contrat, qualité, pipeline, KPI, tableau de bord",
+            "Validations explicites avant exécution",
+            "Exécution Bronze/Silver/Gold vérifiée et auditée",
+            "Analyse Data Analyst"
         ],
         "endpoints": {
             "upload": "POST /api/upload",
-            "pipeline": "POST /api/pipeline/execute",
-            "status": "GET /api/pipeline/status",
-            "results": "GET /api/pipeline/results"
+            "plan": "POST /api/workflow/plan",
+            "ask": "POST /api/workflow/ask",
+            "plan_view": "GET /api/workflow/{plan_id}",
+            "approve_contract": "POST /api/workflow/{plan_id}/approve-contract",
+            "approve_transformations": "POST /api/workflow/{plan_id}/approve-transformations",
+            "dashboard": "POST /api/workflow/{plan_id}/dashboard",
+            "execute": "POST /api/workflow/{plan_id}/execute"
         }
     }
 
