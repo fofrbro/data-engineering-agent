@@ -1,0 +1,94 @@
+{
+    "dataset": "sales",
+    "version": "1.0",
+    "description": "Contrat proposé automatiquement pour sales.",
+    "status": "VALIDATED",
+    "generated_by": "contract_generator",
+    "generated_at": "2026-09-24T16:11:40.783225+00:00",
+    "source_file": "uploads\\db9bc0b3-1d6e-4838-9ef2-8ff4df4f3c32_sales.csv",
+    "domain": {
+        "name": "SALES",
+        "confidence": 0.9,
+        "evidence": [
+            "mesure PRICE",
+            "mesure QUANTITY",
+            "entité CUSTOMER",
+            "entité PRODUCT"
+        ]
+    },
+    "candidate_keys": [],
+    "quality_rules": [
+        {
+            "rule": "no_duplicate_rows",
+            "enforced_by": "validate_csv"
+        }
+    ],
+    "review": {
+        "status": "VALIDATED",
+        "reviewed_by": "FOFANA",
+        "reviewed_at": "2026-09-24T16:11:44.966985+00:00",
+        "comment": null
+    },
+    "columns": {
+        "customer_id": {
+            "type": "integer",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "IDENTIFIER",
+                "business_role": null,
+                "entity": "CUSTOMER",
+                "confidence": 0.85
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "product": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": null,
+                "entity": "PRODUCT",
+                "confidence": 0.85
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "quantity": {
+            "type": "integer",
+            "nullable": false,
+            "min": 1,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "QUANTITY",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée",
+                "min=1 : quantité strictement positive observée"
+            ]
+        },
+        "price": {
+            "type": "decimal",
+            "nullable": false,
+            "min": 0,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "PRICE",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type decimal : price pouvant comporter des décimales",
+                "non nullable : aucune valeur nulle observée",
+                "min=0 : un price n'est pas négatif"
+            ]
+        }
+    }
+}
