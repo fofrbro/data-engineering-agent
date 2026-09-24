@@ -43,5 +43,9 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   n'est pas rechargé. Les fichiers sont préparés par
   `src/fabric/gold_export.export_gold_for_fabric()` (exécution SUCCESS
   uniquement) dans `data/fabric_export/gold/<dataset>/`. Logique testée
-  localement (`tests/test_fabric_gold_export.py`). **Pas encore exécuté dans
-  Fabric.**
+  localement (`tests/test_fabric_gold_export.py`).
+  Exécuté dans Fabric le 2026-09-24 pour le dataset `sales` : tables
+  `fact_sales`, `dim_customer`, `dim_product`, `sales_by_product` et
+  `sales_summary` créées, valeurs conformes (CA 3 110, quantité 12, 5 lignes).
+  **Non encore confirmés dans Fabric : la table `gold_loads` et le fait
+  qu'une seconde exécution ne recharge pas le même run.**

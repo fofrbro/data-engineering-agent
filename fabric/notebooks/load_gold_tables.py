@@ -10,7 +10,9 @@
 # - chaque chargement est tracé dans la table gold_loads ;
 # - un run_id déjà chargé pour ce dataset n'est pas rechargé.
 #
-# ATTENTION : ce notebook n'a pas encore été exécuté dans Fabric.
+# Exécuté dans Fabric le 2026-09-24 (dataset sales) : 5 tables Gold créées,
+# valeurs conformes. Non encore confirmés : gold_loads et le saut d'un run
+# déjà chargé.
 
 # %%
 DATASET = "sales"  # paramètre du notebook
