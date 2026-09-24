@@ -494,9 +494,9 @@
             <div id="messagesContainer"></div>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('files')">Fichiers</button>
-                <button class="tab-btn" onclick="switchTab('execution')">Exécutions</button>
-                <button class="tab-btn" onclick="switchTab('docs')">Documentation</button>
+                <button class="tab-btn active" data-tab="files" onclick="switchTab('files')">Fichiers</button>
+                <button class="tab-btn" data-tab="execution" onclick="switchTab('execution')">Exécutions</button>
+                <button class="tab-btn" data-tab="docs" onclick="switchTab('docs')">Documentation</button>
             </div>
 
             <!-- Onglet Fichiers -->
@@ -896,7 +896,9 @@
             });
 
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            // Le bouton est retrouvé par son onglet : switchTab peut être
+            // appelé par le code, hors de tout événement de clic.
+            document.querySelector(`.tab-btn[data-tab="${tabName}"]`)?.classList.add('active');
         }
 
         async function loadUploadedFiles() {
