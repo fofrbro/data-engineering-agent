@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from src.audit import (
     create_audit_record,
     create_run_id,
@@ -47,7 +49,23 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
     results = {}
 
     def execute_step(name: str, arguments: dict):
-        result = tool_executor(name, arguments)
+        started_at = datetime.now(timezone.utc)
+
+        try:
+            result = tool_executor(name, arguments)
+        except Exception as exc:
+            # L'étape en échec reste visible dans l'audit.
+            record_step(
+                audit,
+                name=name,
+                status="FAILED",
+                started_at=started_at,
+                finished_at=datetime.now(timezone.utc),
+                error=str(exc),
+            )
+            raise
+
+        finished_at = datetime.now(timezone.utc)
 
         status = "SUCCESS"
 
@@ -67,6 +85,8 @@ def execute_pipeline(plan: PipelinePlan, tool_executor) -> dict:
             name=name,
             status=status,
             result=result,
+            started_at=started_at,
+            finished_at=finished_at,
         )
 
         return result

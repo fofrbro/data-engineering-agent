@@ -626,3 +626,44 @@ def test_orchestrator_audit_without_decision_keeps_empty_policy_fields():
 
     assert audit["policy_rule"] is None
     assert audit["decision_reason"] is None
+
+
+def test_orchestrator_times_every_step():
+    def fake_tool(name, arguments):
+        return {"valid": True, "issues_count": 0, "errors_count": 0}
+
+    audit = execute_pipeline(
+        make_plan(decision=False, ingest=False,
+                  transform_to_silver=False, build_gold=False),
+        fake_tool,
+    )["audit"]
+
+    for step in audit["steps"]:
+        assert step["started_at"].endswith("+00:00")
+        assert step["duration_seconds"] >= 0
+        assert step["error"] is None
+
+
+def test_failed_step_is_persisted_in_audit(monkeypatch):
+    import pytest
+    import src.pipeline_orchestrator as orchestrator
+
+    persisted = []
+    monkeypatch.setattr(orchestrator, "append_audit", persisted.append)
+
+    def fake_tool(name, arguments):
+        if name == "validate_csv":
+            raise ValueError("fichier illisible")
+        return {"status": "OK"}
+
+    with pytest.raises(ValueError):
+        execute_pipeline(make_plan(), fake_tool)
+
+    audit = persisted[0]
+    failed = audit["steps"][-1]
+
+    assert audit["final_status"] == "FAILED"
+    assert failed["name"] == "validate_csv"
+    assert failed["status"] == "FAILED"
+    assert failed["error"] == "fichier illisible"
+    assert failed["duration_seconds"] >= 0

@@ -107,3 +107,44 @@ def test_finish_audit_records_execution_mode():
     )
 
     assert result["execution_mode"] == "ASSESS_ONLY"
+
+
+def test_record_step_with_timing_and_error():
+    from datetime import datetime, timezone
+
+    audit = create_audit_record(
+        run_id="run-timing",
+        source_file="data/sales.csv",
+        contract_path="data/contracts/sales.json",
+    )
+    started = datetime(2026, 9, 24, 10, 0, 0, tzinfo=timezone.utc)
+    finished = datetime(2026, 9, 24, 10, 0, 1, 500000, tzinfo=timezone.utc)
+
+    record_step(
+        audit,
+        name="validate_csv",
+        status="FAILED",
+        started_at=started,
+        finished_at=finished,
+        error="boom",
+    )
+
+    step = audit["steps"][0]
+
+    assert step["started_at"] == "2026-09-24T10:00:00+00:00"
+    assert step["finished_at"] == "2026-09-24T10:00:01.500000+00:00"
+    assert step["duration_seconds"] == 1.5
+    assert step["error"] == "boom"
+
+
+def test_record_step_without_timing_keeps_empty_fields():
+    audit = create_audit_record(
+        run_id="run-legacy",
+        source_file="data/sales.csv",
+        contract_path="data/contracts/sales.json",
+    )
+
+    record_step(audit, name="inspect_csv", status="SUCCESS")
+
+    assert audit["steps"][0]["duration_seconds"] is None
+    assert audit["steps"][0]["error"] is None

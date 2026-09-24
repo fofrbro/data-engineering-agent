@@ -41,14 +41,28 @@ def record_step(
     name: str,
     status: str,
     result: dict | None = None,
+    started_at: datetime | None = None,
+    finished_at: datetime | None = None,
+    error: str | None = None,
 ) -> None:
     """
     Ajoute le résultat d'une étape au journal d'audit.
+
+    Les horodatages sont en UTC ; la durée est calculée
+    lorsque le début et la fin sont connus.
     """
 
     step = {
         "name": name,
         "status": status,
+        "started_at": started_at.isoformat() if started_at else None,
+        "finished_at": finished_at.isoformat() if finished_at else None,
+        "duration_seconds": (
+            (finished_at - started_at).total_seconds()
+            if started_at and finished_at
+            else None
+        ),
+        "error": error,
     }
 
     if result is not None:
