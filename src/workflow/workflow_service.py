@@ -76,12 +76,14 @@ class WorkflowService:
         file_path: str,
         contract_path: str | None = None,
         dataset: str | None = None,
+        enrichments: list[dict] | None = None,
     ) -> dict:
         plan = plan_file(
             file_path,
             contract_path=contract_path or None,
             dataset=dataset or None,
             contracts_dir=self.contracts_dir,
+            enrichments=enrichments,
         )
         self._plans[plan.plan_id] = plan
 

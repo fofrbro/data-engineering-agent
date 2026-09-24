@@ -36,6 +36,7 @@ from src.recommendation.dashboard_review import (
 from src.recommendation.kpi_recommender import KpiRecommendation, recommend_kpis
 from src.recommendation.pipeline_recommender import (
     PipelineRecommendation,
+    Transformation,
     recommend_pipeline,
 )
 from src.semantic.semantic_profiler import SemanticProfile, profile_semantics
@@ -72,6 +73,7 @@ class AgentPlan:
     kpis: KpiRecommendation
     dashboard: DashboardPlan
     contracts_dir: str
+    enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
     status: str = PLANNED
@@ -101,6 +103,75 @@ CORRECTING_TRANSFORMATIONS = {
 }
 
 
+ENRICHMENT_SOURCES = {
+    "arithmetic": lambda op: [op.get("left"), op.get("right")],
+    "concat": lambda op: list(op.get("columns") or []),
+    "date_part": lambda op: [op.get("source")],
+    "constant": lambda op: [],
+}
+ARITHMETIC_OPERATORS = {"add", "subtract", "multiply", "divide"}
+DATE_PARTS = {"year", "month", "day", "quarter", "weekday"}
+
+
+def enrichment_transformations(
+    recommendation: PipelineRecommendation,
+    enrichments: list[dict],
+) -> list[Transformation]:
+    """
+    Transforme les enrichissements déclaratifs en étapes Silver.
+
+    Les colonnes sont désignées par leur nom Silver ; elles doivent
+    exister après les transformations recommandées (ou être créées
+    par un enrichissement précédent). Aucun code n'est évalué.
+    """
+
+    available = set(recommendation.bronze["columns"])
+    steps = []
+
+    for step in recommendation.transformations:
+        if step.type == "rename":
+            available = {step.parameters["mapping"].get(c, c) for c in available}
+        if step.type == "derive":
+            derived = [step.parameters.get("target"), *step.parameters.get("targets", [])]
+            available |= {column for column in derived if column}
+
+    for operation in enrichments:
+        kind = operation.get("type")
+        target = operation.get("target")
+
+        if kind not in ENRICHMENT_SOURCES:
+            raise WorkflowError(f"Type d'enrichissement inconnu : {kind}")
+
+        if not isinstance(target, str) or not target or target in available:
+            raise WorkflowError(f"Colonne cible invalide ou déjà existante : {target}")
+
+        sources = ENRICHMENT_SOURCES[kind](operation)
+        missing = [c for c in sources if c not in available]
+
+        if missing or (kind == "concat" and not sources):
+            raise WorkflowError(f"Colonnes absentes pour {target} : {missing or sources}")
+
+        if kind == "arithmetic" and operation.get("operator", "multiply") not in ARITHMETIC_OPERATORS:
+            raise WorkflowError(f"Opérateur inconnu pour {target} : {operation.get('operator')}")
+
+        if kind == "date_part" and operation.get("part", "year") not in DATE_PARTS:
+            raise WorkflowError(f"Partie de date inconnue pour {target} : {operation.get('part')}")
+
+        available.add(target)
+        steps.append(
+            Transformation(
+                id=f"enrich_{target}",
+                type="enrich",
+                columns=sources,
+                description=f"Enrichissement {kind} : créer {target}.",
+                rationale="Enrichissement demandé par l'utilisateur.",
+                parameters={"operation": dict(operation)},
+            )
+        )
+
+    return steps
+
+
 def _refresh(plan: AgentPlan) -> None:
     """
     Recalcule ce qui dépend du contrat, dont la décision
@@ -111,6 +182,9 @@ def _refresh(plan: AgentPlan) -> None:
     schema = plan.discovery.schema
     plan.recommendation = recommend_pipeline(
         schema, plan.semantics, plan.contract, plan.dataset,
+    )
+    plan.recommendation.transformations.extend(
+        enrichment_transformations(plan.recommendation, plan.enrichments)
     )
     plan.quality_preview = validate_csv(plan.file_path, plan.contract_path)
     plan.decision_preview = determine_ingestion_decision(
@@ -159,10 +233,12 @@ def plan_file(
     contract_path: str | None = None,
     dataset: str | None = None,
     contracts_dir: str | Path = DEFAULT_CONTRACTS_DIR,
+    enrichments: list[dict] | None = None,
 ) -> AgentPlan:
     """
     PLAN : analyse le fichier et propose tout ce qui est nécessaire
-    à son traitement. Sans contrat fourni, un contrat PROPOSED est
+    à son traitement. Les enrichissements déclaratifs demandés
+    deviennent des transformations Silver. Sans contrat fourni, un contrat PROPOSED est
     généré dans <contracts_dir>/proposed/.
     """
 
@@ -201,6 +277,7 @@ def plan_file(
         kpis=kpis,
         dashboard=plan_dashboard(kpis, discovery.schema, semantics),
         contracts_dir=str(contracts_dir),
+        enrichments=list(enrichments or []),
     )
     _refresh(plan)
 

@@ -902,12 +902,21 @@
                 showMessage("Veuillez d'abord uploader un fichier", 'error');
                 return;
             }
+            let enrichments = [];
+            try {
+                enrichments = JSON.parse(document.getElementById('enrichments').value || '[]');
+                if (!Array.isArray(enrichments)) throw new Error('Le JSON doit être une liste');
+            } catch (error) {
+                showMessage(`Enrichissements invalides: ${error.message}`, 'error');
+                return;
+            }
             try {
                 showMessage("L'agent analyse le fichier...", 'info');
                 const view = await workflowRequest('/api/workflow/plan', {
                     file_id: currentFileId,
                     contract_path: document.getElementById('contractPath').value.trim() || null,
-                    dataset_name: document.getElementById('datasetName').value.trim() || null
+                    dataset_name: document.getElementById('datasetName').value.trim() || null,
+                    enrichments
                 });
                 currentPlanId = view.plan_id;
                 showMessage('✓ Plan proposé : il doit être validé avant exécution.', 'success');

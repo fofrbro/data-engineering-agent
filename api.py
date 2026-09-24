@@ -138,6 +138,7 @@ class WorkflowPlanRequest(BaseModel):
     file_id: str
     contract_path: Optional[str] = None
     dataset_name: Optional[str] = None
+    enrichments: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class WorkflowAskRequest(BaseModel):
@@ -699,6 +700,7 @@ async def create_workflow_plan(request: WorkflowPlanRequest):
             files[0]["file_path"],
             request.contract_path,
             dataset,
+            request.enrichments,
         )
     )
 

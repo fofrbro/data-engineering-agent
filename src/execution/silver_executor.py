@@ -17,6 +17,7 @@ from dataclasses import asdict, dataclass
 import pandas as pd
 
 from src.recommendation.pipeline_recommender import Transformation
+from src.tabular_pipeline import enrich_dataframe
 
 
 APPLIED = "APPLIED"
@@ -170,6 +171,13 @@ def _apply(
         for part in params["targets"]:
             df[part] = getattr(dates.dt, part)
         return df, empty
+
+    if step.type == "enrich":
+        try:
+            enriched, _ = enrich_dataframe(df, [params["operation"]])
+        except ValueError as exc:
+            raise TransformationError(str(exc)) from exc
+        return enriched, empty
 
     raise TransformationError(f"Transformation inconnue : {step.id}")
 
