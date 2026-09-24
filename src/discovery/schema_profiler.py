@@ -9,6 +9,7 @@ scores de confiance, relève du semantic profiler.
 
 import math
 import re
+import unicodedata
 import warnings
 from dataclasses import asdict, dataclass, field
 from datetime import date, datetime
@@ -202,13 +203,31 @@ def _infer_type(values: pd.Series) -> tuple[str, pd.Series]:
     return STRING, values
 
 
-def _identifier_name_hint(name: str) -> bool:
-    snake = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(name))
-    tokens = [
+def name_tokens(name) -> list[str]:
+    """
+    Découpe un nom de colonne en mots normalisés :
+    camelCase séparé, minuscules, accents retirés.
+
+    Exemple : "QuantitéVendue" -> ["quantite", "vendue"].
+    """
+
+    text = unicodedata.normalize("NFKD", str(name))
+    text = "".join(
+        char
+        for char in text
+        if not unicodedata.combining(char)
+    )
+    snake = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", text)
+
+    return [
         token
         for token in re.split(r"[^a-z0-9]+", snake.lower())
         if token
     ]
+
+
+def _identifier_name_hint(name: str) -> bool:
+    tokens = name_tokens(name)
 
     if not tokens:
         return False
