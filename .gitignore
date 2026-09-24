@@ -21,3 +21,7 @@ data/audit/
 uploads/
 results/
 data/archive/
+
+# Sauvegardes de restauration (copies du projet)
+Data-engineering/
+Data-engineering.zip
