@@ -104,8 +104,8 @@ class IncrementalLoadResult:
 class LocalLakehouse:
     """
     Lakehouse local : une table = un fichier Parquet.
-    Seules les opérations nécessaires au chargement incrémental
-    sont fournies (lecture et ajout).
+    Seules les opérations nécessaires aux chargements sont fournies
+    (lecture, ajout, remplacement).
     """
 
     def __init__(self, root: str | Path):
@@ -119,6 +119,13 @@ class LocalLakehouse:
 
     def read_table(self, table: str) -> pd.DataFrame:
         return pd.read_parquet(self._path(table))
+
+    def overwrite(self, table: str, rows: pd.DataFrame) -> None:
+        """Remplace entièrement la table."""
+
+        path = self._path(table)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        rows.to_parquet(path, index=False)
 
     def append(
         self,

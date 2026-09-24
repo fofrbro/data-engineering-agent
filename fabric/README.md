@@ -36,3 +36,12 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   sans erreur ; la durée moyenne reste NULL tant qu'aucune durée n'est
   connue. Même vérification SQLite contre `calculate_step_kpis()`.
   **Pas encore exécutée dans Fabric.**
+- `notebooks/load_gold_tables.py` : chargement des tables Gold d'un dataset
+  depuis `Files/gold/<dataset>/` (manifeste + Parquet). Chaque table est
+  remplacée par sa dernière version vérifiée, le nombre de lignes est
+  contrôlé, le chargement est tracé dans `gold_loads` et un run déjà chargé
+  n'est pas rechargé. Les fichiers sont préparés par
+  `src/fabric/gold_export.export_gold_for_fabric()` (exécution SUCCESS
+  uniquement) dans `data/fabric_export/gold/<dataset>/`. Logique testée
+  localement (`tests/test_fabric_gold_export.py`). **Pas encore exécuté dans
+  Fabric.**

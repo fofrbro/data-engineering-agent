@@ -28,3 +28,6 @@ Data-engineering.zip
 
 # Contrats proposés automatiquement (à relire avant validation)
 data/contracts/proposed/
+
+# Fichiers préparés pour Fabric (à déposer dans Files/)
+data/fabric_export/
