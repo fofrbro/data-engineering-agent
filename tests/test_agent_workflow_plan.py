@@ -137,3 +137,44 @@ def test_proposed_contract_is_saved_for_review(contracts_dir):
     saved = json.loads(open(plan.contract_path, encoding="utf-8").read())
 
     assert saved["status"] == "PROPOSED"
+
+
+def test_quality_warnings_show_whether_they_will_be_corrected(tmp_path, contracts_dir):
+    plan = plan_file(orders_file(tmp_path), contracts_dir=contracts_dir)
+    approve_plan_contract(plan, "cheikhou")
+
+    before = validation_status(plan)
+    preview_before = render_plan_preview(plan)
+    approve_destructive_transformations(plan, "cheikhou")
+    after = validation_status(plan)
+
+    assert plan.decision_preview["policy_rule"] == "PASSED_WITH_WARNINGS"
+    assert {(w["rule"], w["correction"]) for w in before["quality_warnings"]} == {
+        ("no_nulls", "fill_null_dimensions"),
+        ("no_duplicates", "deduplicate_rows"),
+    }
+    assert len(before["uncorrected_warnings"]) == 2
+    assert "NON CORRIGÉ : approuver deduplicate_rows" in preview_before
+    assert after["uncorrected_warnings"] == []
+    assert "corrigé par deduplicate_rows" in render_plan_preview(plan)
+
+
+def test_null_measure_warning_is_not_marked_corrected(tmp_path, contracts_dir):
+    path = tmp_path / "orders.csv"
+    pd.DataFrame(
+        {
+            "order_id": [1, 2, 3],
+            "status": ["paid", None, "paid"],
+            "amount": [10.0, None, 30.0],
+        }
+    ).to_csv(path, index=False)
+
+    plan = plan_file(str(path), contracts_dir=contracts_dir)
+    approve_plan_contract(plan, "cheikhou")
+    approve_destructive_transformations(plan, "cheikhou")
+    warnings = {w["column"]: w for w in validation_status(plan)["quality_warnings"]}
+
+    assert warnings["status"]["corrected"] is True
+    # Une mesure nulle n'est jamais imputée.
+    assert warnings["amount"]["correction"] is None
+    assert warnings["amount"]["corrected"] is False

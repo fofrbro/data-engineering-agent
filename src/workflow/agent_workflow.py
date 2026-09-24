@@ -72,6 +72,7 @@ class AgentPlan:
     kpis: KpiRecommendation
     dashboard: DashboardPlan
     contracts_dir: str
+    quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
     status: str = PLANNED
     history: list[dict] = field(default_factory=list)
@@ -93,26 +94,64 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _preview_decision(file_path: str, contract_path: str) -> dict:
-    """
-    Décision prévisionnelle, non auditée. La décision qui compte
-    est recalculée au moment de l'exécution.
-    """
-
-    return determine_ingestion_decision(
-        validate_contract(file_path, contract_path),
-        validate_csv(file_path, contract_path),
-    )
+# Avertissements qualité et transformation Silver qui les corrige.
+CORRECTING_TRANSFORMATIONS = {
+    "no_duplicates": "deduplicate_rows",
+    "no_nulls": "fill_null_dimensions",
+}
 
 
 def _refresh(plan: AgentPlan) -> None:
-    """Recalcule ce qui dépend du contrat."""
+    """
+    Recalcule ce qui dépend du contrat, dont la décision
+    prévisionnelle. Elle n'est pas auditée : la décision qui compte
+    est recalculée au moment de l'exécution.
+    """
 
     schema = plan.discovery.schema
     plan.recommendation = recommend_pipeline(
         schema, plan.semantics, plan.contract, plan.dataset,
     )
-    plan.decision_preview = _preview_decision(plan.file_path, plan.contract_path)
+    plan.quality_preview = validate_csv(plan.file_path, plan.contract_path)
+    plan.decision_preview = determine_ingestion_decision(
+        validate_contract(plan.file_path, plan.contract_path),
+        plan.quality_preview,
+    )
+
+
+def quality_warnings(plan: AgentPlan) -> list[dict]:
+    """
+    Avertissements qualité, avec la transformation qui les corrige
+    et l'indication qu'elle sera réellement appliquée ou non.
+    """
+
+    planned = {step.id: step for step in plan.recommendation.transformations}
+    warnings = []
+
+    for issue in plan.quality_preview.get("issues", []):
+        if issue.get("severity") != "WARNING":
+            continue
+
+        correction = CORRECTING_TRANSFORMATIONS.get(issue["rule"])
+        step = planned.get(correction)
+
+        # La correction doit porter sur la colonne concernée.
+        if step and issue.get("column") and issue["column"] not in step.columns:
+            step = None
+        corrected = step is not None and (
+            not step.requires_approval or plan.destructive_approval is not None
+        )
+        warnings.append(
+            {
+                "rule": issue["rule"],
+                "column": issue.get("column"),
+                "message": issue["message"],
+                "correction": correction if step else None,
+                "corrected": corrected,
+            }
+        )
+
+    return warnings
 
 
 def plan_file(
@@ -263,8 +302,12 @@ def validation_status(plan: AgentPlan) -> dict:
             f"Contrat {plan.contract_status} : validation requise avant exécution."
         )
 
+    warnings = quality_warnings(plan)
+
     return {
         "contract_validated": plan.contract_status == VALIDATED,
+        "quality_warnings": warnings,
+        "uncorrected_warnings": [w for w in warnings if not w["corrected"]],
         "destructive_transformations": destructive,
         "destructive_approved": destructive_approved,
         "skipped_if_not_approved": [] if destructive_approved else destructive,
@@ -303,6 +346,22 @@ def render_plan_preview(plan: AgentPlan) -> str:
         f"  - {table.name} ({table.table_type})"
         for table in plan.recommendation.gold
     ]
+
+    if status["quality_warnings"]:
+        lines.append("Avertissements qualité :")
+
+        for warning in status["quality_warnings"]:
+            target = f" ({warning['column']})" if warning["column"] else ""
+            outcome = (
+                f"corrigé par {warning['correction']}"
+                if warning["corrected"]
+                else "NON CORRIGÉ : " + (
+                    f"approuver {warning['correction']}"
+                    if warning["correction"]
+                    else "aucune correction prévue"
+                )
+            )
+            lines.append(f"  - {warning['rule']}{target} : {warning['message']} -> {outcome}")
 
     lines += ["", f"KPI proposés : {len(plan.kpis.kpis)}", ""]
     lines.append(render_dashboard_preview(plan.dashboard))
