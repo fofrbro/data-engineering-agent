@@ -66,6 +66,10 @@ def test_audit_to_step_rows():
         "step_order": 1,
         "step_name": "validate_csv",
         "status": "SUCCESS",
+        "started_at": None,
+        "finished_at": None,
+        "duration_seconds": None,
+        "error": None,
     }
 
     assert rows[1]["step_order"] == 2

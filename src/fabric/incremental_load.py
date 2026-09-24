@@ -120,7 +120,18 @@ class LocalLakehouse:
     def read_table(self, table: str) -> pd.DataFrame:
         return pd.read_parquet(self._path(table))
 
-    def append(self, table: str, rows: pd.DataFrame) -> None:
+    def append(
+        self,
+        table: str,
+        rows: pd.DataFrame,
+        normalize=None,
+    ) -> None:
+        """
+        Ajoute des lignes. normalize reçoit la table complète : comme
+        mergeSchema dans Delta, les colonnes nouvelles sont ajoutées et
+        restent vides pour les lignes existantes.
+        """
+
         path = self._path(table)
         path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -129,6 +140,9 @@ class LocalLakehouse:
                 [pd.read_parquet(path), rows],
                 ignore_index=True,
             )
+
+        if normalize is not None:
+            rows = normalize(rows)
 
         rows.to_parquet(path, index=False)
 
@@ -162,10 +176,10 @@ def load_audit_incrementally(
     new_steps = select_new_steps(source_steps, source_runs, existing_steps)
 
     if not new_steps.empty:
-        lakehouse.append("pipeline_steps", new_steps)
+        lakehouse.append("pipeline_steps", new_steps, normalize_step_table)
 
     if not new_runs.empty:
-        lakehouse.append("pipeline_runs", new_runs)
+        lakehouse.append("pipeline_runs", new_runs, normalize_run_table)
 
     return IncrementalLoadResult(
         inserted_runs=len(new_runs),

@@ -38,6 +38,11 @@ def audit_to_step_rows(audit: dict) -> list[dict]:
                 "step_order": position,
                 "step_name": step.get("name"),
                 "status": step.get("status"),
+                # Absents des audits antérieurs à l'horodatage des étapes.
+                "started_at": step.get("started_at"),
+                "finished_at": step.get("finished_at"),
+                "duration_seconds": step.get("duration_seconds"),
+                "error": step.get("error"),
             }
         )
 

@@ -11,6 +11,8 @@
 #
 # Exécuté dans Fabric le 2026-09-24 : tables et vue créées ; une seconde
 # exécution ne crée aucun run_id en double.
+# Colonnes d'horodatage des étapes (mergeSchema) : pas encore exécuté
+# dans Fabric.
 
 # %%
 from pyspark.sql import functions as F
@@ -35,7 +37,20 @@ STEP_COLUMNS = [
     "step_order",
     "step_name",
     "status",
+    "started_at",
+    "finished_at",
+    "duration_seconds",
+    "error",
 ]
+
+# Colonnes d'étape ajoutées avec l'horodatage des étapes : absentes des
+# exports plus anciens, elles sont alors créées vides.
+STEP_TIMING_TYPES = {
+    "started_at": "timestamp",
+    "finished_at": "timestamp",
+    "duration_seconds": "double",
+    "error": "string",
+}
 
 RUNS_SOURCE = "Files/audit/pipeline_runs_structured.parquet"
 STEPS_SOURCE = "Files/audit/pipeline_steps_structured.parquet"
@@ -47,8 +62,14 @@ source_runs = (
     .dropDuplicates(["run_id"])
 )
 
+raw_steps = spark.read.parquet(STEPS_SOURCE)
+
+for column, column_type in STEP_TIMING_TYPES.items():
+    if column not in raw_steps.columns:
+        raw_steps = raw_steps.withColumn(column, F.lit(None).cast(column_type))
+
 source_steps = (
-    spark.read.parquet(STEPS_SOURCE)
+    raw_steps
     .select(*STEP_COLUMNS)
     .join(source_runs.select("run_id"), "run_id", "left_semi")
     .dropDuplicates(["run_id", "step_order"])
@@ -79,9 +100,12 @@ inserted_steps = new_steps.count()
 inserted_runs = new_runs.count()
 
 # %%
+# mergeSchema : ajoute les colonnes d'horodatage à une table créée
+# avant leur introduction ; les lignes existantes restent à NULL.
 new_steps.select(*STEP_COLUMNS).write \
     .mode("append") \
     .format("delta") \
+    .option("mergeSchema", "true") \
     .saveAsTable("pipeline_steps")
 
 new_runs.select(*RUN_COLUMNS).write \

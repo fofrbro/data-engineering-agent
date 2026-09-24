@@ -90,6 +90,10 @@ STEP_COLUMNS = [
     "step_order",
     "step_name",
     "status",
+    "started_at",
+    "finished_at",
+    "duration_seconds",
+    "error",
 ]
 
 
@@ -157,6 +161,21 @@ def normalize_step_table(
     ).astype("Int64")
     table["step_name"] = table["step_name"].astype("string")
     table["status"] = table["status"].astype("string")
+    table["started_at"] = pd.to_datetime(
+        table["started_at"],
+        errors="coerce",
+        utc=True,
+    )
+    table["finished_at"] = pd.to_datetime(
+        table["finished_at"],
+        errors="coerce",
+        utc=True,
+    )
+    table["duration_seconds"] = pd.to_numeric(
+        table["duration_seconds"],
+        errors="coerce",
+    ).astype("float64")
+    table["error"] = table["error"].astype("string")
 
     return table
 

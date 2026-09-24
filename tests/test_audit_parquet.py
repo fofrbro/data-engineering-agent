@@ -203,7 +203,12 @@ def test_normalize_step_table():
         "step_order",
         "step_name",
         "status",
+        "started_at",
+        "finished_at",
+        "duration_seconds",
+        "error",
     ]
+    assert normalized["duration_seconds"].isna().all()
 
     assert normalized[
         "step_order"

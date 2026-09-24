@@ -137,10 +137,46 @@ def test_loaded_schema_is_stable_and_utc(tmp_path):
     assert str(loaded["started_at"].dt.tz) == "UTC"
     assert list(lakehouse.read_table("pipeline_steps").columns) == [
         "run_id", "step_order", "step_name", "status",
+        "started_at", "finished_at", "duration_seconds", "error",
     ]
+
+
+def test_new_step_columns_are_added_to_an_old_schema_table(tmp_path):
+    lakehouse = LocalLakehouse(tmp_path)
+    old_runs, old_steps = source(["r1"])
+    lakehouse.append("pipeline_runs", old_runs)
+    lakehouse.append("pipeline_steps", old_steps)
+
+    runs, step_rows = source(["r1", "r2"])
+    step_rows["started_at"] = "2026-09-24T10:00:00+00:00"
+    step_rows["duration_seconds"] = 0.5
+
+    load_audit_incrementally(lakehouse, runs, step_rows)
+    loaded = lakehouse.read_table("pipeline_steps")
+
+    assert len(loaded) == 4
+    assert loaded.loc[loaded.run_id == "r1", "duration_seconds"].isna().all()
+    assert (loaded.loc[loaded.run_id == "r2", "duration_seconds"] == 0.5).all()
+    assert str(loaded["started_at"].dt.tz) == "UTC"
 
 
 def test_select_new_runs_against_empty_table():
     runs, _ = source(["r1", "r2"])
 
     assert len(select_new_runs(runs, pd.DataFrame(columns=["run_id"]))) == 2
+
+
+def test_notebook_step_columns_match_local_schema():
+    from pathlib import Path
+
+    from src.audit_parquet import STEP_COLUMNS
+
+    notebook = Path("fabric/notebooks/incremental_load_audit_tables.py").read_text(
+        encoding="utf-8"
+    )
+    namespace = {}
+    start = notebook.index("STEP_COLUMNS = [")
+    exec(notebook[start:notebook.index("]", start) + 1], namespace)
+
+    assert namespace["STEP_COLUMNS"] == STEP_COLUMNS
+    assert '.option("mergeSchema", "true")' in notebook

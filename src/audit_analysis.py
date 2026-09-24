@@ -44,6 +44,10 @@ def load_audit_tables(input_path=None):
             "step_order",
             "step_name",
             "status",
+            "started_at",
+            "finished_at",
+            "duration_seconds",
+            "error",
         ],
     )
 
