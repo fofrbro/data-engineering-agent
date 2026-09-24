@@ -33,6 +33,12 @@ from src.tabular_pipeline import (
     process_uploads,
 )
 from src.tools.data_analyst import DataAnalyst, analyze_gold_data
+from src.contract.contract_lifecycle import (
+    ContractStatusError,
+    approve_contract_file,
+    reject_contract_file,
+)
+from src.upload_governance import assess_uploads
 from src.tools.fabric_connector import (
     configure_fabric_session,
     publish_to_fabric as publish_dataset_to_fabric,
@@ -109,6 +115,13 @@ def _fabric_msal_application():
 # ============================================
 # Modèles Pydantic
 # ============================================
+
+
+class ContractReviewRequest(BaseModel):
+    """Revue d'un contrat proposé."""
+    contract_path: str
+    reviewer: str
+    comment: Optional[str] = None
 
 
 class PipelineRequest(BaseModel):
@@ -425,6 +438,7 @@ async def execute_pipeline(
             publish_to_fabric,
             pipeline_request.enrichments,
             pipeline_request.drop_duplicates,
+            contract_path or None,
         )
 
         return {
@@ -520,12 +534,29 @@ def run_pipeline_async(
     publish_to_fabric: bool,
     enrichments: list[dict[str, Any]],
     drop_duplicates: bool,
+    contract_path: Optional[str] = None,
 ):
     """Exécute un pipeline tabulaire déterministe dans une tâche de fond."""
     session = sessions[file_id]
 
     try:
         session["status"] = "processing"
+
+        # Le Policy Engine décide avant tout traitement :
+        # seuls les lots entièrement INGEST sont transformés.
+        governance = assess_uploads(
+            file_paths,
+            contract_path,
+            dataset_name,
+        )
+        if not governance["allowed"]:
+            session["results"] = {
+                "status": "blocked",
+                "governance": governance,
+                "completed_at": datetime.now().isoformat(),
+            }
+            session["status"] = "blocked"
+            return
 
         pipeline = process_uploads(
             file_paths=file_paths,
@@ -563,6 +594,7 @@ def run_pipeline_async(
             }
         session["results"] = {
             "status": "success",
+            "governance": governance,
             "pipeline": pipeline,
             "analysis": analysis,
             "analysis_report": analysis_report,
@@ -592,6 +624,45 @@ def run_pipeline_async(
             "completed_at": datetime.now().isoformat()
         }
         session["status"] = "error"
+
+
+# ============================================
+# Revue des Data Contracts
+# ============================================
+
+
+@app.post("/api/contracts/approve")
+async def approve_contract_endpoint(review: ContractReviewRequest):
+    """Valide un contrat proposé ; il devient utilisable pour l'ingestion."""
+    try:
+        path = approve_contract_file(
+            review.contract_path,
+            review.reviewer,
+            review.comment,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except ContractStatusError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    return {"status": "VALIDATED", "contract_path": path.as_posix()}
+
+
+@app.post("/api/contracts/reject")
+async def reject_contract_endpoint(review: ContractReviewRequest):
+    """Rejette un contrat proposé ; le commentaire sert de motif."""
+    try:
+        path = reject_contract_file(
+            review.contract_path,
+            review.reviewer,
+            review.comment or "",
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except ContractStatusError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    return {"status": "REJECTED", "contract_path": path.as_posix()}
 
 
 # ============================================

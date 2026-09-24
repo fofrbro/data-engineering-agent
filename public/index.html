@@ -713,6 +713,10 @@
                     clearInterval(pollingInterval);
                     showMessage('✓ Pipeline complété', 'success');
                     await displayResults(data);
+                } else if (data.status === 'blocked') {
+                    clearInterval(pollingInterval);
+                    showMessage('⛔ Traitement bloqué par le Policy Engine', 'warning');
+                    displayGovernance(data);
                 } else if (data.status === 'awaiting_fabric_auth') {
                     clearInterval(pollingInterval);
                     showMessage('⚠️ La publication Fabric est désactivée pour le moment.', 'warning');
@@ -728,6 +732,58 @@
         // ============================================
         // Affichage des Résultats
         // ============================================
+
+        function displayGovernance(data) {
+            const governance = data.results?.governance || {};
+            const rows = (governance.assessments || []).map(item => `
+                <li><strong>${escapeHtml(item.file)}</strong> :
+                    ${escapeHtml(item.decision || '')}
+                    (${escapeHtml(item.policy_rule || '')}) —
+                    ${escapeHtml(item.reason || '')}</li>
+            `).join('');
+
+            let html = `
+                <div class="result-item">
+                    <h3>${escapeHtml(data.file_name)}</h3>
+                    <span class="status">⛔ bloqué</span>
+                    <p style="margin-top: 15px;"><strong>Décisions du Policy Engine :</strong></p>
+                    <ul>${rows}</ul>
+            `;
+
+            if (governance.proposed_contract_path) {
+                html += `
+                    <p style="margin-top: 15px;">Un Data Contract a été proposé :
+                        <code>${escapeHtml(governance.proposed_contract_path)}</code>.
+                        Relisez-le, puis approuvez-le pour relancer le pipeline avec ce contrat.</p>
+                    <button class="btn-primary" onclick="approveProposedContract('${escapeHtml(governance.proposed_contract_path)}')">
+                        Approuver le contrat proposé
+                    </button>
+                `;
+            }
+
+            html += '</div>';
+            document.getElementById('executionList').innerHTML = html;
+            switchTab('execution');
+        }
+
+        async function approveProposedContract(contractPath) {
+            const reviewer = window.prompt('Nom du relecteur qui valide ce contrat :');
+            if (!reviewer) return;
+
+            const response = await fetch('/api/contracts/approve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contract_path: contractPath, reviewer })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('contractPath').value = data.contract_path;
+                showMessage(`✓ Contrat validé : ${data.contract_path}. Relancez le pipeline.`, 'success');
+            } else {
+                showMessage(formatApiError(data, 'Validation du contrat impossible'), 'error');
+            }
+        }
 
         async function displayResults(data) {
             const executionList = document.getElementById('executionList');

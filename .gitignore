@@ -25,3 +25,6 @@ data/archive/
 # Sauvegardes de restauration (copies du projet)
 Data-engineering/
 Data-engineering.zip
+
+# Contrats proposés automatiquement (à relire avant validation)
+data/contracts/proposed/
