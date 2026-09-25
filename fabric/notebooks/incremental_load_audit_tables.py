@@ -11,8 +11,8 @@
 #
 # Exécuté dans Fabric le 2026-09-24 : tables et vue créées ; une seconde
 # exécution ne crée aucun run_id en double.
-# Colonnes d'horodatage des étapes (mergeSchema) : pas encore exécuté
-# dans Fabric.
+# Colonnes d'horodatage des étapes (mergeSchema) et vue
+# pipeline_step_observability : confirmées dans Fabric le 2026-09-25.
 
 # %%
 from pyspark.sql import functions as F

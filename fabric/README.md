@@ -35,7 +35,8 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   taux de succès, durée moyenne). Une étape réussie est une étape terminée
   sans erreur ; la durée moyenne reste NULL tant qu'aucune durée n'est
   connue. Même vérification SQLite contre `calculate_step_kpis()`.
-  **Pas encore exécutée dans Fabric.**
+  Exécutée dans Fabric le 2026-09-25 : 7 étapes, durées moyennes renseignées
+  (colonnes d'horodatage ajoutées à `pipeline_steps` par `mergeSchema`).
 - `notebooks/load_gold_tables.py` : chargement des tables Gold d'un dataset
   depuis `Files/gold/<dataset>/` (manifeste + Parquet). Chaque table est
   remplacée par sa dernière version vérifiée, le nombre de lignes est
@@ -47,5 +48,6 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   Exécuté dans Fabric le 2026-09-24 pour le dataset `sales` : tables
   `fact_sales`, `dim_customer`, `dim_product`, `sales_by_product` et
   `sales_summary` créées, valeurs conformes (CA 3 110, quantité 12, 5 lignes).
-  **Non encore confirmés dans Fabric : la table `gold_loads` et le fait
-  qu'une seconde exécution ne recharge pas le même run.**
+  Table `gold_loads` confirmée le 2026-09-25 : 5 lignes, une par table, même
+  `run_id`. **Non encore confirmé dans Fabric : une seconde exécution ne
+  recharge pas le même run.**

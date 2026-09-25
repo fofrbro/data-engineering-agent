@@ -2,7 +2,9 @@
 
 Artefacts à reproduire dans le modèle sémantique et le rapport Power BI.
 Ils sont générés par `src/powerbi/` ; les tests vérifient leur sémantique
-en Python, mais **ils n'ont pas été exécutés dans Power BI**.
+en Python. Dans Power BI, la relation et les mesures ont été créées le
+2026-09-25 ; **les valeurs affichées et les pages du rapport ne sont pas
+encore confirmées**.
 
 ## Modèle sémantique
 
