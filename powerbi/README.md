@@ -36,6 +36,10 @@ sémantique DAX et la compare aux KPI Python (`calculate_pipeline_kpis`,
 
 ## Rapport
 
+**Pour construire les pages, suivre `observability_report_guide.md`** :
+visuel par visuel, avec les noms de l'interface Power BI en français et les
+champs à glisser dans chaque zone.
+
 `observability_report.json` décrit les pages 1 et 2 : pour chaque visuel,
 son type Power BI, ses champs et ses mesures, plus les segments (fichier,
 décision, mode, statut, date). C'est une référence de construction, pas un

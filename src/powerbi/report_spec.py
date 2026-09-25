@@ -253,3 +253,112 @@ def save_report_spec(spec: dict, path: str | Path) -> Path:
         newline="\n",
     )
     return destination
+
+
+# ----------------------------------------------------------------------
+# Guide de construction lisible (interface Power BI en français)
+# ----------------------------------------------------------------------
+
+VISUAL_LABELS_FR = {
+    "card": "Carte",
+    "clusteredBarChart": "Graphique à barres groupées",
+    "clusteredColumnChart": "Histogramme groupé",
+    "lineChart": "Graphique en courbes",
+    "stackedBarChart": "Graphique à barres empilées",
+    "stackedColumnChart": "Histogramme empilé",
+    "pieChart": "Graphique en secteurs",
+    "donutChart": "Graphique en anneau",
+    "scatterChart": "Nuage de points",
+    "tableEx": "Table",
+    "pivotTable": "Matrice",
+}
+
+# Zones de champs du volet « Générer un visuel ». Dans un graphique à
+# barres, les catégories sont sur l'axe Y et les valeurs sur l'axe X.
+WELLS_FR = {
+    "card": {"values": "Champs"},
+    "clusteredBarChart": {"axis": "Axe Y", "values": "Axe X", "legend": "Légende"},
+    "stackedBarChart": {"axis": "Axe Y", "values": "Axe X", "legend": "Légende"},
+    "clusteredColumnChart": {"axis": "Axe X", "values": "Axe Y", "legend": "Légende"},
+    "stackedColumnChart": {"axis": "Axe X", "values": "Axe Y", "legend": "Légende"},
+    "lineChart": {"axis": "Axe X", "values": "Axe Y", "legend": "Légende"},
+    "pieChart": {"legend": "Légende", "values": "Valeurs", "axis": "Légende"},
+    "donutChart": {"legend": "Légende", "values": "Valeurs", "axis": "Légende"},
+    "scatterChart": {"x": "Axe X", "y": "Axe Y"},
+    "tableEx": {"columns": "Colonnes"},
+    "pivotTable": {"rows": "Lignes", "columns": "Colonnes", "values": "Valeurs"},
+}
+
+GRANULARITY_FR = {"day": "jour", "month": "mois"}
+
+
+def _field_label(field: str) -> str:
+    """ "[Total Runs]" -> "mesure Total Runs" ; "t[col]" -> "t > col". """
+
+    if field.startswith("[") and field.endswith("]"):
+        return f"mesure « {field[1:-1]} »"
+
+    table, column = field.rstrip("]").split("[", 1)
+    return f"« {table.strip(chr(39))} > {column} »"
+
+
+def _visual_lines(visual: dict) -> list[str]:
+    wells = WELLS_FR[visual["visual_type"]]
+    lines = [f"- **{visual['title']}** : {VISUAL_LABELS_FR[visual['visual_type']]}"]
+    placed = set()
+
+    for key, value in visual["fields"].items():
+        if key == "date_granularity":
+            continue
+
+        well = wells[key]
+        values = value if isinstance(value, list) else [value]
+        label = ", ".join(_field_label(v) for v in values)
+
+        # Un anneau n'a qu'une zone Légende : l'axe et la légende s'y confondent.
+        if (well, label) in placed:
+            continue
+
+        placed.add((well, label))
+        lines.append(f"  - {well} : {label}")
+
+    if "date_granularity" in visual["fields"]:
+        lines.append(
+            "  - Dans l'axe, remplacer la hiérarchie de dates par le champ "
+            f"lui-même (granularité : {GRANULARITY_FR[visual['fields']['date_granularity']]})."
+        )
+
+    return lines
+
+
+def render_report_guide(spec: dict) -> str:
+    """Guide pas à pas pour construire le rapport dans Power BI."""
+
+    lines = [
+        f"# Guide de construction du rapport « {spec['report']} »",
+        "",
+        "Généré par `src/powerbi/report_spec.py` - ne pas modifier à la main.",
+        "",
+        "Pour chaque visuel : cliquer sur l'icône du visuel dans le volet",
+        "« Visualisations », puis faire glisser les champs indiqués depuis le volet",
+        "« Données » dans les zones du volet « Générer un visuel ».",
+        "",
+    ]
+
+    for number, page in enumerate(spec["pages"], start=1):
+        lines += [f"## Page {number} - {page['title']}", ""]
+        lines.append(f"Renommer la page : « {page['title']} ».")
+        lines += ["", "### Visuels", ""]
+
+        for visual in page["visuals"]:
+            lines += _visual_lines(visual)
+
+        lines += ["", "### Segments (filtres de page)", ""]
+
+        for slicer in page["slicers"]:
+            style = "Entre (plage de dates)" if slicer["slicer"] == "between" else "Liste déroulante"
+            lines.append(f"- Segment sur {_field_label(slicer['field'])}, style : {style}")
+
+        lines.append("")
+
+    return "\n".join(lines)

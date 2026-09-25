@@ -94,3 +94,33 @@ def test_versioned_observability_spec_is_up_to_date():
     )
 
     assert versioned == build_report_spec()
+
+
+def test_every_visual_type_has_french_label_and_wells():
+    from src.powerbi.report_spec import VISUAL_LABELS_FR, WELLS_FR
+
+    assert set(VISUAL_LABELS_FR) == set(VISUAL_TYPES.values())
+    assert set(WELLS_FR) == set(VISUAL_TYPES.values())
+
+
+def test_guide_covers_dataset_page(tmp_path):
+    from src.powerbi.report_spec import render_report_guide
+
+    plan = plan_file("data/sales.csv", contracts_dir=tmp_path)
+    approve_plan_dashboard(plan, "cheikhou")
+
+    guide = render_report_guide(build_report_spec(plan.dashboard, plan.kpis, "sales_clean"))
+
+    assert "## Page 3 - Suivi des ventes - Sales" in guide
+    assert "- **Revenue by Product** : Graphique à barres groupées" in guide
+    assert "  - Axe Y : « sales_clean > product »" in guide
+    assert "  - Axe X : mesure « Revenue »" in guide
+    assert "- **price vs quantity** : Nuage de points" in guide
+
+
+def test_versioned_guide_is_up_to_date():
+    from src.powerbi.report_spec import render_report_guide
+
+    versioned = Path("powerbi/observability_report_guide.md").read_text(encoding="utf-8")
+
+    assert versioned == render_report_guide(build_report_spec())
