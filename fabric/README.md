@@ -49,5 +49,5 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   `fact_sales`, `dim_customer`, `dim_product`, `sales_by_product` et
   `sales_summary` créées, valeurs conformes (CA 3 110, quantité 12, 5 lignes).
   Table `gold_loads` confirmée le 2026-09-25 : 5 lignes, une par table, même
-  `run_id`. **Non encore confirmé dans Fabric : une seconde exécution ne
-  recharge pas le même run.**
+  `run_id`. Seconde exécution le 2026-09-25 : « Run … déjà chargé : aucune
+  table modifiée » (idempotence confirmée dans Fabric).

@@ -12,7 +12,7 @@
 #
 # Exécuté dans Fabric le 2026-09-24 (dataset sales) : 5 tables Gold créées,
 # valeurs conformes ; gold_loads confirmée le 2026-09-25 (5 lignes, même
-# run_id). Non encore confirmé : le saut d'un run déjà chargé.
+# run_id) ; une seconde exécution ne recharge pas le même run.
 
 # %%
 DATASET = "sales"  # paramètre du notebook
