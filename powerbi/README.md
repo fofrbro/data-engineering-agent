@@ -3,8 +3,25 @@
 Artefacts à reproduire dans le modèle sémantique et le rapport Power BI.
 Ils sont générés par `src/powerbi/` ; les tests vérifient leur sémantique
 en Python. Dans Power BI, la relation et les mesures ont été créées le
-2026-09-25 ; **les valeurs affichées et les pages du rapport ne sont pas
-encore confirmées**.
+2026-09-25. Le 2026-09-27, les pages 1 et 2 ont été construites avec le guide
+et leurs valeurs vérifiées sur le premier run (1 run INGEST, 7 étapes, durée
+moyenne 0,12 s, courbe par jour via la colonne calculée `started_at_date`).
+Restaient à finaliser : l'histogramme « Execution Mode », la valeur du visuel
+« Step status » et le format pourcentage des taux.
+
+## Voir les modifications du modèle dans un rapport
+
+Un rapport existant reprend les modifications du modèle sémantique ; il n'est
+pas nécessaire de le recréer.
+
+- **Nouvelles mesures, formats, colonnes** : enregistrer le modèle, puis
+  « Actualiser » dans le rapport, ou le fermer et le rouvrir (F5 dans le
+  navigateur).
+- **Nouvelles données** (après les notebooks) : actualiser le modèle
+  sémantique (« Actualiser maintenant »), ou activer « Conserver vos données
+  Direct Lake à jour » dans ses paramètres.
+- **Aucun effet** : vérifier que le rapport est bien connecté au modèle
+  modifié (et non au modèle par défaut du Lakehouse).
 
 ## Modèle sémantique
 
@@ -37,10 +54,11 @@ sémantique DAX et la compare aux KPI Python (`calculate_pipeline_kpis`,
 ## Rapport
 
 **Modèle Direct Lake et colonnes calculées.** Un modèle sémantique Direct
-Lake (créé depuis le Lakehouse) n'accepte pas de colonne calculée. La courbe
+Lake (créé depuis le Lakehouse) peut refuser les colonnes calculées. La courbe
 « Runs over time » a besoin d'une date sans l'heure : dans ce cas, la colonne
 doit être ajoutée en amont, dans la table `pipeline_runs` (évolution du schéma
-à décider), ou le visuel utilise `started_at` tel quel en attendant.
+à décider). Dans le modèle actuel, la colonne calculée `started_at_date` a été
+acceptée (2026-09-27).
 
 **Pour construire les pages, suivre `observability_report_guide.md`** :
 visuel par visuel, avec les noms de l'interface Power BI en français et les
