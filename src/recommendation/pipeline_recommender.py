@@ -12,6 +12,7 @@ schéma, le profil sémantique et, s'il existe, le Data Contract.
 from dataclasses import asdict, dataclass, field
 
 from src.contract.contract_lifecycle import VALIDATED, contract_status
+from src.recommendation.business_rules import cancellation_exclusion
 from src.discovery.schema_profiler import (
     DATETIME,
     INTEGER,
@@ -75,6 +76,9 @@ class Metric:
     name: str
     expression: str
     source_columns: list[str]
+    # Règle métier : lignes exclues avant agrégation, ex.
+    # {"column": "status", "exclude": ["CANCELLED"]}.
+    exclusion: dict | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -155,6 +159,7 @@ class _Context:
         self.schema = schema
         self.semantics = semantics
         self.contract = contract or {}
+        self.exclusion = cancellation_exclusion(schema, semantics)
         self.renames = {
             column.name: _snake_case(column.name)
             for column in schema.columns
@@ -457,6 +462,11 @@ def _metrics(
     metrics.append(
         Metric("number_of_lines", f"COUNT({count_column})", [count_column])
     )
+
+    # Même règle que pour les KPI : les agrégats Gold et les mesures
+    # Power BI restent cohérents.
+    for metric in metrics:
+        metric.exclusion = ctx.exclusion
 
     return metrics
 

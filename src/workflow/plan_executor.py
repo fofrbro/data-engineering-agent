@@ -29,7 +29,11 @@ from src.audit import (
 from src.audit_explain import explain_audit, format_run_explanation
 from src.audit_store import DEFAULT_AUDIT_PATH, append_audit
 from src.discovery.readers import read_dataframe
-from src.execution.gold_executor import METRIC_PATTERN, build_gold_tables
+from src.execution.gold_executor import (
+    METRIC_PATTERN,
+    apply_exclusion,
+    build_gold_tables,
+)
 from src.execution.silver_executor import (
     APPLIED,
     apply_silver_transformations,
@@ -196,7 +200,8 @@ def verify_outputs(
 
             column = match.group(2)
             gold_total = float(gold[table.name][metric.name].sum())
-            silver_total = float(pd.to_numeric(silver[column]).sum())
+            kept = apply_exclusion(silver, metric.exclusion)
+            silver_total = float(pd.to_numeric(kept[column]).sum())
             check(
                 f"total:{table.name}.{metric.name}",
                 abs(gold_total - silver_total) <= TOTAL_TOLERANCE,

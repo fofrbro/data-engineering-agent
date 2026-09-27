@@ -27,8 +27,27 @@ def _require(silver: pd.DataFrame, columns: list[str], table: str) -> None:
         raise GoldBuildError(f"{table} : colonnes absentes de Silver : {missing}")
 
 
+def apply_exclusion(frame: pd.DataFrame, exclusion: dict | None) -> pd.DataFrame:
+    """Retire les lignes exclues par une règle métier."""
+
+    if not exclusion:
+        return frame
+
+    return frame[~frame[exclusion["column"]].isin(exclusion["exclude"])]
+
+
 def _aggregate(silver: pd.DataFrame, table: GoldTable) -> pd.DataFrame:
     named = {}
+    exclusions = {str(metric.exclusion) for metric in table.metrics}
+
+    if len(exclusions) > 1:
+        raise GoldBuildError(
+            f"{table.name} : les mesures d'une table doivent partager la même exclusion."
+        )
+
+    if table.metrics and table.metrics[0].exclusion:
+        _require(silver, [table.metrics[0].exclusion["column"]], table.name)
+        silver = apply_exclusion(silver, table.metrics[0].exclusion)
 
     for metric in table.metrics:
         match = METRIC_PATTERN.match(metric.expression)

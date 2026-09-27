@@ -90,3 +90,25 @@ def test_kpi_values_exclude_cancelled_orders():
     )
     assert evaluate_kpi(kpis.kpi("Orders"), frame) == kept["order_id"].nunique()
     assert evaluate_kpi(kpis.kpi("Orders"), frame) < len(frame)
+
+
+def test_gold_aggregates_exclude_cancelled_orders_and_match_kpis(tmp_path):
+    from src.workflow.agent_workflow import approve_plan_contract, plan_file
+    from src.workflow.plan_executor import execute_plan
+
+    plan = plan_file(SAMPLE, contracts_dir=tmp_path / "contracts")
+    approve_plan_contract(plan, "cheikhou")
+    result = execute_plan(plan, output_root=tmp_path / "lake", audit_path=tmp_path / "runs.jsonl")
+
+    summary = pd.read_parquet(result.outputs["ventes_2025_2026_summary"]).iloc[0]
+    fact = pd.read_parquet(result.outputs["fact_ventes_2025_2026"])
+    kept = fact[fact["status"] != "CANCELLED"]
+    kpis = recommend_kpis(*profiles(read_dataframe(SAMPLE)), "ventes_2025_2026")
+
+    assert result.final_status == "SUCCESS"
+    assert all(check["passed"] for check in result.verification)
+    # La table de faits garde toutes les lignes ; les agrégats les excluent.
+    assert len(fact) == 1500
+    assert summary["number_of_lines"] == len(kept)
+    assert summary["total_sales"] == pytest.approx(kept["line_amount"].sum())
+    assert summary["total_sales"] == pytest.approx(evaluate_kpi(kpis.kpi("Revenue"), fact), rel=1e-4)
