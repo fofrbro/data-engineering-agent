@@ -99,3 +99,48 @@ def test_second_file_of_a_dataset_runs_without_new_contract_approval(service):
 
     assert second["contract_origin"] == "REUSED"
     assert service.execute(second["plan_id"])["final_status"] == "SUCCESS"
+
+
+def test_create_plans_makes_one_plan_per_dataset(service, tmp_path):
+    uploaded_sales = tmp_path / "a1_sales.csv"
+    uploaded_sales.write_text(open("data/sales.csv", encoding="utf-8").read(), encoding="utf-8")
+
+    views = service.create_plans(
+        ["data/samples/ventes_2025_2026.csv", str(uploaded_sales), "data/samples/ventes_rejet.csv"],
+        display_names={str(uploaded_sales): "sales.csv"},
+    )
+
+    assert [(v["dataset"], len(v["files"])) for v in views] == [
+        ("ventes_2025_2026", 2), ("sales", 1),
+    ]
+    assert [p["decision"] for p in views[0]["file_previews"]] == ["QUARANTINE", "QUARANTINE"]
+
+
+def test_create_plans_with_dataset_name_and_duplicate_names(service, tmp_path):
+    other = tmp_path / "sales.xlsx"
+    import pandas as pd
+    pd.DataFrame({"code": ["A"], "label": ["x"]}).to_excel(other, index=False)
+
+    single = service.create_plans(
+        ["data/sales.csv", "data/sales.csv"], dataset="lot_ventes",
+    )
+    split = service.create_plans(["data/sales.csv", str(other)])
+
+    assert [v["dataset"] for v in single] == ["lot_ventes"]
+    assert [v["dataset"] for v in split] == ["sales", "sales_2"]
+
+
+def test_execute_reports_each_file(service):
+    first = service.create_plans(["data/samples/ventes_2025_2026.csv"])[0]["plan_id"]
+    service.approve_contract(first, "cheikhou")
+
+    view = service.create_plans(
+        ["data/samples/ventes_2025_2026.csv", "data/samples/ventes_rejet.csv"],
+        dataset="ventes_2025_2026",
+    )[0]
+    result = service.execute(view["plan_id"])
+
+    assert [(r["decision"], r["final_status"]) for r in result["file_results"]] == [
+        ("INGEST", "SUCCESS"), ("REJECT", "REJECTED"),
+    ]
+    assert result["fabric_export"].endswith("fabric_export/gold/ventes_2025_2026")

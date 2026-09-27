@@ -53,9 +53,10 @@ Lancer le serveur :
 
 Puis ouvrir http://localhost:8000 :
 
-1. uploader un fichier ;
-2. **« Préparer avec l'agent »** : plan, décision prévisionnelle, contrat,
-   pipeline, KPI, tableau de bord ;
+1. uploader un ou plusieurs fichiers ;
+2. **« Préparer avec l'agent »** : un plan par dataset détecté, avec la
+   décision prévisionnelle de chaque fichier, le contrat, le pipeline, les KPI
+   et le tableau de bord ;
 3. dans l'onglet **Agent** : saisir le nom du relecteur, **valider le
    contrat**, et si besoin les transformations destructives et le tableau de
    bord ;
@@ -65,6 +66,20 @@ Puis ouvrir http://localhost:8000 :
 Pour un nouveau fichier d'un dataset déjà validé, le contrat validé existant
 (`data/contracts/<dataset>.json`) est réutilisé automatiquement ; le nom du
 dataset vient du nom de fichier ou du champ « Nom du Dataset ».
+
+### Plusieurs fichiers à la fois
+
+- **Sans nom de dataset**, les fichiers qui ont exactement les mêmes colonnes
+  (quel que soit leur ordre ou leur format) forment un même dataset ; un
+  fichier au schéma différent a son propre plan.
+- **Avec un nom de dataset**, tous les fichiers du lot sont traités comme ce
+  dataset.
+- Chaque fichier reçoit sa propre décision. Les fichiers INGEST sont combinés
+  dans un seul run Bronze → Silver → Gold ; chaque fichier refusé est isolé
+  (quarantaine ou rejet) dans son propre run audité, sans bloquer les autres.
+  Les runs d'une même exécution partagent un `batch_id`.
+- Les recommandations suivent le contrat : une colonne hors contrat n'est ni
+  transformée ni utilisée dans Gold, les KPI ou le tableau de bord.
 
 ### Fichiers d'exemple
 
@@ -78,7 +93,8 @@ décisions sur le dataset `ventes_2025_2026` :
 | `ventes_rejet.csv` | REJECT | quantités négatives (contrat : ≥ 1) |
 
 Pour les deux derniers, saisir `ventes_2025_2026` dans « Nom du Dataset » afin
-de réutiliser le contrat validé.
+de réutiliser le contrat validé. Les trois fichiers peuvent aussi être envoyés
+ensemble avec ce nom : un seul plan, trois décisions.
 
 ## Règles de décision
 
@@ -104,8 +120,8 @@ agrégats Gold ; la table de faits garde toutes les lignes.
 | Méthode | Route | Rôle |
 |---|---|---|
 | POST | `/api/upload` | uploader un ou plusieurs fichiers |
-| POST | `/api/workflow/plan` | créer le plan d'un fichier uploadé |
-| POST | `/api/workflow/ask` | demande en langage naturel (LLM → plan ou explication) |
+| POST | `/api/workflow/plan` | créer les plans d'un lot uploadé (`{"plans": [...]}`, un par dataset) |
+| POST | `/api/workflow/ask` | demande en langage naturel (LLM → plan ou explication), un fichier à la fois |
 | GET | `/api/workflow/{plan_id}` | consulter un plan |
 | POST | `/api/workflow/{plan_id}/approve-contract` | valider le contrat |
 | POST | `/api/workflow/{plan_id}/approve-transformations` | approuver les transformations destructives |
@@ -211,7 +227,8 @@ tests/                      tests unitaires et de bout en bout
 
 - `docs/` (API_REFERENCE, QUICKSTART, FABRIC_CONFIG) décrit l'ancien parcours
   et n'a pas été mis à jour.
-- Le workflow traite un fichier à la fois.
+- La demande en langage naturel (`/api/workflow/ask`) traite un fichier à la
+  fois ; l'interface et `/api/workflow/plan` acceptent un lot.
 - La détection des annulations s'appuie sur les valeurs d'exemple du profil
   (5 valeurs distinctes au plus par colonne).
 - Les routes de connexion Fabric (`/api/fabric/*`) et les modes historiques de

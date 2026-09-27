@@ -10,7 +10,9 @@ import json
 from pathlib import Path
 
 from src.audit_store import DEFAULT_AUDIT_PATH
+from src.contract.contract_generator import dataset_name_from_path
 from src.fabric.gold_export import export_gold_for_fabric
+from src.workflow.batch import group_files
 from src.tools.data_analyst import DataAnalyst, analyze_gold_data
 from src.recommendation.dashboard_review import (
     APPROVE,
@@ -64,6 +66,8 @@ class WorkflowService:
             "status": plan.status,
             "dataset": plan.dataset,
             "file": plan.file_path,
+            "files": plan.file_paths,
+            "file_previews": plan.file_previews,
             "contract_path": plan.contract_path,
             "contract_status": plan.contract_status,
             "contract_origin": plan.contract_origin,
@@ -78,7 +82,7 @@ class WorkflowService:
 
     def create_plan(
         self,
-        file_path: str,
+        file_path: str | list[str],
         contract_path: str | None = None,
         dataset: str | None = None,
         enrichments: list[dict] | None = None,
@@ -93,6 +97,40 @@ class WorkflowService:
         self._plans[plan.plan_id] = plan
 
         return self.view(plan.plan_id)
+
+    def create_plans(
+        self,
+        file_paths: list[str],
+        contract_path: str | None = None,
+        dataset: str | None = None,
+        enrichments: list[dict] | None = None,
+        display_names: dict[str, str] | None = None,
+    ) -> list[dict]:
+        """
+        Un plan par dataset du lot (voir group_files). Un groupe sans
+        nom fourni prend le nom d'origine de son premier fichier
+        (display_names), suffixé en cas de doublon.
+        """
+
+        display_names = display_names or {}
+        views = []
+        used = set()
+
+        for group in group_files(file_paths, dataset):
+            name = group.dataset or dataset_name_from_path(
+                display_names.get(group.files[0], group.files[0])
+            )
+            unique, index = name, 2
+
+            while unique in used:
+                unique, index = f"{name}_{index}", index + 1
+
+            used.add(unique)
+            views.append(
+                self.create_plan(group.files, contract_path, unique, enrichments)
+            )
+
+        return views
 
     def approve_contract(self, plan_id: str, reviewer: str, comment=None) -> dict:
         approve_plan_contract(self.get(plan_id), reviewer, comment)
@@ -179,6 +217,7 @@ class WorkflowService:
             "outputs": result.outputs,
             "verification": result.verification,
             "explanation": result.explanation,
+            "file_results": result.file_results,
             "fabric_export": fabric_export,
             **analysis,
         }

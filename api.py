@@ -423,29 +423,28 @@ def _workflow_call(action):
 
 @app.post("/api/workflow/plan")
 async def create_workflow_plan(request: WorkflowPlanRequest):
-    """PLAN : analyse le fichier et propose contrat, pipeline, KPI et TBO."""
+    """
+    PLAN : analyse le ou les fichiers du lot et propose, pour chaque
+    dataset détecté, contrat, pipeline, KPI et TBO.
+    """
     if request.file_id not in sessions:
         raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
     files = sessions[request.file_id]["files"]
-    if len(files) != 1:
-        raise HTTPException(
-            status_code=400,
-            detail="Le workflow agent traite un fichier à la fois.",
-        )
 
-    # Le fichier stocké est préfixé par son identifiant d'upload :
-    # le dataset est nommé d'après le nom d'origine.
-    dataset = request.dataset_name or dataset_name_from_path(files[0]["file_name"])
-
-    return _workflow_call(
-        lambda: workflow_service.create_plan(
-            files[0]["file_path"],
+    # Les fichiers stockés sont préfixés par leur identifiant d'upload :
+    # les datasets sont nommés d'après les noms d'origine.
+    plans = _workflow_call(
+        lambda: workflow_service.create_plans(
+            [item["file_path"] for item in files],
             request.contract_path,
-            dataset,
+            request.dataset_name,
             request.enrichments,
+            {item["file_path"]: item["file_name"] for item in files},
         )
     )
+
+    return {"plans": plans}
 
 
 @app.post("/api/workflow/ask")

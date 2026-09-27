@@ -502,7 +502,7 @@
                     <input type="text" id="reviewerName" placeholder="Votre nom" onchange="saveReviewerName()">
                 </div>
                 <div id="agentPanel">
-                    <p style="color: #999;">Uploadez un fichier puis cliquez sur « Préparer avec l'agent ».</p>
+                    <p style="color: #999;">Uploadez un ou plusieurs fichiers puis cliquez sur « Préparer avec l'agent » : un plan est proposé par dataset détecté.</p>
                 </div>
             </div>
 
@@ -651,7 +651,8 @@
         // Workflow agent : PLAN -> VALIDATE -> EXECUTE
         // ============================================
 
-        let currentPlanId = null;
+        // Plans du dernier lot, dans l'ordre : un plan par dataset détecté.
+        let agentPlanIds = [];
 
         function saveReviewerName() {
             try {
@@ -698,41 +699,48 @@
                 return;
             }
             try {
-                showMessage("L'agent analyse le fichier...", 'info');
-                const view = await workflowRequest('/api/workflow/plan', {
+                showMessage("L'agent analyse le lot...", 'info');
+                const data = await workflowRequest('/api/workflow/plan', {
                     file_id: currentFileId,
                     contract_path: document.getElementById('contractPath').value.trim() || null,
                     dataset_name: document.getElementById('datasetName').value.trim() || null,
                     enrichments
                 });
-                currentPlanId = view.plan_id;
-                showMessage('✓ Plan proposé : il doit être validé avant exécution.', 'success');
-                renderAgentPlan(view);
+                agentPlanIds = data.plans.map(view => view.plan_id);
+                document.getElementById('agentPanel').innerHTML = agentPlanIds
+                    .map(id => `<div id="plan-${id}"></div><div id="execution-${id}"></div>`)
+                    .join('');
+                data.plans.forEach(renderAgentPlan);
+                showMessage(
+                    `✓ ${data.plans.length} plan(s) proposé(s) : chacun doit être validé avant exécution.`,
+                    'success'
+                );
+                switchTab('agent');
             } catch (error) {
                 showMessage(`Erreur: ${error.message}`, 'error');
             }
         }
 
-        async function agentAction(action, body) {
+        async function agentAction(planId, action, body) {
             try {
-                const view = await workflowRequest(`/api/workflow/${currentPlanId}/${action}`, body);
+                const view = await workflowRequest(`/api/workflow/${planId}/${action}`, body);
                 renderAgentPlan(view);
             } catch (error) {
                 showMessage(`Erreur: ${error.message}`, 'error');
             }
         }
 
-        function approveAgentContract() {
+        function approveAgentContract(planId) {
             const reviewer = reviewerName();
-            if (reviewer) agentAction('approve-contract', { reviewer });
+            if (reviewer) agentAction(planId, 'approve-contract', { reviewer });
         }
 
-        function approveAgentTransformations() {
+        function approveAgentTransformations(planId) {
             const reviewer = reviewerName();
-            if (reviewer) agentAction('approve-transformations', { reviewer });
+            if (reviewer) agentAction(planId, 'approve-transformations', { reviewer });
         }
 
-        function reviewAgentDashboard(action) {
+        function reviewAgentDashboard(planId, action) {
             const reviewer = reviewerName();
             if (!reviewer) return;
             let comment = null;
@@ -740,37 +748,48 @@
                 comment = window.prompt('Motif du rejet du tableau de bord :');
                 if (!comment) return;
             }
-            agentAction('dashboard', { action, reviewer, comment });
+            agentAction(planId, 'dashboard', { action, reviewer, comment });
         }
 
-        async function executeAgentPlan() {
+        async function executeAgentPlan(planId) {
             try {
                 showMessage('Exécution du plan...', 'info');
-                const result = await workflowRequest(`/api/workflow/${currentPlanId}/execute`);
+                const result = await workflowRequest(`/api/workflow/${planId}/execute`);
                 showMessage(`Exécution terminée : ${result.final_status}`, result.final_status === 'SUCCESS' ? 'success' : 'warning');
                 // Le statut du plan a changé côté serveur (EXECUTED, BLOCKED...).
-                const view = await (await fetch(`/api/workflow/${currentPlanId}`)).json();
+                const view = await (await fetch(`/api/workflow/${planId}`)).json();
                 renderAgentPlan(view);
-                renderAgentExecution(result);
+                renderAgentExecution(planId, result);
             } catch (error) {
                 showMessage(`Erreur: ${error.message}`, 'error');
             }
         }
 
         const smallButton = 'class="btn-primary" style="width:auto;padding:6px 12px;margin-left:8px;"';
+        const cell = 'style="padding:4px 8px;border-bottom:1px solid #eee;text-align:left;"';
+
+        function fileName(path) {
+            // Nom d'origine : sans dossier ni préfixe d'upload (identifiant_).
+            return String(path).split(/[\\/]/).pop().replace(/^[0-9a-f]{8}-[0-9a-f-]{27}_/, '');
+        }
 
         function renderAgentPlan(view) {
+            const id = view.plan_id;
             const v = view.validation;
             const d = view.decision_preview;
             const item = (ok, label, action = '') => `
                 <li style="margin: 8px 0;">${ok ? '✅' : '⏳'} ${label} ${action}</li>`;
+
+            const files = (view.file_previews || []).map(p => `
+                <tr><td ${cell}>${escapeHtml(fileName(p.file))}</td><td ${cell}>${p.rows}</td>
+                <td ${cell}><strong>${escapeHtml(p.decision)}</strong></td><td ${cell}>${escapeHtml(p.policy_rule)}</td></tr>`).join('');
 
             const destructive = v.destructive_transformations.length
                 ? item(
                     v.destructive_approved,
                     `Transformations destructives : ${escapeHtml(v.destructive_transformations.join(', '))}`
                         + (v.destructive_approved ? ' (approuvées)' : ' (ignorées tant que non approuvées)'),
-                    v.destructive_approved ? '' : `<button ${smallButton} onclick="approveAgentTransformations()">Approuver</button>`
+                    v.destructive_approved ? '' : `<button ${smallButton} onclick="approveAgentTransformations('${id}')">Approuver</button>`
                 )
                 : '';
 
@@ -780,17 +799,21 @@
 
             const dashboardDone = view.dashboard.status !== 'PROPOSED';
             const dashboardActions = dashboardDone ? '' : `
-                <button ${smallButton} onclick="reviewAgentDashboard('APPROVE')">Approuver</button>
-                <button ${smallButton} onclick="reviewAgentDashboard('REJECT')">Rejeter</button>`;
+                <button ${smallButton} onclick="reviewAgentDashboard('${id}', 'APPROVE')">Approuver</button>
+                <button ${smallButton} onclick="reviewAgentDashboard('${id}', 'REJECT')">Rejeter</button>`;
 
             const contractAction = v.contract_validated
                 ? ''
-                : `<button ${smallButton} onclick="approveAgentContract()">Valider le contrat</button>`;
+                : `<button ${smallButton} onclick="approveAgentContract('${id}')">Valider le contrat</button>`;
 
-            document.getElementById('agentPanel').innerHTML = `
+            document.getElementById(`plan-${id}`).innerHTML = `
                 <div class="result-item">
                     <h3>Plan agent - ${escapeHtml(view.dataset)}</h3>
                     <span class="status">${escapeHtml(view.status)}</span>
+                    <table style="margin-top: 12px; border-collapse: collapse; width: 100%;">
+                        <tr><th ${cell}>Fichier</th><th ${cell}>Lignes</th><th ${cell}>Décision prévue</th><th ${cell}>Règle</th></tr>
+                        ${files}
+                    </table>
                     <p style="margin-top: 12px;">
                         Décision prévisionnelle : <strong>${escapeHtml(d.decision)}</strong>
                         (${escapeHtml(d.policy_rule)}) - ${escapeHtml(d.reason)}
@@ -802,7 +825,7 @@
                         ${item(dashboardDone, `Tableau de bord : ${escapeHtml(view.dashboard.title)} (${escapeHtml(view.dashboard.status)})`, dashboardActions)}
                     </ul>
                     ${v.blockers.length ? `<p style="color:#b42318;">${escapeHtml(v.blockers.join(' '))}</p>` : ''}
-                    <button class="btn-primary" id="agentExecuteBtn" onclick="executeAgentPlan()" ${v.ready_to_execute && view.status === 'PLANNED' ? '' : 'disabled'}>
+                    <button class="btn-primary" id="execute-${id}" onclick="executeAgentPlan('${id}')" ${v.ready_to_execute && view.status === 'PLANNED' ? '' : 'disabled'}>
                         ▶️ Exécuter le plan validé
                     </button>
                     <details style="margin-top: 15px;">
@@ -810,20 +833,25 @@
                         <pre>${escapeHtml(view.preview)}</pre>
                     </details>
                 </div>
-                <div id="agentExecution"></div>
             `;
-            switchTab('agent');
         }
 
-        function renderAgentExecution(result) {
+        function renderAgentExecution(planId, result) {
             const checks = result.verification.map(c => `
                 <li>${c.passed ? '✅' : '❌'} ${escapeHtml(c.check)} - ${escapeHtml(c.detail)}</li>`).join('');
+            const files = (result.file_results || []).map(r => `
+                <tr><td ${cell}>${escapeHtml(fileName(r.file))}</td><td ${cell}><strong>${escapeHtml(r.decision)}</strong></td>
+                <td ${cell}>${escapeHtml(r.final_status)}</td><td ${cell}>${escapeHtml(r.run_id)}</td></tr>`).join('');
 
-            document.getElementById('agentExecuteBtn').disabled = true;
-            document.getElementById('agentExecution').innerHTML = `
+            document.getElementById(`execute-${planId}`).disabled = true;
+            document.getElementById(`execution-${planId}`).innerHTML = `
                 <div class="result-item">
                     <h3>Exécution ${escapeHtml(result.run_id)}</h3>
                     <span class="status ${result.final_status === 'SUCCESS' ? 'completed' : 'error'}">${escapeHtml(result.final_status)}</span>
+                    <table style="margin-top: 12px; border-collapse: collapse; width: 100%;">
+                        <tr><th ${cell}>Fichier</th><th ${cell}>Décision</th><th ${cell}>Statut</th><th ${cell}>Run</th></tr>
+                        ${files}
+                    </table>
                     ${checks ? `<p style="margin-top: 12px;"><strong>Vérifications :</strong></p><ul style="list-style: none;">${checks}</ul>` : ''}
                     ${result.fabric_export ? `<p style="margin-top: 12px;">Tables Gold prêtes pour Fabric : <code>${escapeHtml(result.fabric_export)}</code> (à déposer dans Files/gold/, puis notebook load_gold_tables).</p>` : ''}
                     <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>
