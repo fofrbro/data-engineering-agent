@@ -51,3 +51,17 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   Table `gold_loads` confirmée le 2026-09-25 : 5 lignes, une par table, même
   `run_id`. Seconde exécution le 2026-09-25 : « Run … déjà chargé : aucune
   table modifiée » (idempotence confirmée dans Fabric).
+
+## Dépannage
+
+- **Fichier remplacé dans `Files/` mais ancien schéma lu** : une session Spark
+  qui a déjà lu un fichier peut garder son ancien schéma en cache, tout en
+  lisant les nouvelles lignes (constaté le 2026-09-27 : `duration_seconds`
+  lu en `long` au lieu de `double`). Arrêter la session du notebook avant de
+  relire des fichiers remplacés.
+- **`DELTA_FAILED_TO_MERGE_FIELDS`** : la source et la table Delta typent une
+  colonne différemment. Le notebook d'audit convertit désormais la source au
+  type de la table ; vérifier aussi que les fichiers déposés sont les derniers
+  exports.
+- **Exporter les audits après les exécutions** : un export fait avant les runs
+  est vide et n'ajoute rien.
