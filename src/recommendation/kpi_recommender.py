@@ -12,6 +12,7 @@ les tableaux de bord sont construits sur Silver et Gold.
 from dataclasses import asdict, dataclass, field
 
 from src.discovery.schema_profiler import SchemaProfile
+from src.recommendation.business_rules import cancellation_exclusion, with_exclusion
 from src.recommendation.pipeline_recommender import (
     MAX_GROUP_BY_DISTINCT,
     silver_column_name,
@@ -81,6 +82,7 @@ class KPI:
     kpi_type: str = SCALAR
     dimension: str | None = None
     format: str = NUMBER
+    exclusion: dict | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -433,15 +435,24 @@ def recommend_kpis(
     is_sales = domain == SALES_DOMAIN
     cols = _Columns(semantics, schema)
     main = _main_measure(cols, is_sales)
+    kpis = [
+        *_scalar_kpis(cols, main, is_sales),
+        *_breakdown_kpis(cols, main),
+    ]
 
-    return KpiRecommendation(
-        dataset=dataset,
-        domain=domain,
-        kpis=[
-            *_scalar_kpis(cols, main, is_sales),
-            *_breakdown_kpis(cols, main),
-        ],
-    )
+    # Règle métier : les commandes annulées ne comptent dans aucun KPI.
+    exclusion = cancellation_exclusion(schema, semantics)
+
+    if exclusion:
+        for kpi in kpis:
+            kpi.formula = with_exclusion(kpi.formula, exclusion)
+            kpi.exclusion = exclusion
+            kpi.rationale += (
+                f" Lignes exclues : {exclusion['column']} = "
+                f"{', '.join(exclusion['exclude'])}."
+            )
+
+    return KpiRecommendation(dataset=dataset, domain=domain, kpis=kpis)
 
 
 def recommend_kpis_for_file(path: str, dataset: str | None = None) -> KpiRecommendation:

@@ -35,6 +35,9 @@ PATTERNS = [
 ]
 
 GROUP_BY = re.compile(r"^(.*?) GROUP BY (?:MONTH\()?([A-Za-z_][A-Za-z0-9_]*)\)?$")
+WHERE_NOT_IN = re.compile(
+    r"^(.*) WHERE ([A-Za-z_][A-Za-z0-9_]*) NOT IN \(('[^']*'(?:, '[^']*')*)\)$"
+)
 
 
 class UnsupportedFormulaError(ValueError):
@@ -53,6 +56,19 @@ def parse_formula(formula: str) -> Formula:
 
     if grouped:
         text = grouped.group(1).strip()
+
+    excluded = WHERE_NOT_IN.match(text)
+
+    if excluded:
+        inner, column, values = excluded.groups()
+        return Formula(
+            "exclude",
+            (
+                parse_formula(inner),
+                column,
+                tuple(value.strip("'") for value in values.split(", ")),
+            ),
+        )
 
     if " / " in text:
         left, right = text.split(" / ", 1)
@@ -98,6 +114,11 @@ def to_dax(formula: Formula, table: str) -> str:
         left, right = formula.args
         return f"DIVIDE({to_dax(left, table)}, {to_dax(right, table)})"
 
+    if formula.op == "exclude":
+        inner, name, values = formula.args
+        listed = ", ".join(f'"{value}"' for value in values)
+        return f"CALCULATE({to_dax(inner, table)}, NOT {column(name)} IN {{{listed}}})"
+
     raise UnsupportedFormulaError(f"Opération inconnue : {formula.op}")
 
 
@@ -120,6 +141,10 @@ def evaluate(formula: Formula, frame: pd.DataFrame):
 
     if formula.op == "distinct_count":
         return int(frame[formula.args[0]].nunique(dropna=False))
+
+    if formula.op == "exclude":
+        inner, name, values = formula.args
+        return evaluate(inner, frame[~frame[name].isin(values)])
 
     if formula.op == "divide":
         numerator = evaluate(formula.args[0], frame)
