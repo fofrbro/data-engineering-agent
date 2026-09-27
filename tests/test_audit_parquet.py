@@ -315,3 +315,26 @@ def test_normalize_run_table_handles_invalid_timestamps():
     assert pd.isna(
         normalized["finished_at"].iloc[0]
     )
+
+
+def test_empty_structured_export_keeps_stable_parquet_types(tmp_path):
+    import pyarrow.parquet as pq
+
+    from src.audit_parquet import export_structured_audit_to_parquet
+
+    audit_file = tmp_path / "empty.jsonl"
+    audit_file.write_text("", encoding="utf-8")
+
+    runs_path, steps_path = export_structured_audit_to_parquet(
+        input_path=audit_file,
+        runs_output_path=tmp_path / "runs.parquet",
+        steps_output_path=tmp_path / "steps.parquet",
+    )
+    runs = pq.read_schema(runs_path)
+    steps = pq.read_schema(steps_path)
+
+    # Types attendus par les tables Delta, même sans aucune ligne.
+    assert str(runs.field("duration_seconds").type) == "double"
+    assert str(steps.field("duration_seconds").type) == "double"
+    assert str(runs.field("started_at").type).startswith("timestamp")
+    assert str(steps.field("started_at").type).startswith("timestamp")

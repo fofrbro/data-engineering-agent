@@ -130,10 +130,12 @@ def normalize_run_table(
         errors="coerce",
         utc=True,
     )
+    # Toujours décimal, même sur une table vide (pandas typerait alors
+    # la colonne en entier et Delta refuserait de fusionner les schémas).
     table["duration_seconds"] = pd.to_numeric(
         table["duration_seconds"],
         errors="coerce",
-    )
+    ).astype("float64")
     table["error"] = table["error"].astype("string")
 
     return table
