@@ -62,7 +62,7 @@ Renommer la page : « AGENT OBSERVABILITY ».
   - Créer d'abord, dans la table pipeline_runs, une colonne calculée (« Nouvelle colonne ») : `started_at_date = DATE(YEAR(pipeline_runs[started_at]), MONTH(pipeline_runs[started_at]), DAY(pipeline_runs[started_at]))`. Si « Nouvelle colonne » est indisponible (modèle Direct Lake), voir powerbi/README.md.
   - Axe X : « pipeline_runs > started_at_date »
   - Axe Y : mesure « Total Runs »
-  - Dans l'axe, choisir le champ lui-même et non sa hiérarchie de dates, pour obtenir un point par jour.
+  - Dans « Générer un visuel », sous Axe X, cliquer sur la flèche à droite du champ et choisir le champ lui-même (et non « Hiérarchie de dates »), pour obtenir un point par jour.
 
 ### Segments (filtres de page)
 

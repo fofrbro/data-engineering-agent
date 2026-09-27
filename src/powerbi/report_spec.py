@@ -358,15 +358,24 @@ def _visual_lines(visual: dict) -> list[str]:
 
     if granularity == "day":
         lines.append(
-            "  - Dans l'axe, choisir le champ lui-même et non sa hiérarchie de "
-            "dates, pour obtenir un point par jour."
+            "  - Dans « Générer un visuel », sous Axe X, cliquer sur la flèche à "
+            "droite du champ et choisir le champ lui-même (et non « Hiérarchie de "
+            "dates »), pour obtenir un point par jour."
         )
 
     if granularity == "month":
-        lines.append(
-            "  - Dans l'axe, garder la hiérarchie de dates avec seulement Année "
-            "et Mois, pour obtenir un point par mois."
-        )
+        table, column, _ = _date_column(visual["fields"]["axis"])
+        month_column = f"{column.removesuffix('_date')}_month"
+        lines += [
+            "  - Pour un point par mois : dans « Générer un visuel », sous Axe X, "
+            f"cliquer sur la flèche à droite de « {column} » et choisir « Hiérarchie "
+            "de dates » ; supprimer Trimestre et Jour (croix), puis sur le graphique "
+            "cliquer sur « Développer tout vers le bas d'un niveau » (double flèche).",
+            "  - Si « Hiérarchie de dates » n'est pas proposée (modèle créé depuis un "
+            f"Lakehouse), créer dans la table {table} une colonne calculée "
+            f"`{month_column} = DATE(YEAR({table}[{column}]), MONTH({table}[{column}]), 1)` "
+            f"et la placer dans l'Axe X à la place de « {column} ».",
+        ]
 
     return lines
 

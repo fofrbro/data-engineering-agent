@@ -167,3 +167,25 @@ def test_export_dataset_report_requires_approval_and_writes_files(tmp_path):
     assert "Total Runs" not in guide
     assert "[Revenue] = CALCULATE(SUMX('fact_ventes_2025_2026'," in dax
     assert "KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {\"CANCELLED\"}))" in dax
+
+
+def test_monthly_axis_steps_include_a_month_column_fallback(tmp_path):
+    from src.powerbi.report_spec import export_dataset_report
+    from src.recommendation.dashboard_review import load_dashboard_plan
+    from src.recommendation.kpi_recommender import recommend_kpis_for_file
+
+    plan = load_dashboard_plan("powerbi/dashboards/ventes_2025_2026.json")
+    files = export_dataset_report(
+        plan,
+        recommend_kpis_for_file("data/samples/ventes_2025_2026.csv"),
+        "fact_ventes_2025_2026",
+        tmp_path,
+    )
+    guide = files["guide"].read_text(encoding="utf-8")
+
+    assert "choisir « Hiérarchie de dates » ; supprimer Trimestre et Jour" in guide
+    assert (
+        "`order_month = DATE(YEAR(fact_ventes_2025_2026[order_date]), "
+        "MONTH(fact_ventes_2025_2026[order_date]), 1)`"
+    ) in guide
+    assert "Dans l'axe" not in guide

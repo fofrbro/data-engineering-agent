@@ -58,12 +58,14 @@ Renommer la page : « Suivi des ventes - Ventes 2025 2026 ».
 - **Revenue by Month** : Graphique en courbes
   - Axe X : « fact_ventes_2025_2026 > order_date »
   - Axe Y : mesure « Revenue »
-  - Dans l'axe, garder la hiérarchie de dates avec seulement Année et Mois, pour obtenir un point par mois.
+  - Pour un point par mois : dans « Générer un visuel », sous Axe X, cliquer sur la flèche à droite de « order_date » et choisir « Hiérarchie de dates » ; supprimer Trimestre et Jour (croix), puis sur le graphique cliquer sur « Développer tout vers le bas d'un niveau » (double flèche).
+  - Si « Hiérarchie de dates » n'est pas proposée (modèle créé depuis un Lakehouse), créer dans la table fact_ventes_2025_2026 une colonne calculée `order_month = DATE(YEAR(fact_ventes_2025_2026[order_date]), MONTH(fact_ventes_2025_2026[order_date]), 1)` et la placer dans l'Axe X à la place de « order_date ».
 - **Revenue by Month and category** : Histogramme empilé
   - Axe X : « fact_ventes_2025_2026 > order_date »
   - Axe Y : mesure « Revenue »
   - Légende : « fact_ventes_2025_2026 > category »
-  - Dans l'axe, garder la hiérarchie de dates avec seulement Année et Mois, pour obtenir un point par mois.
+  - Pour un point par mois : dans « Générer un visuel », sous Axe X, cliquer sur la flèche à droite de « order_date » et choisir « Hiérarchie de dates » ; supprimer Trimestre et Jour (croix), puis sur le graphique cliquer sur « Développer tout vers le bas d'un niveau » (double flèche).
+  - Si « Hiérarchie de dates » n'est pas proposée (modèle créé depuis un Lakehouse), créer dans la table fact_ventes_2025_2026 une colonne calculée `order_month = DATE(YEAR(fact_ventes_2025_2026[order_date]), MONTH(fact_ventes_2025_2026[order_date]), 1)` et la placer dans l'Axe X à la place de « order_date ».
 - **Revenue by Product** : Graphique à barres groupées
   - Axe Y : « fact_ventes_2025_2026 > product »
   - Axe X : mesure « Revenue »
