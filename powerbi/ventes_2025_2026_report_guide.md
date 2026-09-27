@@ -6,6 +6,22 @@ Pour chaque visuel : cliquer sur l'icône du visuel dans le volet
 « Visualisations », puis faire glisser les champs indiqués depuis le volet
 « Données » dans les zones du volet « Générer un visuel ».
 
+## 1. Créer le modèle sémantique
+
+Un modèle sémantique dédié, séparé de celui de l'observabilité de l'agent :
+
+1. Dans le Lakehouse, cliquer sur « Nouveau modèle sémantique ».
+2. Le nommer « Suivi des ventes - Ventes 2025 2026 ».
+3. Cocher uniquement : `fact_ventes_2025_2026`.
+4. Dans ce modèle, créer les mesures de `ventes_2025_2026_measures.dax` dans la table `fact_ventes_2025_2026` (« Nouvelle mesure », puis coller la formule).
+5. Régler le format de chaque mesure (section suivante).
+
+## 2. Créer le rapport
+
+Depuis ce modèle sémantique, cliquer sur « Créer un rapport ». Ce rapport est
+distinct du rapport d'observabilité : un rapport ne se connecte qu'à un seul
+modèle sémantique.
+
 ## Formats des mesures
 
 Dans Fabric : ouvrir le modèle sémantique, « Ouvrir le modèle de données »,
@@ -21,7 +37,7 @@ forme »). Dans Power BI Desktop : ruban « Outils de mesure ».
 - Products : Nombre entier
 - Average Unit Price : Devise, 2 décimales
 
-## Page 3 - Suivi des ventes - Ventes 2025 2026
+## Page 1 - Suivi des ventes - Ventes 2025 2026
 
 Renommer la page : « Suivi des ventes - Ventes 2025 2026 ».
 

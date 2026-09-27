@@ -87,17 +87,22 @@ fichier importable dans Power BI. Il est régénéré par
   d'un `DashboardPlan` **APPROVED** uniquement, avec les mesures DAX des KPI
   (`src/powerbi/kpi_dax.py`). Un plan non approuvé est refusé.
 
-## Page 3 - tableau de bord d'un dataset
+## Rapport métier d'un dataset
 
-Générée par `src.powerbi.report_spec.export_dataset_report()` à partir d'un
+Chaque dataset métier a **son propre modèle sémantique et son propre
+rapport**, séparés de l'observabilité de l'agent (sujet, public, droits et
+actualisations différents ; un rapport ne se connecte qu'à un modèle).
+
+Générés par `src.powerbi.report_spec.export_dataset_report()` à partir d'un
 `DashboardPlan` **APPROVED** uniquement :
 
 - `dashboards/<dataset>.json` : le plan revu, avec son historique de revue ;
 - `<dataset>_measures.dax` : les mesures DAX des KPI ;
-- `<dataset>_report_guide.md` : le guide de construction de la page.
+- `<dataset>_report_guide.md` : le guide complet (création du modèle
+  sémantique, création du rapport, formats, visuels, segments).
 
 Pour `ventes_2025_2026` (table `fact_ventes_2025_2026`), le plan a été modifié
 puis approuvé par FOFANA le 2026-09-27 (retrait du nuage de points et de la
 matrice produit × catégorie). Les mesures excluent les commandes annulées
-(`status = CANCELLED`), comme les agrégats Gold. **Page non encore construite
+(`status = CANCELLED`), comme les agrégats Gold. **Rapport non encore construit
 dans Power BI.**

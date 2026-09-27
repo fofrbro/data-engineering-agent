@@ -157,7 +157,11 @@ def test_export_dataset_report_requires_approval_and_writes_files(tmp_path):
     dax = files["measures"].read_text(encoding="utf-8")
 
     assert files["plan"].name == "ventes_2025_2026.json"
-    assert "## Page 3 - Suivi des ventes - Ventes 2025 2026" in guide
+    assert "## 1. Créer le modèle sémantique" in guide
+    assert "3. Cocher uniquement : `fact_ventes_2025_2026`." in guide
+    assert "`ventes_2025_2026_measures.dax`" in guide
+    assert "## 2. Créer le rapport" in guide
+    assert "## Page 1 - Suivi des ventes - Ventes 2025 2026" in guide
     assert "- Orders : Nombre entier" in guide
     assert "unit_price vs quantity" not in guide
     assert "Total Runs" not in guide

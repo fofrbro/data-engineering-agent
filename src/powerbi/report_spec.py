@@ -394,15 +394,44 @@ def _format_lines(spec: dict, observability: bool = True) -> list[str]:
     return lines
 
 
+def _model_setup_lines(spec: dict, measures_file: str) -> list[str]:
+    """Étapes de création du modèle sémantique dédié au dataset."""
+
+    tables = sorted({m["table"] for m in spec["dataset_measures"]})
+
+    return [
+        "## 1. Créer le modèle sémantique",
+        "",
+        "Un modèle sémantique dédié, séparé de celui de l'observabilité de l'agent :",
+        "",
+        "1. Dans le Lakehouse, cliquer sur « Nouveau modèle sémantique ».",
+        f"2. Le nommer « {spec['report']} ».",
+        f"3. Cocher uniquement : {', '.join(f'`{t}`' for t in tables)}.",
+        f"4. Dans ce modèle, créer les mesures de `{measures_file}` dans la table "
+        f"{', '.join(f'`{t}`' for t in tables)} (« Nouvelle mesure », puis coller "
+        "la formule).",
+        "5. Régler le format de chaque mesure (section suivante).",
+        "",
+        "## 2. Créer le rapport",
+        "",
+        "Depuis ce modèle sémantique, cliquer sur « Créer un rapport ». Ce rapport est",
+        "distinct du rapport d'observabilité : un rapport ne se connecte qu'à un seul",
+        "modèle sémantique.",
+        "",
+    ]
+
+
 def render_report_guide(
     spec: dict,
     observability: bool = True,
     first_page: int = 1,
+    measures_file: str | None = None,
 ) -> str:
     """
     Guide pas à pas pour construire le rapport dans Power BI.
     observability=False omet les formats des mesures d'observabilité
-    (guide d'une page dataset seule).
+    (guide d'un rapport dataset). measures_file ajoute les étapes de
+    création du modèle sémantique dédié et de son rapport.
     """
 
     lines = [
@@ -414,6 +443,7 @@ def render_report_guide(
         "« Visualisations », puis faire glisser les champs indiqués depuis le volet",
         "« Données » dans les zones du volet « Générer un visuel ».",
         "",
+        *(_model_setup_lines(spec, measures_file) if measures_file else []),
         *_format_lines(spec, observability),
     ]
 
@@ -478,9 +508,9 @@ def export_dataset_report(
 
     guide = folder / f"{plan.dataset}_report_guide.md"
     dax = folder / f"{plan.dataset}_measures.dax"
-    # Les pages 1 et 2 sont celles de l'observabilité.
+    # Rapport dédié au dataset, sur son propre modèle sémantique.
     guide.write_text(
-        render_report_guide(spec, observability=False, first_page=3),
+        render_report_guide(spec, observability=False, measures_file=dax.name),
         encoding="utf-8",
         newline="\n",
     )
