@@ -166,4 +166,4 @@ def test_export_dataset_report_requires_approval_and_writes_files(tmp_path):
     assert "unit_price vs quantity" not in guide
     assert "Total Runs" not in guide
     assert "[Revenue] = CALCULATE(SUMX('fact_ventes_2025_2026'," in dax
-    assert "NOT 'fact_ventes_2025_2026'[status] IN {\"CANCELLED\"})" in dax
+    assert "KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {\"CANCELLED\"}))" in dax

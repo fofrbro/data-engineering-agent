@@ -74,9 +74,12 @@ def test_dax_filters_cancelled_orders():
         "SUM(quantity * unit_price) / COUNT(DISTINCT order_id) WHERE status NOT IN ('CANCELLED')"
     )
 
+    # KEEPFILTERS : l'exclusion s'ajoute au filtre d'un visuel par statut
+    # au lieu de le remplacer (constaté dans Power BI le 2026-09-27 :
+    # sans lui, chaque statut affichait le chiffre d'affaires total).
     assert to_dax(formula, "fact") == (
         "CALCULATE(DIVIDE(SUMX('fact', 'fact'[quantity] * 'fact'[unit_price]), "
-        "DISTINCTCOUNT('fact'[order_id])), NOT 'fact'[status] IN {\"CANCELLED\"})"
+        "DISTINCTCOUNT('fact'[order_id])), KEEPFILTERS(NOT 'fact'[status] IN {\"CANCELLED\"}))"
     )
 
 

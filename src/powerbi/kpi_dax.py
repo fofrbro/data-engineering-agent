@@ -117,7 +117,13 @@ def to_dax(formula: Formula, table: str) -> str:
     if formula.op == "exclude":
         inner, name, values = formula.args
         listed = ", ".join(f'"{value}"' for value in values)
-        return f"CALCULATE({to_dax(inner, table)}, NOT {column(name)} IN {{{listed}}})"
+        # KEEPFILTERS : l'exclusion s'ajoute au filtre du visuel ou du
+        # segment sur la même colonne au lieu de le remplacer (sans lui,
+        # « Revenue par status » affiche le total pour chaque statut).
+        return (
+            f"CALCULATE({to_dax(inner, table)}, "
+            f"KEEPFILTERS(NOT {column(name)} IN {{{listed}}}))"
+        )
 
     raise UnsupportedFormulaError(f"Opération inconnue : {formula.op}")
 

@@ -1,22 +1,22 @@
 // Mesures générées par src/powerbi/report_spec.py - ne pas modifier à la main.
 
 // Table : fact_ventes_2025_2026 | Format : Devise, 2 décimales
-[Revenue] = CALCULATE(SUMX('fact_ventes_2025_2026', 'fact_ventes_2025_2026'[quantity] * 'fact_ventes_2025_2026'[unit_price]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Revenue] = CALCULATE(SUMX('fact_ventes_2025_2026', 'fact_ventes_2025_2026'[quantity] * 'fact_ventes_2025_2026'[unit_price]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Nombre entier
-[Orders] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[order_id]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Orders] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[order_id]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Nombre décimal, 2 décimales
-[Quantity Sold] = CALCULATE(SUM('fact_ventes_2025_2026'[quantity]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Quantity Sold] = CALCULATE(SUM('fact_ventes_2025_2026'[quantity]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Devise, 2 décimales
-[Average Order Value] = CALCULATE(DIVIDE(SUMX('fact_ventes_2025_2026', 'fact_ventes_2025_2026'[quantity] * 'fact_ventes_2025_2026'[unit_price]), DISTINCTCOUNT('fact_ventes_2025_2026'[order_id])), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Average Order Value] = CALCULATE(DIVIDE(SUMX('fact_ventes_2025_2026', 'fact_ventes_2025_2026'[quantity] * 'fact_ventes_2025_2026'[unit_price]), DISTINCTCOUNT('fact_ventes_2025_2026'[order_id])), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Nombre entier
-[Customers] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[customer_id]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Customers] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[customer_id]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Nombre entier
-[Products] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[product]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Products] = CALCULATE(DISTINCTCOUNT('fact_ventes_2025_2026'[product]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
 
 // Table : fact_ventes_2025_2026 | Format : Devise, 2 décimales
-[Average Unit Price] = CALCULATE(AVERAGE('fact_ventes_2025_2026'[unit_price]), NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"})
+[Average Unit Price] = CALCULATE(AVERAGE('fact_ventes_2025_2026'[unit_price]), KEEPFILTERS(NOT 'fact_ventes_2025_2026'[status] IN {"CANCELLED"}))
