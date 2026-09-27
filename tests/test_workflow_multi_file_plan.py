@@ -46,11 +46,23 @@ def test_batch_plan_has_one_decision_per_file(validated_contract):
     assert validation_status(plan)["ready_to_execute"] is True
 
 
-def test_batch_schema_is_profiled_on_all_rows(validated_contract):
+def test_batch_schema_is_profiled_on_all_rows_within_the_contract(validated_contract):
     plan = plan_file(BATCH, dataset="ventes_2025_2026", contracts_dir=validated_contract)
 
-    # 1 500 + 300 + 300 lignes ; la colonne commentaire du fichier en quarantaine.
+    # 1 500 + 300 + 300 lignes.
     assert plan.discovery.schema.row_count == 2100
+    # La colonne commentaire, hors contrat, ne pilote aucune recommandation.
+    assert "commentaire" not in [c.name for c in plan.discovery.schema.columns]
+    assert all(
+        "commentaire" not in step.columns for step in plan.recommendation.transformations
+    )
+
+
+def test_proposed_contract_keeps_every_profiled_column(tmp_path):
+    plan = plan_file(BATCH[:2], dataset="ventes_mix", contracts_dir=tmp_path / "contracts")
+
+    assert plan.contract_origin == "PROPOSED"
+    assert "commentaire" in plan.contract["columns"]
     assert "commentaire" in [c.name for c in plan.discovery.schema.columns]
 
 

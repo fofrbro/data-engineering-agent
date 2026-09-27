@@ -30,7 +30,7 @@ import pandas as pd
 
 from src.discovery.dataset_discovery import DiscoveryResult, discover_dataset
 from src.discovery.readers import read_dataset
-from src.discovery.schema_profiler import profile_schema
+from src.discovery.schema_profiler import SchemaProfile, profile_schema
 from src.recommendation.dashboard_planner import DashboardPlan, plan_dashboard
 from src.recommendation.dashboard_review import (
     APPROVED,
@@ -262,6 +262,37 @@ def _batch_decision(file_previews: list[dict]) -> dict:
     }
 
 
+def _restrict_to_contract(
+    discovery: DiscoveryResult,
+    semantics: SemanticProfile,
+    contract: dict,
+) -> tuple[DiscoveryResult, SemanticProfile]:
+    """
+    Les recommandations suivent le contrat : une colonne hors contrat
+    (signalée comme inattendue par la validation) n'est ni transformée
+    ni utilisée dans Gold, les KPI ou le tableau de bord. Sans colonnes
+    dans le contrat, le profil complet est gardé.
+    """
+
+    contract_columns = set(contract.get("columns") or {})
+    schema = discovery.schema
+
+    if not contract_columns or {c.name for c in schema.columns} <= contract_columns:
+        return discovery, semantics
+
+    restricted = SchemaProfile(
+        row_count=schema.row_count,
+        column_count=len([c for c in schema.columns if c.name in contract_columns]),
+        duplicate_rows=schema.duplicate_rows,
+        columns=[c for c in schema.columns if c.name in contract_columns],
+    )
+
+    return (
+        DiscoveryResult(file=discovery.file, format=discovery.format, schema=restricted),
+        profile_semantics(restricted),
+    )
+
+
 def _discover(file_paths: list[str]) -> DiscoveryResult:
     """
     Découverte d'un fichier ou d'un lot : pour un lot, le profil de
@@ -379,6 +410,7 @@ def plan_file(
             Path(contracts_dir) / "proposed" / f"{dataset}.json",
         ).as_posix()
 
+    discovery, semantics = _restrict_to_contract(discovery, semantics, contract)
     kpis = recommend_kpis(discovery.schema, semantics, dataset)
 
     plan = AgentPlan(

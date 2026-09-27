@@ -13,6 +13,7 @@ EXECUTE -> VERIFY -> AUDIT d'un AgentPlan validé.
 """
 
 import shutil
+from uuid import uuid4
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -40,7 +41,10 @@ from src.execution.silver_executor import (
 )
 from src.tools.contract_validation import validate_contract
 from src.tools.data_validation import validate_csv
-from src.tools.ingestion_decision import determine_ingestion_decision
+from src.tools.ingestion_decision import (
+    RULE_PASSED_WITH_WARNINGS,
+    determine_ingestion_decision,
+)
 from src.workflow.agent_workflow import (
     BLOCKED,
     EXECUTED,
@@ -65,6 +69,8 @@ class ExecutionResult:
     outputs: dict[str, str] = field(default_factory=dict)
     verification: list[dict] = field(default_factory=list)
     explanation: str = ""
+    # Décision et run de chaque fichier du plan.
+    file_results: list[dict] = field(default_factory=list)
 
 
 class _AuditedRun:
@@ -214,6 +220,94 @@ def verify_outputs(
     }
 
 
+def _new_audit(plan: AgentPlan, source_file: str, batch_id: str) -> dict:
+    audit = create_audit_record(
+        run_id=create_run_id(),
+        source_file=source_file,
+        contract_path=plan.contract_path,
+    )
+    audit["execution_mode"] = "INGEST"
+    audit["plan_id"] = plan.plan_id
+    audit["batch_id"] = batch_id
+    return audit
+
+
+def _fail(audit: dict, error: Exception, audit_path) -> None:
+    finish_audit(
+        audit,
+        status="FAILED",
+        decision=audit.get("decision"),
+        execution_mode="INGEST",
+        error=str(error),
+    )
+    append_audit(audit, audit_path)
+
+
+def _assess(plan: AgentPlan, path: str, audit: dict) -> dict:
+    """Évaluation d'un fichier, étapes enregistrées dans son audit."""
+
+    run = _AuditedRun(audit)
+    quality = run.step("validate_csv", lambda: validate_csv(path, plan.contract_path))
+    contract = run.step(
+        "validate_contract", lambda: validate_contract(path, plan.contract_path),
+    )
+    decision = run.step(
+        "determine_ingestion_decision",
+        lambda: determine_ingestion_decision(contract, quality),
+    )
+
+    audit["decision"] = decision["decision"]
+    audit["policy_rule"] = decision["policy_rule"]
+    audit["decision_reason"] = decision["reason"]
+
+    return decision
+
+
+def _isolate(path: str, decision: dict, audit: dict, root: Path, audit_path) -> ExecutionResult:
+    """Fichier refusé : quarantaine ou rejet, dans son propre run."""
+
+    quarantine = decision["decision"] == "QUARANTINE"
+    _AuditedRun(audit).step(
+        "quarantine_file" if quarantine else "reject_file",
+        lambda: _route(
+            path,
+            root / ("quarantine" if quarantine else "rejected"),
+            "QUARANTINED" if quarantine else "REJECTED",
+            decision["reason"],
+        ),
+    )
+    finish_audit(
+        audit,
+        status="QUARANTINED" if quarantine else "REJECTED",
+        decision=decision["decision"],
+        execution_mode="INGEST",
+    )
+    return _result(audit, {}, {}, audit_path)
+
+
+def _combined_audit(plan: AgentPlan, accepted: list, batch_id: str) -> dict:
+    """
+    Run unique des fichiers INGEST. Pour un seul fichier, c'est son
+    propre audit ; pour plusieurs, un run qui reprend leurs étapes
+    d'évaluation, dans l'ordre.
+    """
+
+    if len(accepted) == 1:
+        return accepted[0][2]
+
+    audit = _new_audit(plan, ", ".join(path for path, _, _ in accepted), batch_id)
+    audit["started_at"] = accepted[0][2]["started_at"]
+    audit["steps"] = [step for _, _, file_audit in accepted for step in file_audit["steps"]]
+    rules = {decision["policy_rule"] for _, decision, _ in accepted}
+    audit["decision"] = "INGEST"
+    audit["policy_rule"] = rules.pop() if len(rules) == 1 else RULE_PASSED_WITH_WARNINGS
+    audit["decision_reason"] = (
+        f"{len(accepted)} fichiers admis et combinés : "
+        + " ; ".join(f"{path} : {decision['reason']}" for path, decision, _ in accepted)
+    )
+    return audit
+
+
 def execute_plan(
     plan: AgentPlan,
     output_root: str | Path = "data",
@@ -221,6 +315,11 @@ def execute_plan(
 ) -> ExecutionResult:
     """
     EXECUTE -> VERIFY -> AUDIT.
+
+    Chaque fichier du plan reçoit sa propre décision. Les fichiers
+    refusés sont isolés, chacun dans son run ; les fichiers INGEST sont
+    combinés dans un seul run Bronze -> Silver -> Gold. Tous les runs
+    d'une exécution partagent un batch_id.
 
     Lève WorkflowError si le plan n'est pas prêt : rien n'est
     exécuté ni écrit.
@@ -232,65 +331,67 @@ def execute_plan(
         raise WorkflowError(" ".join(status["blockers"]))
 
     root = Path(output_root)
-    audit = create_audit_record(
-        run_id=create_run_id(),
-        source_file=plan.file_path,
-        contract_path=plan.contract_path,
-    )
-    audit["execution_mode"] = "INGEST"
-    audit["plan_id"] = plan.plan_id
+    batch_id = str(uuid4())
+    accepted = []
+    file_results = []
+    last_refused = None
+
+    for path in plan.file_paths:
+        audit = _new_audit(plan, path, batch_id)
+
+        try:
+            decision = _assess(plan, path, audit)
+
+            if decision["decision"] != "INGEST":
+                last_refused = _isolate(path, decision, audit, root, audit_path)
+                file_results.append(
+                    {
+                        "file": path,
+                        "decision": decision["decision"],
+                        "policy_rule": decision["policy_rule"],
+                        "run_id": audit["run_id"],
+                        "final_status": audit["final_status"],
+                    }
+                )
+                continue
+        except Exception as exc:
+            plan.status = FAILED
+            _fail(audit, exc, audit_path)
+            raise
+
+        accepted.append((path, decision, audit))
+
+    if not accepted:
+        plan.status = BLOCKED
+
+        if len(file_results) > 1:
+            decisions = {result["decision"] for result in file_results}
+            last_refused.decision = decisions.pop() if len(decisions) == 1 else "PARTIAL"
+            last_refused.final_status = BLOCKED
+
+        last_refused.file_results = file_results
+        return last_refused
+
+    audit = _combined_audit(plan, accepted, batch_id)
     run = _AuditedRun(audit)
     outputs: dict[str, str] = {}
     verification: dict = {}
 
     try:
-        quality = run.step(
-            "validate_csv",
-            lambda: validate_csv(plan.file_path, plan.contract_path),
-        )
-        contract = run.step(
-            "validate_contract",
-            lambda: validate_contract(plan.file_path, plan.contract_path),
-        )
-        decision = run.step(
-            "determine_ingestion_decision",
-            lambda: determine_ingestion_decision(contract, quality),
-        )
-
-        audit["decision"] = decision["decision"]
-        audit["policy_rule"] = decision["policy_rule"]
-        audit["decision_reason"] = decision["reason"]
-
-        if decision["decision"] != "INGEST":
-            quarantine = decision["decision"] == "QUARANTINE"
-            run.step(
-                "quarantine_file" if quarantine else "reject_file",
-                lambda: _route(
-                    plan.file_path,
-                    root / ("quarantine" if quarantine else "rejected"),
-                    "QUARANTINED" if quarantine else "REJECTED",
-                    decision["reason"],
-                ),
-            )
-            final_status = "QUARANTINED" if quarantine else "REJECTED"
-            plan.status = BLOCKED
-            finish_audit(
-                audit,
-                status=final_status,
-                decision=decision["decision"],
-                execution_mode="INGEST",
-            )
-            return _result(audit, outputs, verification, audit_path)
-
         recommendation = plan.recommendation
-        bronze = read_dataframe(plan.file_path)
+        frames = {path: read_dataframe(path) for path, _, _ in accepted}
+        bronze = pd.concat(frames.values(), ignore_index=True)
 
         def write_bronze():
             outputs["bronze"] = _write(
                 bronze, root / "bronze" / f"{recommendation.bronze['table']}.parquet"
             )
             record_output(audit, path=outputs["bronze"], layer="bronze")
-            return {"rows": len(bronze), "file": outputs["bronze"]}
+            return {
+                "rows": len(bronze),
+                "file": outputs["bronze"],
+                "rows_by_file": {path: len(frame) for path, frame in frames.items()},
+            }
 
         run.step("write_bronze", write_bronze)
 
@@ -349,7 +450,7 @@ def execute_plan(
         finish_audit(
             audit,
             status="FAILED" if failed_checks else "SUCCESS",
-            decision=decision["decision"],
+            decision="INGEST",
             execution_mode="INGEST",
             error=(
                 f"Vérification échouée : {', '.join(failed_checks)}"
@@ -357,22 +458,32 @@ def execute_plan(
                 else None
             ),
         )
-        return _result(audit, outputs, verification, audit_path)
+        result = _result(audit, outputs, verification, audit_path)
 
     except Exception as exc:
         plan.status = FAILED
-        finish_audit(
-            audit,
-            status="FAILED",
-            decision=audit.get("decision"),
-            execution_mode="INGEST",
-            error=str(exc),
-        )
-        append_audit(audit, audit_path)
+        _fail(audit, exc, audit_path)
         raise
+
+    for path, decision, _ in accepted:
+        file_results.append(
+            {
+                "file": path,
+                "decision": "INGEST",
+                "policy_rule": decision["policy_rule"],
+                "run_id": result.run_id,
+                "final_status": result.final_status,
+            }
+        )
+
+    result.file_results = sorted(
+        file_results, key=lambda item: plan.file_paths.index(item["file"])
+    )
+    return result
 
 
 def _result(
+
     audit: dict,
     outputs: dict,
     verification: dict,
