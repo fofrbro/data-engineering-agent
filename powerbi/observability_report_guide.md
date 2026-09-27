@@ -8,8 +8,10 @@ Pour chaque visuel : cliquer sur l'icône du visuel dans le volet
 
 ## Formats des mesures
 
-Sélectionner la mesure dans le volet « Données », puis choisir le format
-dans le ruban « Outils de mesure ».
+Dans Fabric : ouvrir le modèle sémantique, « Ouvrir le modèle de données »,
+cliquer sur la mesure dans le volet « Données », puis régler « Format » et
+le nombre de décimales dans le volet « Propriétés » (section « Mise en
+forme »). Dans Power BI Desktop : ruban « Outils de mesure ».
 
 - Total Runs : Nombre entier
 - Successful Runs : Nombre entier
