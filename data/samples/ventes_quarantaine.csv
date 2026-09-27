@@ -1,0 +1,301 @@
+order_id,order_date,customer_id,product,category,region,quantity,unit_price,status,commentaire
+18,2025-10-01,232,Monitor,Informatique,Bretagne,1,306.61,PAID,Livraison express
+296,2025-10-01,58,Monitor,Informatique,Hauts-de-France,2,273.84,PAID,
+356,2025-10-01,175,Mouse,Accessoires,Bretagne,1,25.97,PAID,
+566,2025-10-01,49,Keyboard,Accessoires,Hauts-de-France,1,43.29,PAID,Livraison express
+616,2025-10-01,77,Desk,Mobilier,Bretagne,3,360.89,PAID,
+882,2025-10-01,192,Desk,Mobilier,Auvergne-Rhône-Alpes,3,366.17,PAID,
+985,2025-10-01,85,Keyboard,Accessoires,Hauts-de-France,1,40.54,PAID,Livraison express
+1236,2025-10-01,173,Headset,Accessoires,Auvergne-Rhône-Alpes,1,63.33,PAID,
+1372,2025-10-01,262,Keyboard,Accessoires,Occitanie,1,48.1,PAID,
+1387,2025-10-01,264,Headset,Accessoires,Auvergne-Rhône-Alpes,2,57.14,PAID,Livraison express
+747,2025-10-02,76,Printer,Bureautique,Auvergne-Rhône-Alpes,1,173.46,PAID,
+1010,2025-10-02,92,Headset,Accessoires,Auvergne-Rhône-Alpes,1,56.82,PAID,
+20,2025-10-03,161,Keyboard,Accessoires,Bretagne,5,46.71,PAID,Livraison express
+34,2025-10-03,48,Mouse,Accessoires,Occitanie,3,24.54,PAID,
+226,2025-10-03,106,Headset,Accessoires,Île-de-France,1,57.71,PAID,
+565,2025-10-03,170,Desk,Mobilier,Île-de-France,1,372.63,PAID,Livraison express
+596,2025-10-03,237,Keyboard,Accessoires,Hauts-de-France,2,44.48,PAID,
+787,2025-10-03,101,Keyboard,Accessoires,Occitanie,1,47.6,PAID,
+801,2025-10-03,178,Monitor,Informatique,Hauts-de-France,1,305.64,PAID,Livraison express
+1083,2025-10-03,293,Desk,Mobilier,Bretagne,1,382.11,PAID,
+1258,2025-10-03,262,Laptop,Informatique,Hauts-de-France,1,858.38,PAID,
+128,2025-10-04,147,Mouse,Accessoires,Bretagne,1,24.86,PAID,Livraison express
+387,2025-10-04,159,Headset,Accessoires,Bretagne,1,58.47,PAID,
+1062,2025-10-04,58,Keyboard,Accessoires,Bretagne,1,40.51,PAID,
+218,2025-10-05,92,Desk Chair,Mobilier,Occitanie,1,225.2,PAID,Livraison express
+505,2025-10-05,145,Keyboard,Accessoires,Hauts-de-France,1,42.94,SHIPPED,
+690,2025-10-05,271,Keyboard,Accessoires,Île-de-France,2,42.37,PAID,
+1107,2025-10-05,244,Keyboard,Accessoires,Occitanie,2,43.74,PAID,Livraison express
+1330,2025-10-05,31,Desk Chair,Mobilier,Hauts-de-France,4,199.71,PAID,
+1450,2025-10-05,61,Mouse,Accessoires,Occitanie,1,27.47,CANCELLED,
+243,2025-10-06,153,Desk,Mobilier,Île-de-France,3,323.43,SHIPPED,Livraison express
+855,2025-10-06,279,Keyboard,Accessoires,Hauts-de-France,1,48.67,PAID,
+1345,2025-10-06,180,Mouse,Accessoires,Île-de-France,3,23.84,PAID,
+153,2025-10-07,216,Mouse,Accessoires,Bretagne,4,24.44,PAID,Livraison express
+262,2025-10-07,185,Headset,Accessoires,Auvergne-Rhône-Alpes,1,57.43,PAID,
+278,2025-10-07,253,Keyboard,Accessoires,Île-de-France,1,46.16,PAID,
+416,2025-10-07,259,Monitor,Informatique,Île-de-France,1,278.07,PAID,Livraison express
+1318,2025-10-07,44,Printer,Bureautique,Auvergne-Rhône-Alpes,2,192.5,PAID,
+1495,2025-10-07,100,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,24.2,PAID,
+240,2025-10-08,271,Keyboard,Accessoires,Hauts-de-France,2,41.89,PAID,Livraison express
+811,2025-10-10,76,Desk Chair,Mobilier,Hauts-de-France,2,237.12,PAID,
+968,2025-10-10,17,Headset,Accessoires,Occitanie,1,54.94,PAID,
+1377,2025-10-10,249,Desk,Mobilier,Occitanie,1,368.01,PAID,Livraison express
+1394,2025-10-10,55,Desk Chair,Mobilier,Hauts-de-France,2,218.61,SHIPPED,
+1451,2025-10-10,90,Desk Chair,Mobilier,Hauts-de-France,1,218.11,PAID,
+373,2025-10-11,187,Desk Chair,Mobilier,Bretagne,1,221.09,SHIPPED,Livraison express
+1061,2025-10-11,204,Desk,Mobilier,Île-de-France,3,371.15,SHIPPED,
+1141,2025-10-11,129,Desk Chair,Mobilier,Île-de-France,1,203.43,PAID,
+512,2025-10-12,183,Laptop,Informatique,Auvergne-Rhône-Alpes,4,820.43,SHIPPED,Livraison express
+769,2025-10-12,29,Desk,Mobilier,Auvergne-Rhône-Alpes,5,335.41,PAID,
+898,2025-10-12,158,Desk Chair,Mobilier,Île-de-France,3,215.46,PAID,
+1402,2025-10-12,256,Keyboard,Accessoires,Bretagne,1,42.36,PAID,Livraison express
+829,2025-10-13,134,Mouse,Accessoires,Bretagne,3,24.9,SHIPPED,
+113,2025-10-14,54,Keyboard,Accessoires,Occitanie,1,42.01,PAID,
+366,2025-10-14,257,Mouse,Accessoires,Île-de-France,1,25.19,PAID,Livraison express
+1060,2025-10-14,242,Monitor,Informatique,Auvergne-Rhône-Alpes,1,324.53,PAID,
+1239,2025-10-14,155,Headset,Accessoires,Bretagne,4,62.46,PAID,
+139,2025-10-15,176,Laptop,Informatique,Hauts-de-France,5,865.28,PAID,Livraison express
+1319,2025-10-15,219,Desk Chair,Mobilier,Occitanie,1,204.96,PAID,
+1355,2025-10-15,109,Laptop,Informatique,Île-de-France,5,873.25,CANCELLED,
+1453,2025-10-15,10,Keyboard,Accessoires,Île-de-France,2,47.19,PAID,Livraison express
+198,2025-10-16,162,Laptop,Informatique,Hauts-de-France,1,871.44,PAID,
+396,2025-10-16,108,Headset,Accessoires,Occitanie,5,57.47,PAID,
+861,2025-10-16,252,Desk Chair,Mobilier,Bretagne,2,203.48,PAID,Livraison express
+936,2025-10-16,115,Printer,Bureautique,Auvergne-Rhône-Alpes,3,185.02,PAID,
+1248,2025-10-16,129,Desk,Mobilier,Bretagne,2,357.79,SHIPPED,
+417,2025-10-17,106,Keyboard,Accessoires,Île-de-France,4,43.87,PAID,Livraison express
+448,2025-10-17,236,Headset,Accessoires,Occitanie,2,55.19,PAID,
+463,2025-10-17,282,Laptop,Informatique,Hauts-de-France,1,923.52,PAID,
+488,2025-10-17,185,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,45.46,PAID,Livraison express
+665,2025-10-17,284,Desk,Mobilier,Occitanie,5,327.17,PAID,
+1234,2025-10-17,259,Headset,Accessoires,Hauts-de-France,2,65.63,PAID,
+1424,2025-10-17,170,Desk,Mobilier,Île-de-France,5,337.1,PAID,Livraison express
+119,2025-10-18,272,Desk Chair,Mobilier,Occitanie,1,210.97,SHIPPED,
+292,2025-10-18,219,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,198.17,PAID,
+444,2025-10-18,150,Keyboard,Accessoires,Île-de-France,2,46.99,CANCELLED,Livraison express
+602,2025-10-18,19,Keyboard,Accessoires,Hauts-de-France,5,45.52,PAID,
+713,2025-10-18,79,Headset,Accessoires,Occitanie,2,57.09,PAID,
+86,2025-10-19,251,Headset,Accessoires,Hauts-de-France,1,59.77,PAID,Livraison express
+181,2025-10-19,71,Desk Chair,Mobilier,Occitanie,1,231.28,PAID,
+254,2025-10-19,285,Printer,Bureautique,Occitanie,1,189.8,PAID,
+873,2025-10-19,229,Headset,Accessoires,Île-de-France,1,61.97,PAID,Livraison express
+874,2025-10-19,188,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,42.82,SHIPPED,
+956,2025-10-19,173,Keyboard,Accessoires,Bretagne,3,41.57,PAID,
+1242,2025-10-19,221,Laptop,Informatique,Bretagne,4,800.49,PAID,Livraison express
+1341,2025-10-19,58,Desk,Mobilier,Occitanie,4,335.89,SHIPPED,
+1350,2025-10-19,269,Desk Chair,Mobilier,Occitanie,1,222.99,PAID,
+1401,2025-10-19,90,Mouse,Accessoires,Hauts-de-France,1,23.12,SHIPPED,Livraison express
+149,2025-10-20,101,Headset,Accessoires,Auvergne-Rhône-Alpes,1,64.17,CANCELLED,
+745,2025-10-20,48,Headset,Accessoires,Occitanie,2,54.17,PAID,
+902,2025-10-20,48,Headset,Accessoires,Bretagne,2,54.01,SHIPPED,Livraison express
+1100,2025-10-20,22,Headset,Accessoires,Occitanie,2,61.84,SHIPPED,
+1280,2025-10-20,173,Desk,Mobilier,Occitanie,1,351.28,PAID,
+392,2025-10-21,27,Desk Chair,Mobilier,Île-de-France,1,200.6,PAID,Livraison express
+527,2025-10-21,25,Desk,Mobilier,Auvergne-Rhône-Alpes,5,374.42,PAID,
+1260,2025-10-21,134,Mouse,Accessoires,Île-de-France,1,24.63,PAID,
+1420,2025-10-21,186,Keyboard,Accessoires,Bretagne,4,40.52,PAID,Livraison express
+200,2025-10-22,184,Mouse,Accessoires,Bretagne,5,27.18,SHIPPED,
+297,2025-10-22,133,Desk Chair,Mobilier,Île-de-France,2,237.43,SHIPPED,
+465,2025-10-22,252,Printer,Bureautique,Occitanie,5,169.05,CANCELLED,Livraison express
+674,2025-10-22,4,Printer,Bureautique,Occitanie,3,170.93,PAID,
+748,2025-10-22,165,Headset,Accessoires,Auvergne-Rhône-Alpes,2,59.59,PAID,
+1018,2025-10-22,169,Printer,Bureautique,Auvergne-Rhône-Alpes,3,163.51,PAID,Livraison express
+84,2025-10-23,95,Desk Chair,Mobilier,Bretagne,2,241.49,SHIPPED,
+274,2025-10-23,128,Keyboard,Accessoires,Bretagne,4,42.04,PAID,
+428,2025-10-23,107,Keyboard,Accessoires,Hauts-de-France,3,47.41,SHIPPED,Livraison express
+1069,2025-10-23,86,Desk,Mobilier,Bretagne,1,334.33,CANCELLED,
+1222,2025-10-23,129,Mouse,Accessoires,Bretagne,2,23.22,PAID,
+114,2025-10-24,37,Laptop,Informatique,Bretagne,1,889.51,PAID,Livraison express
+317,2025-10-24,219,Headset,Accessoires,Bretagne,3,59.08,PAID,
+401,2025-10-24,245,Desk Chair,Mobilier,Occitanie,2,221.54,PAID,
+612,2025-10-24,127,Desk,Mobilier,Île-de-France,2,344.31,PAID,Livraison express
+653,2025-10-24,99,Keyboard,Accessoires,Île-de-France,1,42.74,PAID,
+127,2025-10-25,150,Desk,Mobilier,Île-de-France,1,360.63,PAID,
+354,2025-10-25,88,Mouse,Accessoires,Hauts-de-France,4,26.09,PAID,Livraison express
+654,2025-10-25,266,Desk,Mobilier,Occitanie,2,316.09,PAID,
+834,2025-10-25,36,Keyboard,Accessoires,Hauts-de-France,5,49.01,PAID,
+1309,2025-10-25,202,Desk,Mobilier,Occitanie,1,367.09,PAID,Livraison express
+694,2025-10-26,12,Headset,Accessoires,Bretagne,2,65.25,CANCELLED,
+698,2025-10-26,184,Laptop,Informatique,Bretagne,1,929.45,PAID,
+782,2025-10-26,63,Headset,Accessoires,Occitanie,1,54.08,PAID,Livraison express
+820,2025-10-26,269,Laptop,Informatique,Occitanie,2,802.61,SHIPPED,
+1031,2025-10-26,111,Monitor,Informatique,Hauts-de-France,2,321.91,PAID,
+1184,2025-10-26,148,Mouse,Accessoires,Hauts-de-France,5,26.93,PAID,Livraison express
+1220,2025-10-26,246,Keyboard,Accessoires,Occitanie,1,45.91,PAID,
+280,2025-10-27,195,Keyboard,Accessoires,Hauts-de-France,2,48.19,PAID,
+363,2025-10-27,168,Desk Chair,Mobilier,Île-de-France,2,232.1,SHIPPED,Livraison express
+925,2025-10-27,62,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,23.29,PAID,
+614,2025-10-28,287,Mouse,Accessoires,Auvergne-Rhône-Alpes,5,24.47,PAID,
+770,2025-10-28,197,Printer,Bureautique,Île-de-France,1,181.34,SHIPPED,Livraison express
+779,2025-10-28,228,Desk Chair,Mobilier,Île-de-France,2,210.96,PAID,
+1360,2025-10-28,233,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,43.58,PAID,
+1429,2025-10-28,297,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,229.09,SHIPPED,Livraison express
+53,2025-10-29,6,Printer,Bureautique,Hauts-de-France,5,164.1,PAID,
+235,2025-10-29,217,Printer,Bureautique,Occitanie,2,191.37,PAID,
+822,2025-10-29,87,Headset,Accessoires,Île-de-France,2,64.82,SHIPPED,Livraison express
+678,2025-10-30,243,Headset,Accessoires,Hauts-de-France,5,57.29,PAID,
+959,2025-10-30,91,Headset,Accessoires,Bretagne,3,56.27,PAID,
+1441,2025-10-30,280,Desk,Mobilier,Hauts-de-France,1,356.76,PAID,Livraison express
+757,2025-10-31,74,Laptop,Informatique,Auvergne-Rhône-Alpes,2,846.43,PAID,
+201,2025-11-01,176,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,221.83,PAID,
+248,2025-11-01,234,Desk Chair,Mobilier,Île-de-France,1,205.32,PAID,Livraison express
+299,2025-11-01,59,Monitor,Informatique,Bretagne,3,312.73,PAID,
+285,2025-11-02,273,Keyboard,Accessoires,Bretagne,1,47.68,PAID,
+426,2025-11-02,66,Desk Chair,Mobilier,Occitanie,3,228.77,PAID,Livraison express
+518,2025-11-02,187,Headset,Accessoires,Occitanie,2,56.92,SHIPPED,
+973,2025-11-02,291,Laptop,Informatique,Île-de-France,2,772.09,PAID,
+997,2025-11-02,218,Headset,Accessoires,Bretagne,3,65.64,PAID,Livraison express
+1174,2025-11-02,141,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,42.65,PAID,
+531,2025-11-03,272,Headset,Accessoires,Occitanie,2,58.31,PAID,
+746,2025-11-03,216,Monitor,Informatique,Auvergne-Rhône-Alpes,2,289.91,PAID,Livraison express
+919,2025-11-03,61,Keyboard,Accessoires,Île-de-France,1,45.61,CANCELLED,
+931,2025-11-03,137,Desk,Mobilier,Île-de-France,3,351.87,PAID,
+1091,2025-11-03,61,Laptop,Informatique,Hauts-de-France,2,795.24,SHIPPED,Livraison express
+1434,2025-11-03,292,Keyboard,Accessoires,Occitanie,4,47.77,PAID,
+143,2025-11-04,198,Desk,Mobilier,Auvergne-Rhône-Alpes,5,368.85,PAID,
+329,2025-11-04,251,Desk,Mobilier,Occitanie,2,351.45,PAID,Livraison express
+352,2025-11-04,160,Desk,Mobilier,Occitanie,3,375.78,PAID,
+644,2025-11-04,67,Laptop,Informatique,Auvergne-Rhône-Alpes,1,925.56,CANCELLED,
+924,2025-11-04,65,Desk,Mobilier,Île-de-France,2,348.66,PAID,Livraison express
+1004,2025-11-04,71,Desk,Mobilier,Île-de-France,2,359.13,PAID,
+1130,2025-11-04,285,Mouse,Accessoires,Hauts-de-France,4,26.81,PAID,
+1044,2025-11-05,264,Desk,Mobilier,Île-de-France,2,338.21,PAID,Livraison express
+1256,2025-11-05,128,Laptop,Informatique,Hauts-de-France,2,777.13,PAID,
+264,2025-11-06,81,Headset,Accessoires,Bretagne,5,57.73,SHIPPED,
+657,2025-11-06,203,Keyboard,Accessoires,Île-de-France,1,42.25,PAID,Livraison express
+730,2025-11-06,189,Desk Chair,Mobilier,Île-de-France,4,202.78,PAID,
+1032,2025-11-06,134,Keyboard,Accessoires,Auvergne-Rhône-Alpes,5,41.15,PAID,
+1096,2025-11-06,252,Headset,Accessoires,Île-de-France,1,63.08,PAID,Livraison express
+286,2025-11-07,66,Keyboard,Accessoires,Occitanie,4,45.09,CANCELLED,
+345,2025-11-07,168,Headset,Accessoires,Bretagne,4,58.74,SHIPPED,
+1071,2025-11-07,24,Headset,Accessoires,Île-de-France,2,56.97,PAID,Livraison express
+1172,2025-11-07,169,Desk Chair,Mobilier,Île-de-France,4,235.78,PAID,
+496,2025-11-08,245,Headset,Accessoires,Île-de-France,1,54.31,PAID,
+1498,2025-11-08,261,Desk Chair,Mobilier,Occitanie,3,239.5,SHIPPED,Livraison express
+178,2025-11-09,118,Laptop,Informatique,Hauts-de-France,1,885.49,CANCELLED,
+480,2025-11-09,24,Desk,Mobilier,Auvergne-Rhône-Alpes,1,333.03,PAID,
+1332,2025-11-09,168,Printer,Bureautique,Bretagne,3,188.92,PAID,Livraison express
+1497,2025-11-09,105,Monitor,Informatique,Occitanie,2,300.47,SHIPPED,
+359,2025-11-10,290,Printer,Bureautique,Auvergne-Rhône-Alpes,3,184.35,PAID,
+742,2025-11-10,80,Desk Chair,Mobilier,Île-de-France,1,236.62,PAID,Livraison express
+758,2025-11-10,112,Headset,Accessoires,Auvergne-Rhône-Alpes,3,57.29,SHIPPED,
+1253,2025-11-10,15,Mouse,Accessoires,Île-de-France,2,27.11,PAID,
+1390,2025-11-10,186,Keyboard,Accessoires,Bretagne,4,48.51,SHIPPED,Livraison express
+1412,2025-11-10,214,Printer,Bureautique,Hauts-de-France,1,175.78,PAID,
+111,2025-11-11,22,Laptop,Informatique,Île-de-France,5,860.94,PAID,
+311,2025-11-11,111,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,232.85,PAID,Livraison express
+1147,2025-11-11,95,Laptop,Informatique,Hauts-de-France,2,894.43,PAID,
+1300,2025-11-11,74,Laptop,Informatique,Occitanie,1,777.94,PAID,
+69,2025-11-12,36,Printer,Bureautique,Île-de-France,5,190.01,PAID,Livraison express
+436,2025-11-12,58,Monitor,Informatique,Occitanie,5,311.58,SHIPPED,
+485,2025-11-12,211,Keyboard,Accessoires,Hauts-de-France,1,42.93,PAID,
+521,2025-11-12,300,Desk,Mobilier,Hauts-de-France,5,326.48,PAID,Livraison express
+647,2025-11-12,271,Laptop,Informatique,Auvergne-Rhône-Alpes,2,863.65,PAID,
+83,2025-11-13,291,Headset,Accessoires,Occitanie,1,55.3,PAID,
+1099,2025-11-13,101,Keyboard,Accessoires,Hauts-de-France,1,45.98,SHIPPED,Livraison express
+617,2025-11-14,106,Headset,Accessoires,Hauts-de-France,2,60.09,PAID,
+930,2025-11-14,85,Mouse,Accessoires,Occitanie,1,26.18,SHIPPED,
+1154,2025-11-14,263,Desk Chair,Mobilier,Occitanie,1,206.58,SHIPPED,Livraison express
+276,2025-11-15,58,Desk,Mobilier,Île-de-France,1,369.49,SHIPPED,
+390,2025-11-15,96,Printer,Bureautique,Occitanie,1,175.46,PAID,
+723,2025-11-15,59,Laptop,Informatique,Hauts-de-France,1,858.09,PAID,Livraison express
+1059,2025-11-15,131,Keyboard,Accessoires,Bretagne,1,49.19,PAID,
+1090,2025-11-15,171,Headset,Accessoires,Bretagne,1,58.57,PAID,
+104,2025-11-16,109,Desk,Mobilier,Hauts-de-France,1,367.92,PAID,Livraison express
+361,2025-11-16,98,Desk Chair,Mobilier,Bretagne,5,207.31,PAID,
+422,2025-11-16,83,Laptop,Informatique,Île-de-France,1,926.53,PAID,
+604,2025-11-16,8,Keyboard,Accessoires,Hauts-de-France,5,44.68,PAID,Livraison express
+649,2025-11-16,175,Mouse,Accessoires,Hauts-de-France,1,26.36,PAID,
+802,2025-11-16,115,Laptop,Informatique,Île-de-France,2,770.29,PAID,
+1023,2025-11-16,224,Monitor,Informatique,Bretagne,2,315.34,PAID,Livraison express
+1475,2025-11-16,44,Monitor,Informatique,Hauts-de-France,1,297.92,PAID,
+351,2025-11-17,262,Printer,Bureautique,Hauts-de-France,1,162.64,PAID,
+534,2025-11-17,44,Laptop,Informatique,Occitanie,5,883.14,PAID,Livraison express
+626,2025-11-17,134,Laptop,Informatique,Auvergne-Rhône-Alpes,2,792.92,PAID,
+860,2025-11-17,235,Laptop,Informatique,Bretagne,2,781.87,CANCELLED,
+1127,2025-11-17,60,Desk Chair,Mobilier,Bretagne,2,221.89,SHIPPED,Livraison express
+1188,2025-11-17,201,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,215.09,PAID,
+41,2025-11-18,288,Monitor,Informatique,Bretagne,3,288.9,SHIPPED,
+619,2025-11-18,177,Headset,Accessoires,Auvergne-Rhône-Alpes,4,60.15,PAID,Livraison express
+679,2025-11-18,225,Desk Chair,Mobilier,Occitanie,4,218.53,PAID,
+1001,2025-11-18,54,Headset,Accessoires,Bretagne,5,61.0,PAID,
+1189,2025-11-18,177,Desk,Mobilier,Auvergne-Rhône-Alpes,2,383.23,SHIPPED,Livraison express
+291,2025-11-19,250,Desk,Mobilier,Occitanie,2,335.77,PAID,
+453,2025-11-19,232,Laptop,Informatique,Hauts-de-France,5,786.06,SHIPPED,
+1331,2025-11-19,298,Laptop,Informatique,Île-de-France,2,772.18,PAID,Livraison express
+486,2025-11-20,120,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,228.67,CANCELLED,
+490,2025-11-21,212,Desk Chair,Mobilier,Hauts-de-France,3,221.04,PAID,
+560,2025-11-21,33,Mouse,Accessoires,Île-de-France,2,24.26,CANCELLED,Livraison express
+625,2025-11-21,233,Headset,Accessoires,Occitanie,3,65.75,CANCELLED,
+732,2025-11-21,59,Keyboard,Accessoires,Hauts-de-France,3,45.75,PAID,
+888,2025-11-21,104,Printer,Bureautique,Hauts-de-France,3,195.66,PAID,Livraison express
+969,2025-11-21,155,Headset,Accessoires,Occitanie,1,65.47,PAID,
+179,2025-11-22,275,Desk,Mobilier,Bretagne,1,335.24,PAID,
+195,2025-11-22,107,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,209.37,PAID,Livraison express
+711,2025-11-22,170,Monitor,Informatique,Bretagne,3,312.9,PAID,
+754,2025-11-22,137,Desk,Mobilier,Auvergne-Rhône-Alpes,5,348.38,PAID,
+1391,2025-11-22,204,Mouse,Accessoires,Bretagne,1,25.03,SHIPPED,Livraison express
+224,2025-11-23,157,Monitor,Informatique,Occitanie,2,291.33,PAID,
+244,2025-11-23,120,Laptop,Informatique,Hauts-de-France,1,823.3,PAID,
+528,2025-11-23,295,Desk,Mobilier,Occitanie,4,353.46,PAID,Livraison express
+1337,2025-11-23,82,Mouse,Accessoires,Île-de-France,1,27.32,PAID,
+67,2025-11-24,38,Desk,Mobilier,Occitanie,2,358.19,PAID,
+438,2025-11-24,217,Keyboard,Accessoires,Île-de-France,1,48.16,PAID,Livraison express
+775,2025-11-24,103,Desk Chair,Mobilier,Île-de-France,4,240.24,PAID,
+817,2025-11-24,13,Mouse,Accessoires,Bretagne,2,23.22,CANCELLED,
+1268,2025-11-24,220,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,23.77,PAID,Livraison express
+108,2025-11-25,74,Keyboard,Accessoires,Bretagne,2,49.23,SHIPPED,
+909,2025-11-25,42,Printer,Bureautique,Bretagne,5,182.42,PAID,
+1398,2025-11-25,289,Monitor,Informatique,Bretagne,1,313.63,PAID,Livraison express
+3,2025-11-26,148,Monitor,Informatique,Île-de-France,5,270.69,SHIPPED,
+334,2025-11-26,198,Laptop,Informatique,Bretagne,1,921.32,PAID,
+472,2025-11-26,107,Keyboard,Accessoires,Île-de-France,3,41.46,PAID,Livraison express
+714,2025-11-26,154,Headset,Accessoires,Bretagne,3,54.07,PAID,
+724,2025-11-26,146,Monitor,Informatique,Île-de-France,2,310.12,PAID,
+509,2025-11-27,285,Desk,Mobilier,Occitanie,2,383.45,PAID,Livraison express
+648,2025-11-27,291,Monitor,Informatique,Île-de-France,1,312.17,SHIPPED,
+753,2025-11-27,238,Desk,Mobilier,Auvergne-Rhône-Alpes,2,351.43,SHIPPED,
+1250,2025-11-27,299,Headset,Accessoires,Bretagne,3,61.43,PAID,Livraison express
+105,2025-11-28,89,Keyboard,Accessoires,Hauts-de-France,4,42.2,PAID,
+260,2025-11-28,67,Keyboard,Accessoires,Hauts-de-France,1,48.97,SHIPPED,
+364,2025-11-28,75,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,223.57,SHIPPED,Livraison express
+542,2025-11-28,155,Laptop,Informatique,Île-de-France,1,864.57,PAID,
+585,2025-11-28,18,Keyboard,Accessoires,Hauts-de-France,1,47.42,SHIPPED,
+651,2025-11-28,25,Desk Chair,Mobilier,Île-de-France,4,216.9,PAID,Livraison express
+948,2025-11-28,160,Keyboard,Accessoires,Hauts-de-France,1,46.43,PAID,
+1148,2025-11-28,34,Mouse,Accessoires,Occitanie,2,25.64,CANCELLED,
+1395,2025-11-28,133,Desk,Mobilier,Île-de-France,1,374.79,PAID,Livraison express
+8,2025-11-29,218,Desk,Mobilier,Bretagne,5,342.87,SHIPPED,
+65,2025-11-29,264,Laptop,Informatique,Île-de-France,3,775.81,PAID,
+157,2025-11-29,112,Monitor,Informatique,Occitanie,1,297.44,PAID,Livraison express
+258,2025-11-29,262,Headset,Accessoires,Hauts-de-France,2,55.39,PAID,
+718,2025-11-29,70,Monitor,Informatique,Hauts-de-France,3,279.29,SHIPPED,
+736,2025-11-29,35,Keyboard,Accessoires,Bretagne,5,46.32,PAID,Livraison express
+793,2025-11-29,61,Printer,Bureautique,Bretagne,3,197.4,PAID,
+846,2025-11-29,269,Headset,Accessoires,Hauts-de-France,3,54.28,PAID,
+792,2025-11-30,117,Keyboard,Accessoires,Occitanie,5,47.14,PAID,Livraison express
+950,2025-11-30,159,Printer,Bureautique,Île-de-France,2,184.54,PAID,
+19,2025-12-01,23,Mouse,Accessoires,Bretagne,2,25.84,PAID,
+33,2025-12-01,270,Desk,Mobilier,Bretagne,2,372.13,PAID,Livraison express
+214,2025-12-01,144,Monitor,Informatique,Île-de-France,1,301.29,PAID,
+700,2025-12-01,171,Headset,Accessoires,Hauts-de-France,5,57.14,SHIPPED,
+821,2025-12-01,19,Mouse,Accessoires,Occitanie,2,27.46,SHIPPED,Livraison express
+839,2025-12-01,119,Desk Chair,Mobilier,Hauts-de-France,1,217.59,PAID,
+1212,2025-12-01,123,Printer,Bureautique,Bretagne,1,192.87,PAID,
+1290,2025-12-01,133,Printer,Bureautique,Hauts-de-France,4,175.82,PAID,Livraison express
+1461,2025-12-01,129,Desk Chair,Mobilier,Île-de-France,1,226.66,CANCELLED,
+11,2025-12-02,234,Mouse,Accessoires,Occitanie,2,25.3,PAID,
+432,2025-12-02,143,Keyboard,Accessoires,Hauts-de-France,1,47.62,PAID,Livraison express
+743,2025-12-02,187,Desk Chair,Mobilier,Bretagne,4,226.21,CANCELLED,
+904,2025-12-02,12,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,231.46,PAID,
+1196,2025-12-02,266,Desk,Mobilier,Auvergne-Rhône-Alpes,2,370.35,PAID,Livraison express
+1326,2025-12-02,4,Monitor,Informatique,Île-de-France,3,288.12,PAID,
+336,2025-12-03,141,Printer,Bureautique,Hauts-de-France,3,192.95,PAID,
+571,2025-12-03,193,Headset,Accessoires,Auvergne-Rhône-Alpes,3,59.96,SHIPPED,Livraison express
+47,2025-12-04,268,Laptop,Informatique,Auvergne-Rhône-Alpes,2,769.9,CANCELLED,
+49,2025-12-04,94,Mouse,Accessoires,Bretagne,1,25.81,SHIPPED,
+823,2025-12-04,76,Printer,Bureautique,Auvergne-Rhône-Alpes,1,184.24,PAID,Livraison express
+272,2025-12-05,216,Mouse,Accessoires,Occitanie,1,24.89,PAID,
+462,2025-12-05,164,Desk,Mobilier,Occitanie,3,370.72,PAID,

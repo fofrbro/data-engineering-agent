@@ -1,0 +1,1501 @@
+order_id,order_date,customer_id,product,category,region,quantity,unit_price,status
+18,2025-10-01,232,Monitor,Informatique,Bretagne,1,306.61,PAID
+296,2025-10-01,58,Monitor,Informatique,Hauts-de-France,2,273.84,PAID
+356,2025-10-01,175,Mouse,Accessoires,Bretagne,1,25.97,PAID
+566,2025-10-01,49,Keyboard,Accessoires,Hauts-de-France,1,43.29,PAID
+616,2025-10-01,77,Desk,Mobilier,Bretagne,3,360.89,PAID
+882,2025-10-01,192,Desk,Mobilier,Auvergne-Rhône-Alpes,3,366.17,PAID
+985,2025-10-01,85,Keyboard,Accessoires,Hauts-de-France,1,40.54,PAID
+1236,2025-10-01,173,Headset,Accessoires,Auvergne-Rhône-Alpes,1,63.33,PAID
+1372,2025-10-01,262,Keyboard,Accessoires,Occitanie,1,48.1,PAID
+1387,2025-10-01,264,Headset,Accessoires,Auvergne-Rhône-Alpes,2,57.14,PAID
+747,2025-10-02,76,Printer,Bureautique,Auvergne-Rhône-Alpes,1,173.46,PAID
+1010,2025-10-02,92,Headset,Accessoires,Auvergne-Rhône-Alpes,1,56.82,PAID
+20,2025-10-03,161,Keyboard,Accessoires,Bretagne,5,46.71,PAID
+34,2025-10-03,48,Mouse,Accessoires,Occitanie,3,24.54,PAID
+226,2025-10-03,106,Headset,Accessoires,Île-de-France,1,57.71,PAID
+565,2025-10-03,170,Desk,Mobilier,Île-de-France,1,372.63,PAID
+596,2025-10-03,237,Keyboard,Accessoires,Hauts-de-France,2,44.48,PAID
+787,2025-10-03,101,Keyboard,Accessoires,Occitanie,1,47.6,PAID
+801,2025-10-03,178,Monitor,Informatique,Hauts-de-France,1,305.64,PAID
+1083,2025-10-03,293,Desk,Mobilier,Bretagne,1,382.11,PAID
+1258,2025-10-03,262,Laptop,Informatique,Hauts-de-France,1,858.38,PAID
+128,2025-10-04,147,Mouse,Accessoires,Bretagne,1,24.86,PAID
+387,2025-10-04,159,Headset,Accessoires,Bretagne,1,58.47,PAID
+1062,2025-10-04,58,Keyboard,Accessoires,Bretagne,1,40.51,PAID
+218,2025-10-05,92,Desk Chair,Mobilier,Occitanie,1,225.2,PAID
+505,2025-10-05,145,Keyboard,Accessoires,Hauts-de-France,1,42.94,SHIPPED
+690,2025-10-05,271,Keyboard,Accessoires,Île-de-France,2,42.37,PAID
+1107,2025-10-05,244,Keyboard,Accessoires,Occitanie,2,43.74,PAID
+1330,2025-10-05,31,Desk Chair,Mobilier,Hauts-de-France,4,199.71,PAID
+1450,2025-10-05,61,Mouse,Accessoires,Occitanie,1,27.47,CANCELLED
+243,2025-10-06,153,Desk,Mobilier,Île-de-France,3,323.43,SHIPPED
+855,2025-10-06,279,Keyboard,Accessoires,Hauts-de-France,1,48.67,PAID
+1345,2025-10-06,180,Mouse,Accessoires,Île-de-France,3,23.84,PAID
+153,2025-10-07,216,Mouse,Accessoires,Bretagne,4,24.44,PAID
+262,2025-10-07,185,Headset,Accessoires,Auvergne-Rhône-Alpes,1,57.43,PAID
+278,2025-10-07,253,Keyboard,Accessoires,Île-de-France,1,46.16,PAID
+416,2025-10-07,259,Monitor,Informatique,Île-de-France,1,278.07,PAID
+1318,2025-10-07,44,Printer,Bureautique,Auvergne-Rhône-Alpes,2,192.5,PAID
+1495,2025-10-07,100,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,24.2,PAID
+240,2025-10-08,271,Keyboard,Accessoires,Hauts-de-France,2,41.89,PAID
+811,2025-10-10,76,Desk Chair,Mobilier,Hauts-de-France,2,237.12,PAID
+968,2025-10-10,17,Headset,Accessoires,Occitanie,1,54.94,PAID
+1377,2025-10-10,249,Desk,Mobilier,Occitanie,1,368.01,PAID
+1394,2025-10-10,55,Desk Chair,Mobilier,Hauts-de-France,2,218.61,SHIPPED
+1451,2025-10-10,90,Desk Chair,Mobilier,Hauts-de-France,1,218.11,PAID
+373,2025-10-11,187,Desk Chair,Mobilier,Bretagne,1,221.09,SHIPPED
+1061,2025-10-11,204,Desk,Mobilier,Île-de-France,3,371.15,SHIPPED
+1141,2025-10-11,129,Desk Chair,Mobilier,Île-de-France,1,203.43,PAID
+512,2025-10-12,183,Laptop,Informatique,Auvergne-Rhône-Alpes,4,820.43,SHIPPED
+769,2025-10-12,29,Desk,Mobilier,Auvergne-Rhône-Alpes,5,335.41,PAID
+898,2025-10-12,158,Desk Chair,Mobilier,Île-de-France,3,215.46,PAID
+1402,2025-10-12,256,Keyboard,Accessoires,Bretagne,1,42.36,PAID
+829,2025-10-13,134,Mouse,Accessoires,Bretagne,3,24.9,SHIPPED
+113,2025-10-14,54,Keyboard,Accessoires,Occitanie,1,42.01,PAID
+366,2025-10-14,257,Mouse,Accessoires,Île-de-France,1,25.19,PAID
+1060,2025-10-14,242,Monitor,Informatique,Auvergne-Rhône-Alpes,1,324.53,PAID
+1239,2025-10-14,155,Headset,Accessoires,Bretagne,4,62.46,PAID
+139,2025-10-15,176,Laptop,Informatique,Hauts-de-France,5,865.28,PAID
+1319,2025-10-15,219,Desk Chair,Mobilier,Occitanie,1,204.96,PAID
+1355,2025-10-15,109,Laptop,Informatique,Île-de-France,5,873.25,CANCELLED
+1453,2025-10-15,10,Keyboard,Accessoires,Île-de-France,2,47.19,PAID
+198,2025-10-16,162,Laptop,Informatique,Hauts-de-France,1,871.44,PAID
+396,2025-10-16,108,Headset,Accessoires,Occitanie,5,57.47,PAID
+861,2025-10-16,252,Desk Chair,Mobilier,Bretagne,2,203.48,PAID
+936,2025-10-16,115,Printer,Bureautique,Auvergne-Rhône-Alpes,3,185.02,PAID
+1248,2025-10-16,129,Desk,Mobilier,Bretagne,2,357.79,SHIPPED
+417,2025-10-17,106,Keyboard,Accessoires,Île-de-France,4,43.87,PAID
+448,2025-10-17,236,Headset,Accessoires,Occitanie,2,55.19,PAID
+463,2025-10-17,282,Laptop,Informatique,Hauts-de-France,1,923.52,PAID
+488,2025-10-17,185,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,45.46,PAID
+665,2025-10-17,284,Desk,Mobilier,Occitanie,5,327.17,PAID
+1234,2025-10-17,259,Headset,Accessoires,Hauts-de-France,2,65.63,PAID
+1424,2025-10-17,170,Desk,Mobilier,Île-de-France,5,337.1,PAID
+119,2025-10-18,272,Desk Chair,Mobilier,Occitanie,1,210.97,SHIPPED
+292,2025-10-18,219,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,198.17,PAID
+444,2025-10-18,150,Keyboard,Accessoires,Île-de-France,2,46.99,CANCELLED
+602,2025-10-18,19,Keyboard,Accessoires,Hauts-de-France,5,45.52,PAID
+713,2025-10-18,79,Headset,Accessoires,Occitanie,2,57.09,PAID
+86,2025-10-19,251,Headset,Accessoires,Hauts-de-France,1,59.77,PAID
+181,2025-10-19,71,Desk Chair,Mobilier,Occitanie,1,231.28,PAID
+254,2025-10-19,285,Printer,Bureautique,Occitanie,1,189.8,PAID
+873,2025-10-19,229,Headset,Accessoires,Île-de-France,1,61.97,PAID
+874,2025-10-19,188,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,42.82,SHIPPED
+956,2025-10-19,173,Keyboard,Accessoires,Bretagne,3,41.57,PAID
+1242,2025-10-19,221,Laptop,Informatique,Bretagne,4,800.49,PAID
+1341,2025-10-19,58,Desk,Mobilier,Occitanie,4,335.89,SHIPPED
+1350,2025-10-19,269,Desk Chair,Mobilier,Occitanie,1,222.99,PAID
+1401,2025-10-19,90,Mouse,Accessoires,Hauts-de-France,1,23.12,SHIPPED
+149,2025-10-20,101,Headset,Accessoires,Auvergne-Rhône-Alpes,1,64.17,CANCELLED
+745,2025-10-20,48,Headset,Accessoires,Occitanie,2,54.17,PAID
+902,2025-10-20,48,Headset,Accessoires,Bretagne,2,54.01,SHIPPED
+1100,2025-10-20,22,Headset,Accessoires,Occitanie,2,61.84,SHIPPED
+1280,2025-10-20,173,Desk,Mobilier,Occitanie,1,351.28,PAID
+392,2025-10-21,27,Desk Chair,Mobilier,Île-de-France,1,200.6,PAID
+527,2025-10-21,25,Desk,Mobilier,Auvergne-Rhône-Alpes,5,374.42,PAID
+1260,2025-10-21,134,Mouse,Accessoires,Île-de-France,1,24.63,PAID
+1420,2025-10-21,186,Keyboard,Accessoires,Bretagne,4,40.52,PAID
+200,2025-10-22,184,Mouse,Accessoires,Bretagne,5,27.18,SHIPPED
+297,2025-10-22,133,Desk Chair,Mobilier,Île-de-France,2,237.43,SHIPPED
+465,2025-10-22,252,Printer,Bureautique,Occitanie,5,169.05,CANCELLED
+674,2025-10-22,4,Printer,Bureautique,Occitanie,3,170.93,PAID
+748,2025-10-22,165,Headset,Accessoires,Auvergne-Rhône-Alpes,2,59.59,PAID
+1018,2025-10-22,169,Printer,Bureautique,Auvergne-Rhône-Alpes,3,163.51,PAID
+84,2025-10-23,95,Desk Chair,Mobilier,Bretagne,2,241.49,SHIPPED
+274,2025-10-23,128,Keyboard,Accessoires,Bretagne,4,42.04,PAID
+428,2025-10-23,107,Keyboard,Accessoires,Hauts-de-France,3,47.41,SHIPPED
+1069,2025-10-23,86,Desk,Mobilier,Bretagne,1,334.33,CANCELLED
+1222,2025-10-23,129,Mouse,Accessoires,Bretagne,2,23.22,PAID
+114,2025-10-24,37,Laptop,Informatique,Bretagne,1,889.51,PAID
+317,2025-10-24,219,Headset,Accessoires,Bretagne,3,59.08,PAID
+401,2025-10-24,245,Desk Chair,Mobilier,Occitanie,2,221.54,PAID
+612,2025-10-24,127,Desk,Mobilier,Île-de-France,2,344.31,PAID
+653,2025-10-24,99,Keyboard,Accessoires,Île-de-France,1,42.74,PAID
+127,2025-10-25,150,Desk,Mobilier,Île-de-France,1,360.63,PAID
+354,2025-10-25,88,Mouse,Accessoires,Hauts-de-France,4,26.09,PAID
+654,2025-10-25,266,Desk,Mobilier,Occitanie,2,316.09,PAID
+834,2025-10-25,36,Keyboard,Accessoires,Hauts-de-France,5,49.01,PAID
+1309,2025-10-25,202,Desk,Mobilier,Occitanie,1,367.09,PAID
+694,2025-10-26,12,Headset,Accessoires,Bretagne,2,65.25,CANCELLED
+698,2025-10-26,184,Laptop,Informatique,Bretagne,1,929.45,PAID
+782,2025-10-26,63,Headset,Accessoires,Occitanie,1,54.08,PAID
+820,2025-10-26,269,Laptop,Informatique,Occitanie,2,802.61,SHIPPED
+1031,2025-10-26,111,Monitor,Informatique,Hauts-de-France,2,321.91,PAID
+1184,2025-10-26,148,Mouse,Accessoires,Hauts-de-France,5,26.93,PAID
+1220,2025-10-26,246,Keyboard,Accessoires,Occitanie,1,45.91,PAID
+280,2025-10-27,195,Keyboard,Accessoires,Hauts-de-France,2,48.19,PAID
+363,2025-10-27,168,Desk Chair,Mobilier,Île-de-France,2,232.1,SHIPPED
+925,2025-10-27,62,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,23.29,PAID
+614,2025-10-28,287,Mouse,Accessoires,Auvergne-Rhône-Alpes,5,24.47,PAID
+770,2025-10-28,197,Printer,Bureautique,Île-de-France,1,181.34,SHIPPED
+779,2025-10-28,228,Desk Chair,Mobilier,Île-de-France,2,210.96,PAID
+1360,2025-10-28,233,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,43.58,PAID
+1429,2025-10-28,297,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,229.09,SHIPPED
+53,2025-10-29,6,Printer,Bureautique,Hauts-de-France,5,164.1,PAID
+235,2025-10-29,217,Printer,Bureautique,Occitanie,2,191.37,PAID
+822,2025-10-29,87,Headset,Accessoires,Île-de-France,2,64.82,SHIPPED
+678,2025-10-30,243,Headset,Accessoires,Hauts-de-France,5,57.29,PAID
+959,2025-10-30,91,Headset,Accessoires,Bretagne,3,56.27,PAID
+1441,2025-10-30,280,Desk,Mobilier,Hauts-de-France,1,356.76,PAID
+757,2025-10-31,74,Laptop,Informatique,Auvergne-Rhône-Alpes,2,846.43,PAID
+201,2025-11-01,176,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,221.83,PAID
+248,2025-11-01,234,Desk Chair,Mobilier,Île-de-France,1,205.32,PAID
+299,2025-11-01,59,Monitor,Informatique,Bretagne,3,312.73,PAID
+285,2025-11-02,273,Keyboard,Accessoires,Bretagne,1,47.68,PAID
+426,2025-11-02,66,Desk Chair,Mobilier,Occitanie,3,228.77,PAID
+518,2025-11-02,187,Headset,Accessoires,Occitanie,2,56.92,SHIPPED
+973,2025-11-02,291,Laptop,Informatique,Île-de-France,2,772.09,PAID
+997,2025-11-02,218,Headset,Accessoires,Bretagne,3,65.64,PAID
+1174,2025-11-02,141,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,42.65,PAID
+531,2025-11-03,272,Headset,Accessoires,Occitanie,2,58.31,PAID
+746,2025-11-03,216,Monitor,Informatique,Auvergne-Rhône-Alpes,2,289.91,PAID
+919,2025-11-03,61,Keyboard,Accessoires,Île-de-France,1,45.61,CANCELLED
+931,2025-11-03,137,Desk,Mobilier,Île-de-France,3,351.87,PAID
+1091,2025-11-03,61,Laptop,Informatique,Hauts-de-France,2,795.24,SHIPPED
+1434,2025-11-03,292,Keyboard,Accessoires,Occitanie,4,47.77,PAID
+143,2025-11-04,198,Desk,Mobilier,Auvergne-Rhône-Alpes,5,368.85,PAID
+329,2025-11-04,251,Desk,Mobilier,Occitanie,2,351.45,PAID
+352,2025-11-04,160,Desk,Mobilier,Occitanie,3,375.78,PAID
+644,2025-11-04,67,Laptop,Informatique,Auvergne-Rhône-Alpes,1,925.56,CANCELLED
+924,2025-11-04,65,Desk,Mobilier,Île-de-France,2,348.66,PAID
+1004,2025-11-04,71,Desk,Mobilier,Île-de-France,2,359.13,PAID
+1130,2025-11-04,285,Mouse,Accessoires,Hauts-de-France,4,26.81,PAID
+1044,2025-11-05,264,Desk,Mobilier,Île-de-France,2,338.21,PAID
+1256,2025-11-05,128,Laptop,Informatique,Hauts-de-France,2,777.13,PAID
+264,2025-11-06,81,Headset,Accessoires,Bretagne,5,57.73,SHIPPED
+657,2025-11-06,203,Keyboard,Accessoires,Île-de-France,1,42.25,PAID
+730,2025-11-06,189,Desk Chair,Mobilier,Île-de-France,4,202.78,PAID
+1032,2025-11-06,134,Keyboard,Accessoires,Auvergne-Rhône-Alpes,5,41.15,PAID
+1096,2025-11-06,252,Headset,Accessoires,Île-de-France,1,63.08,PAID
+286,2025-11-07,66,Keyboard,Accessoires,Occitanie,4,45.09,CANCELLED
+345,2025-11-07,168,Headset,Accessoires,Bretagne,4,58.74,SHIPPED
+1071,2025-11-07,24,Headset,Accessoires,Île-de-France,2,56.97,PAID
+1172,2025-11-07,169,Desk Chair,Mobilier,Île-de-France,4,235.78,PAID
+496,2025-11-08,245,Headset,Accessoires,Île-de-France,1,54.31,PAID
+1498,2025-11-08,261,Desk Chair,Mobilier,Occitanie,3,239.5,SHIPPED
+178,2025-11-09,118,Laptop,Informatique,Hauts-de-France,1,885.49,CANCELLED
+480,2025-11-09,24,Desk,Mobilier,Auvergne-Rhône-Alpes,1,333.03,PAID
+1332,2025-11-09,168,Printer,Bureautique,Bretagne,3,188.92,PAID
+1497,2025-11-09,105,Monitor,Informatique,Occitanie,2,300.47,SHIPPED
+359,2025-11-10,290,Printer,Bureautique,Auvergne-Rhône-Alpes,3,184.35,PAID
+742,2025-11-10,80,Desk Chair,Mobilier,Île-de-France,1,236.62,PAID
+758,2025-11-10,112,Headset,Accessoires,Auvergne-Rhône-Alpes,3,57.29,SHIPPED
+1253,2025-11-10,15,Mouse,Accessoires,Île-de-France,2,27.11,PAID
+1390,2025-11-10,186,Keyboard,Accessoires,Bretagne,4,48.51,SHIPPED
+1412,2025-11-10,214,Printer,Bureautique,Hauts-de-France,1,175.78,PAID
+111,2025-11-11,22,Laptop,Informatique,Île-de-France,5,860.94,PAID
+311,2025-11-11,111,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,232.85,PAID
+1147,2025-11-11,95,Laptop,Informatique,Hauts-de-France,2,894.43,PAID
+1300,2025-11-11,74,Laptop,Informatique,Occitanie,1,777.94,PAID
+69,2025-11-12,36,Printer,Bureautique,Île-de-France,5,190.01,PAID
+436,2025-11-12,58,Monitor,Informatique,Occitanie,5,311.58,SHIPPED
+485,2025-11-12,211,Keyboard,Accessoires,Hauts-de-France,1,42.93,PAID
+521,2025-11-12,300,Desk,Mobilier,Hauts-de-France,5,326.48,PAID
+647,2025-11-12,271,Laptop,Informatique,Auvergne-Rhône-Alpes,2,863.65,PAID
+83,2025-11-13,291,Headset,Accessoires,Occitanie,1,55.3,PAID
+1099,2025-11-13,101,Keyboard,Accessoires,Hauts-de-France,1,45.98,SHIPPED
+617,2025-11-14,106,Headset,Accessoires,Hauts-de-France,2,60.09,PAID
+930,2025-11-14,85,Mouse,Accessoires,Occitanie,1,26.18,SHIPPED
+1154,2025-11-14,263,Desk Chair,Mobilier,Occitanie,1,206.58,SHIPPED
+276,2025-11-15,58,Desk,Mobilier,Île-de-France,1,369.49,SHIPPED
+390,2025-11-15,96,Printer,Bureautique,Occitanie,1,175.46,PAID
+723,2025-11-15,59,Laptop,Informatique,Hauts-de-France,1,858.09,PAID
+1059,2025-11-15,131,Keyboard,Accessoires,Bretagne,1,49.19,PAID
+1090,2025-11-15,171,Headset,Accessoires,Bretagne,1,58.57,PAID
+104,2025-11-16,109,Desk,Mobilier,Hauts-de-France,1,367.92,PAID
+361,2025-11-16,98,Desk Chair,Mobilier,Bretagne,5,207.31,PAID
+422,2025-11-16,83,Laptop,Informatique,Île-de-France,1,926.53,PAID
+604,2025-11-16,8,Keyboard,Accessoires,Hauts-de-France,5,44.68,PAID
+649,2025-11-16,175,Mouse,Accessoires,Hauts-de-France,1,26.36,PAID
+802,2025-11-16,115,Laptop,Informatique,Île-de-France,2,770.29,PAID
+1023,2025-11-16,224,Monitor,Informatique,Bretagne,2,315.34,PAID
+1475,2025-11-16,44,Monitor,Informatique,Hauts-de-France,1,297.92,PAID
+351,2025-11-17,262,Printer,Bureautique,Hauts-de-France,1,162.64,PAID
+534,2025-11-17,44,Laptop,Informatique,Occitanie,5,883.14,PAID
+626,2025-11-17,134,Laptop,Informatique,Auvergne-Rhône-Alpes,2,792.92,PAID
+860,2025-11-17,235,Laptop,Informatique,Bretagne,2,781.87,CANCELLED
+1127,2025-11-17,60,Desk Chair,Mobilier,Bretagne,2,221.89,SHIPPED
+1188,2025-11-17,201,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,215.09,PAID
+41,2025-11-18,288,Monitor,Informatique,Bretagne,3,288.9,SHIPPED
+619,2025-11-18,177,Headset,Accessoires,Auvergne-Rhône-Alpes,4,60.15,PAID
+679,2025-11-18,225,Desk Chair,Mobilier,Occitanie,4,218.53,PAID
+1001,2025-11-18,54,Headset,Accessoires,Bretagne,5,61.0,PAID
+1189,2025-11-18,177,Desk,Mobilier,Auvergne-Rhône-Alpes,2,383.23,SHIPPED
+291,2025-11-19,250,Desk,Mobilier,Occitanie,2,335.77,PAID
+453,2025-11-19,232,Laptop,Informatique,Hauts-de-France,5,786.06,SHIPPED
+1331,2025-11-19,298,Laptop,Informatique,Île-de-France,2,772.18,PAID
+486,2025-11-20,120,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,228.67,CANCELLED
+490,2025-11-21,212,Desk Chair,Mobilier,Hauts-de-France,3,221.04,PAID
+560,2025-11-21,33,Mouse,Accessoires,Île-de-France,2,24.26,CANCELLED
+625,2025-11-21,233,Headset,Accessoires,Occitanie,3,65.75,CANCELLED
+732,2025-11-21,59,Keyboard,Accessoires,Hauts-de-France,3,45.75,PAID
+888,2025-11-21,104,Printer,Bureautique,Hauts-de-France,3,195.66,PAID
+969,2025-11-21,155,Headset,Accessoires,Occitanie,1,65.47,PAID
+179,2025-11-22,275,Desk,Mobilier,Bretagne,1,335.24,PAID
+195,2025-11-22,107,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,209.37,PAID
+711,2025-11-22,170,Monitor,Informatique,Bretagne,3,312.9,PAID
+754,2025-11-22,137,Desk,Mobilier,Auvergne-Rhône-Alpes,5,348.38,PAID
+1391,2025-11-22,204,Mouse,Accessoires,Bretagne,1,25.03,SHIPPED
+224,2025-11-23,157,Monitor,Informatique,Occitanie,2,291.33,PAID
+244,2025-11-23,120,Laptop,Informatique,Hauts-de-France,1,823.3,PAID
+528,2025-11-23,295,Desk,Mobilier,Occitanie,4,353.46,PAID
+1337,2025-11-23,82,Mouse,Accessoires,Île-de-France,1,27.32,PAID
+67,2025-11-24,38,Desk,Mobilier,Occitanie,2,358.19,PAID
+438,2025-11-24,217,Keyboard,Accessoires,Île-de-France,1,48.16,PAID
+775,2025-11-24,103,Desk Chair,Mobilier,Île-de-France,4,240.24,PAID
+817,2025-11-24,13,Mouse,Accessoires,Bretagne,2,23.22,CANCELLED
+1268,2025-11-24,220,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,23.77,PAID
+108,2025-11-25,74,Keyboard,Accessoires,Bretagne,2,49.23,SHIPPED
+909,2025-11-25,42,Printer,Bureautique,Bretagne,5,182.42,PAID
+1398,2025-11-25,289,Monitor,Informatique,Bretagne,1,313.63,PAID
+3,2025-11-26,148,Monitor,Informatique,Île-de-France,5,270.69,SHIPPED
+334,2025-11-26,198,Laptop,Informatique,Bretagne,1,921.32,PAID
+472,2025-11-26,107,Keyboard,Accessoires,Île-de-France,3,41.46,PAID
+714,2025-11-26,154,Headset,Accessoires,Bretagne,3,54.07,PAID
+724,2025-11-26,146,Monitor,Informatique,Île-de-France,2,310.12,PAID
+509,2025-11-27,285,Desk,Mobilier,Occitanie,2,383.45,PAID
+648,2025-11-27,291,Monitor,Informatique,Île-de-France,1,312.17,SHIPPED
+753,2025-11-27,238,Desk,Mobilier,Auvergne-Rhône-Alpes,2,351.43,SHIPPED
+1250,2025-11-27,299,Headset,Accessoires,Bretagne,3,61.43,PAID
+105,2025-11-28,89,Keyboard,Accessoires,Hauts-de-France,4,42.2,PAID
+260,2025-11-28,67,Keyboard,Accessoires,Hauts-de-France,1,48.97,SHIPPED
+364,2025-11-28,75,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,223.57,SHIPPED
+542,2025-11-28,155,Laptop,Informatique,Île-de-France,1,864.57,PAID
+585,2025-11-28,18,Keyboard,Accessoires,Hauts-de-France,1,47.42,SHIPPED
+651,2025-11-28,25,Desk Chair,Mobilier,Île-de-France,4,216.9,PAID
+948,2025-11-28,160,Keyboard,Accessoires,Hauts-de-France,1,46.43,PAID
+1148,2025-11-28,34,Mouse,Accessoires,Occitanie,2,25.64,CANCELLED
+1395,2025-11-28,133,Desk,Mobilier,Île-de-France,1,374.79,PAID
+8,2025-11-29,218,Desk,Mobilier,Bretagne,5,342.87,SHIPPED
+65,2025-11-29,264,Laptop,Informatique,Île-de-France,3,775.81,PAID
+157,2025-11-29,112,Monitor,Informatique,Occitanie,1,297.44,PAID
+258,2025-11-29,262,Headset,Accessoires,Hauts-de-France,2,55.39,PAID
+718,2025-11-29,70,Monitor,Informatique,Hauts-de-France,3,279.29,SHIPPED
+736,2025-11-29,35,Keyboard,Accessoires,Bretagne,5,46.32,PAID
+793,2025-11-29,61,Printer,Bureautique,Bretagne,3,197.4,PAID
+846,2025-11-29,269,Headset,Accessoires,Hauts-de-France,3,54.28,PAID
+792,2025-11-30,117,Keyboard,Accessoires,Occitanie,5,47.14,PAID
+950,2025-11-30,159,Printer,Bureautique,Île-de-France,2,184.54,PAID
+19,2025-12-01,23,Mouse,Accessoires,Bretagne,2,25.84,PAID
+33,2025-12-01,270,Desk,Mobilier,Bretagne,2,372.13,PAID
+214,2025-12-01,144,Monitor,Informatique,Île-de-France,1,301.29,PAID
+700,2025-12-01,171,Headset,Accessoires,Hauts-de-France,5,57.14,SHIPPED
+821,2025-12-01,19,Mouse,Accessoires,Occitanie,2,27.46,SHIPPED
+839,2025-12-01,119,Desk Chair,Mobilier,Hauts-de-France,1,217.59,PAID
+1212,2025-12-01,123,Printer,Bureautique,Bretagne,1,192.87,PAID
+1290,2025-12-01,133,Printer,Bureautique,Hauts-de-France,4,175.82,PAID
+1461,2025-12-01,129,Desk Chair,Mobilier,Île-de-France,1,226.66,CANCELLED
+11,2025-12-02,234,Mouse,Accessoires,Occitanie,2,25.3,PAID
+432,2025-12-02,143,Keyboard,Accessoires,Hauts-de-France,1,47.62,PAID
+743,2025-12-02,187,Desk Chair,Mobilier,Bretagne,4,226.21,CANCELLED
+904,2025-12-02,12,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,231.46,PAID
+1196,2025-12-02,266,Desk,Mobilier,Auvergne-Rhône-Alpes,2,370.35,PAID
+1326,2025-12-02,4,Monitor,Informatique,Île-de-France,3,288.12,PAID
+336,2025-12-03,141,Printer,Bureautique,Hauts-de-France,3,192.95,PAID
+571,2025-12-03,193,Headset,Accessoires,Auvergne-Rhône-Alpes,3,59.96,SHIPPED
+47,2025-12-04,268,Laptop,Informatique,Auvergne-Rhône-Alpes,2,769.9,CANCELLED
+49,2025-12-04,94,Mouse,Accessoires,Bretagne,1,25.81,SHIPPED
+823,2025-12-04,76,Printer,Bureautique,Auvergne-Rhône-Alpes,1,184.24,PAID
+272,2025-12-05,216,Mouse,Accessoires,Occitanie,1,24.89,PAID
+462,2025-12-05,164,Desk,Mobilier,Occitanie,3,370.72,PAID
+825,2025-12-05,284,Keyboard,Accessoires,Île-de-France,5,46.51,SHIPPED
+1416,2025-12-05,72,Keyboard,Accessoires,Île-de-France,2,42.85,PAID
+751,2025-12-06,178,Mouse,Accessoires,Occitanie,5,22.98,PAID
+1144,2025-12-06,255,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,41.83,SHIPPED
+1469,2025-12-06,46,Desk,Mobilier,Bretagne,1,324.3,PAID
+162,2025-12-07,47,Desk Chair,Mobilier,Île-de-France,5,216.61,PAID
+454,2025-12-07,155,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,45.57,PAID
+761,2025-12-07,81,Keyboard,Accessoires,Île-de-France,1,42.85,CANCELLED
+976,2025-12-07,33,Mouse,Accessoires,Occitanie,2,24.31,PAID
+1240,2025-12-07,6,Desk,Mobilier,Bretagne,5,344.75,SHIPPED
+477,2025-12-08,255,Headset,Accessoires,Auvergne-Rhône-Alpes,3,58.69,PAID
+93,2025-12-09,287,Desk,Mobilier,Auvergne-Rhône-Alpes,3,384.8,PAID
+233,2025-12-09,299,Monitor,Informatique,Bretagne,1,324.9,SHIPPED
+340,2025-12-09,282,Printer,Bureautique,Occitanie,5,166.14,PAID
+346,2025-12-09,187,Monitor,Informatique,Hauts-de-France,1,318.38,PAID
+397,2025-12-09,156,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,40.9,SHIPPED
+859,2025-12-09,1,Keyboard,Accessoires,Bretagne,5,46.41,SHIPPED
+58,2025-12-10,52,Headset,Accessoires,Île-de-France,2,64.2,CANCELLED
+339,2025-12-10,115,Mouse,Accessoires,Île-de-France,1,27.34,PAID
+335,2025-12-11,229,Mouse,Accessoires,Île-de-France,5,26.86,PAID
+584,2025-12-11,254,Monitor,Informatique,Auvergne-Rhône-Alpes,4,328.15,PAID
+812,2025-12-11,172,Keyboard,Accessoires,Île-de-France,2,48.18,SHIPPED
+978,2025-12-11,204,Desk,Mobilier,Occitanie,1,326.26,PAID
+1116,2025-12-11,108,Desk Chair,Mobilier,Bretagne,5,230.25,PAID
+1138,2025-12-11,131,Keyboard,Accessoires,Bretagne,3,44.48,PAID
+1206,2025-12-11,278,Monitor,Informatique,Hauts-de-France,5,280.16,PAID
+1356,2025-12-11,126,Desk Chair,Mobilier,Île-de-France,1,212.49,PAID
+1310,2025-12-12,170,Monitor,Informatique,Hauts-de-France,3,293.93,PAID
+1384,2025-12-12,28,Headset,Accessoires,Hauts-de-France,5,57.07,PAID
+1463,2025-12-12,109,Laptop,Informatique,Hauts-de-France,1,915.9,PAID
+357,2025-12-13,226,Keyboard,Accessoires,Auvergne-Rhône-Alpes,3,42.6,PAID
+74,2025-12-14,280,Headset,Accessoires,Auvergne-Rhône-Alpes,2,57.98,PAID
+594,2025-12-14,190,Headset,Accessoires,Occitanie,2,64.95,PAID
+1008,2025-12-14,78,Laptop,Informatique,Occitanie,1,906.05,SHIPPED
+1264,2025-12-14,243,Desk Chair,Mobilier,Occitanie,1,202.03,PAID
+141,2025-12-15,209,Headset,Accessoires,Auvergne-Rhône-Alpes,1,59.33,PAID
+321,2025-12-15,7,Keyboard,Accessoires,Hauts-de-France,2,45.43,PAID
+636,2025-12-15,78,Mouse,Accessoires,Occitanie,3,23.09,SHIPPED
+967,2025-12-15,280,Headset,Accessoires,Île-de-France,2,63.89,PAID
+974,2025-12-15,212,Desk Chair,Mobilier,Hauts-de-France,1,204.32,PAID
+13,2025-12-16,235,Laptop,Informatique,Bretagne,5,826.19,PAID
+161,2025-12-16,228,Mouse,Accessoires,Occitanie,1,27.09,SHIPPED
+183,2025-12-16,137,Headset,Accessoires,Bretagne,1,61.28,PAID
+541,2025-12-16,166,Headset,Accessoires,Hauts-de-France,1,63.13,PAID
+1223,2025-12-16,26,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,22.92,SHIPPED
+94,2025-12-17,283,Mouse,Accessoires,Hauts-de-France,1,23.16,CANCELLED
+239,2025-12-17,265,Desk Chair,Mobilier,Hauts-de-France,1,241.7,CANCELLED
+471,2025-12-17,211,Desk Chair,Mobilier,Bretagne,3,230.11,SHIPPED
+1460,2025-12-17,179,Laptop,Informatique,Occitanie,3,782.57,PAID
+1492,2025-12-17,73,Keyboard,Accessoires,Occitanie,4,48.79,SHIPPED
+26,2025-12-18,267,Keyboard,Accessoires,Hauts-de-France,4,46.11,SHIPPED
+686,2025-12-18,30,Headset,Accessoires,Occitanie,1,54.46,PAID
+862,2025-12-18,176,Desk Chair,Mobilier,Île-de-France,4,234.25,PAID
+988,2025-12-18,291,Printer,Bureautique,Hauts-de-France,2,165.9,PAID
+1306,2025-12-18,162,Headset,Accessoires,Hauts-de-France,1,55.88,PAID
+1346,2025-12-18,222,Mouse,Accessoires,Bretagne,1,26.51,SHIPPED
+82,2025-12-19,169,Monitor,Informatique,Hauts-de-France,5,282.38,PAID
+498,2025-12-19,125,Headset,Accessoires,Île-de-France,1,64.72,PAID
+567,2025-12-19,177,Mouse,Accessoires,Île-de-France,1,26.21,SHIPPED
+797,2025-12-19,137,Headset,Accessoires,Hauts-de-France,4,60.82,PAID
+1339,2025-12-19,120,Headset,Accessoires,Bretagne,3,60.47,CANCELLED
+370,2025-12-20,208,Desk,Mobilier,Île-de-France,2,363.0,PAID
+631,2025-12-20,223,Laptop,Informatique,Auvergne-Rhône-Alpes,2,806.89,PAID
+912,2025-12-20,48,Printer,Bureautique,Hauts-de-France,5,183.51,PAID
+1203,2025-12-20,213,Keyboard,Accessoires,Occitanie,2,42.03,SHIPPED
+1233,2025-12-20,229,Printer,Bureautique,Occitanie,1,178.86,CANCELLED
+140,2025-12-21,258,Desk,Mobilier,Occitanie,1,319.73,PAID
+368,2025-12-21,253,Printer,Bureautique,Auvergne-Rhône-Alpes,2,177.16,SHIPPED
+729,2025-12-21,49,Desk,Mobilier,Bretagne,2,330.25,SHIPPED
+815,2025-12-21,184,Desk Chair,Mobilier,Hauts-de-France,1,237.93,PAID
+979,2025-12-21,48,Desk,Mobilier,Occitanie,1,379.39,SHIPPED
+1020,2025-12-21,174,Desk Chair,Mobilier,Occitanie,3,204.63,SHIPPED
+30,2025-12-22,96,Keyboard,Accessoires,Occitanie,2,44.33,PAID
+926,2025-12-23,73,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,214.26,PAID
+1106,2025-12-23,138,Desk Chair,Mobilier,Occitanie,4,208.95,PAID
+975,2025-12-24,232,Printer,Bureautique,Bretagne,3,184.98,SHIPPED
+287,2025-12-25,239,Keyboard,Accessoires,Île-de-France,2,45.24,PAID
+1173,2025-12-25,61,Laptop,Informatique,Bretagne,5,926.63,PAID
+1211,2025-12-25,275,Mouse,Accessoires,Occitanie,4,22.88,PAID
+70,2025-12-26,167,Mouse,Accessoires,Occitanie,3,24.11,SHIPPED
+854,2025-12-26,11,Keyboard,Accessoires,Auvergne-Rhône-Alpes,3,42.41,PAID
+1308,2025-12-26,121,Laptop,Informatique,Bretagne,2,770.08,SHIPPED
+1417,2025-12-26,143,Printer,Bureautique,Hauts-de-France,2,169.55,PAID
+132,2025-12-27,122,Keyboard,Accessoires,Hauts-de-France,2,45.04,PAID
+583,2025-12-27,55,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,218.72,SHIPPED
+688,2025-12-27,181,Monitor,Informatique,Occitanie,2,319.6,PAID
+1117,2025-12-27,111,Monitor,Informatique,Île-de-France,1,310.67,PAID
+1155,2025-12-27,223,Laptop,Informatique,Occitanie,4,811.93,PAID
+1378,2025-12-27,3,Laptop,Informatique,Hauts-de-France,1,929.22,PAID
+890,2025-12-28,86,Keyboard,Accessoires,Île-de-France,2,46.75,CANCELLED
+893,2025-12-28,219,Keyboard,Accessoires,Hauts-de-France,5,46.0,PAID
+135,2025-12-29,254,Printer,Bureautique,Bretagne,1,166.99,PAID
+539,2025-12-29,83,Keyboard,Accessoires,Hauts-de-France,1,48.82,PAID
+576,2025-12-29,297,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,26.14,PAID
+712,2025-12-29,77,Printer,Bureautique,Auvergne-Rhône-Alpes,1,178.8,PAID
+972,2025-12-29,213,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,239.32,PAID
+1403,2025-12-29,247,Desk Chair,Mobilier,Bretagne,1,236.46,PAID
+256,2025-12-30,180,Keyboard,Accessoires,Île-de-France,1,41.48,PAID
+349,2025-12-30,242,Laptop,Informatique,Île-de-France,1,934.32,PAID
+1029,2025-12-30,24,Desk,Mobilier,Bretagne,5,342.02,PAID
+1128,2025-12-30,27,Desk,Mobilier,Auvergne-Rhône-Alpes,1,340.66,PAID
+1208,2025-12-30,152,Laptop,Informatique,Bretagne,2,912.54,PAID
+52,2025-12-31,284,Monitor,Informatique,Île-de-France,2,290.44,SHIPPED
+207,2025-12-31,158,Headset,Accessoires,Occitanie,2,59.07,PAID
+353,2025-12-31,87,Desk,Mobilier,Hauts-de-France,2,351.51,SHIPPED
+546,2025-12-31,258,Keyboard,Accessoires,Hauts-de-France,1,42.01,SHIPPED
+1151,2025-12-31,55,Headset,Accessoires,Occitanie,1,55.63,PAID
+1227,2025-12-31,248,Laptop,Informatique,Île-de-France,1,862.91,PAID
+1366,2025-12-31,71,Laptop,Informatique,Île-de-France,1,909.67,CANCELLED
+1437,2025-12-31,36,Keyboard,Accessoires,Occitanie,1,41.18,PAID
+90,2026-01-01,40,Printer,Bureautique,Bretagne,1,189.34,SHIPPED
+309,2026-01-01,274,Printer,Bureautique,Auvergne-Rhône-Alpes,3,197.32,PAID
+381,2026-01-01,224,Laptop,Informatique,Bretagne,2,924.36,PAID
+777,2026-01-01,202,Desk,Mobilier,Île-de-France,5,384.64,SHIPPED
+781,2026-01-01,197,Printer,Bureautique,Auvergne-Rhône-Alpes,2,177.3,PAID
+1190,2026-01-01,82,Monitor,Informatique,Occitanie,1,294.73,PAID
+1303,2026-01-01,104,Laptop,Informatique,Occitanie,1,779.03,PAID
+1484,2026-01-01,192,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,41.54,PAID
+600,2026-01-02,297,Headset,Accessoires,Bretagne,5,56.74,PAID
+702,2026-01-02,13,Mouse,Accessoires,Occitanie,1,26.6,PAID
+951,2026-01-02,113,Monitor,Informatique,Hauts-de-France,4,290.4,PAID
+38,2026-01-03,55,Printer,Bureautique,Bretagne,3,171.96,PAID
+1370,2026-01-03,281,Keyboard,Accessoires,Auvergne-Rhône-Alpes,3,42.44,PAID
+97,2026-01-04,79,Laptop,Informatique,Occitanie,5,920.1,PAID
+210,2026-01-04,41,Headset,Accessoires,Occitanie,1,56.65,PAID
+225,2026-01-04,15,Laptop,Informatique,Hauts-de-France,2,926.09,PAID
+852,2026-01-04,217,Keyboard,Accessoires,Bretagne,2,46.66,PAID
+938,2026-01-04,3,Monitor,Informatique,Hauts-de-France,1,306.57,PAID
+1192,2026-01-04,184,Printer,Bureautique,Occitanie,2,177.08,CANCELLED
+56,2026-01-05,82,Headset,Accessoires,Occitanie,1,59.82,PAID
+328,2026-01-05,36,Printer,Bureautique,Occitanie,1,171.41,PAID
+468,2026-01-05,140,Laptop,Informatique,Île-de-France,5,821.95,PAID
+482,2026-01-05,171,Printer,Bureautique,Bretagne,2,195.25,PAID
+897,2026-01-05,112,Mouse,Accessoires,Occitanie,1,24.56,PAID
+1442,2026-01-05,161,Mouse,Accessoires,Île-de-France,2,23.53,PAID
+1480,2026-01-05,87,Printer,Bureautique,Hauts-de-France,5,180.11,PAID
+192,2026-01-06,97,Printer,Bureautique,Hauts-de-France,3,179.05,CANCELLED
+1085,2026-01-06,170,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,238.34,PAID
+1433,2026-01-06,58,Desk Chair,Mobilier,Occitanie,1,221.5,PAID
+1448,2026-01-06,73,Mouse,Accessoires,Hauts-de-France,5,23.89,CANCELLED
+544,2026-01-07,97,Printer,Bureautique,Bretagne,1,169.43,PAID
+1119,2026-01-07,105,Printer,Bureautique,Occitanie,1,164.14,SHIPPED
+1232,2026-01-07,173,Headset,Accessoires,Bretagne,2,57.36,PAID
+1257,2026-01-07,270,Mouse,Accessoires,Hauts-de-France,3,22.54,PAID
+252,2026-01-08,249,Desk Chair,Mobilier,Île-de-France,5,201.19,PAID
+435,2026-01-08,28,Printer,Bureautique,Bretagne,3,175.01,PAID
+671,2026-01-08,169,Laptop,Informatique,Île-de-France,5,878.92,PAID
+843,2026-01-08,19,Desk,Mobilier,Auvergne-Rhône-Alpes,1,383.25,PAID
+1488,2026-01-08,45,Desk Chair,Mobilier,Île-de-France,1,213.97,SHIPPED
+237,2026-01-09,131,Desk,Mobilier,Bretagne,1,324.67,PAID
+395,2026-01-09,37,Desk,Mobilier,Occitanie,2,353.23,PAID
+456,2026-01-09,295,Monitor,Informatique,Île-de-France,1,311.41,PAID
+744,2026-01-09,276,Monitor,Informatique,Occitanie,2,315.32,PAID
+772,2026-01-09,133,Headset,Accessoires,Île-de-France,2,62.23,CANCELLED
+1012,2026-01-09,191,Mouse,Accessoires,Île-de-France,1,23.48,PAID
+1153,2026-01-09,227,Mouse,Accessoires,Île-de-France,4,26.67,PAID
+1414,2026-01-09,191,Laptop,Informatique,Occitanie,2,891.11,SHIPPED
+514,2026-01-10,129,Desk,Mobilier,Bretagne,1,328.84,SHIPPED
+645,2026-01-10,164,Mouse,Accessoires,Île-de-France,5,24.91,SHIPPED
+661,2026-01-10,159,Laptop,Informatique,Bretagne,5,921.3,PAID
+1036,2026-01-10,52,Mouse,Accessoires,Hauts-de-France,5,26.11,PAID
+1068,2026-01-10,163,Mouse,Accessoires,Bretagne,1,25.81,SHIPPED
+1243,2026-01-10,151,Monitor,Informatique,Hauts-de-France,3,309.76,PAID
+208,2026-01-11,46,Desk Chair,Mobilier,Occitanie,4,235.37,PAID
+515,2026-01-11,282,Printer,Bureautique,Île-de-France,1,184.11,PAID
+850,2026-01-11,270,Laptop,Informatique,Auvergne-Rhône-Alpes,1,918.87,SHIPPED
+1316,2026-01-11,4,Keyboard,Accessoires,Hauts-de-France,5,46.56,PAID
+1474,2026-01-11,63,Printer,Bureautique,Île-de-France,4,183.74,PAID
+251,2026-01-12,186,Monitor,Informatique,Île-de-France,1,313.83,PAID
+420,2026-01-12,35,Mouse,Accessoires,Occitanie,1,25.15,PAID
+427,2026-01-12,283,Monitor,Informatique,Île-de-France,1,286.27,PAID
+664,2026-01-12,212,Headset,Accessoires,Occitanie,5,57.03,PAID
+231,2026-01-13,261,Keyboard,Accessoires,Île-de-France,2,42.27,PAID
+261,2026-01-13,251,Desk Chair,Mobilier,Bretagne,5,219.36,PAID
+905,2026-01-13,89,Headset,Accessoires,Occitanie,3,60.58,CANCELLED
+1102,2026-01-13,265,Desk,Mobilier,Auvergne-Rhône-Alpes,1,377.99,PAID
+186,2026-01-14,165,Keyboard,Accessoires,Hauts-de-France,2,40.78,PAID
+1000,2026-01-14,7,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,230.55,SHIPPED
+1121,2026-01-14,136,Headset,Accessoires,Bretagne,1,65.32,CANCELLED
+990,2026-01-15,68,Keyboard,Accessoires,Bretagne,2,44.32,PAID
+1150,2026-01-15,97,Printer,Bureautique,Hauts-de-France,2,188.39,PAID
+1265,2026-01-15,182,Headset,Accessoires,Bretagne,1,62.45,SHIPPED
+1286,2026-01-15,171,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,49.46,PAID
+1315,2026-01-15,279,Desk,Mobilier,Bretagne,2,320.03,PAID
+1363,2026-01-15,175,Monitor,Informatique,Bretagne,2,301.1,PAID
+4,2026-01-16,204,Printer,Bureautique,Auvergne-Rhône-Alpes,3,197.28,PAID
+282,2026-01-16,85,Headset,Accessoires,Hauts-de-France,1,59.18,SHIPPED
+759,2026-01-16,79,Headset,Accessoires,Bretagne,2,64.97,SHIPPED
+927,2026-01-16,205,Printer,Bureautique,Occitanie,1,191.05,PAID
+1094,2026-01-16,206,Printer,Bureautique,Île-de-France,4,184.08,PAID
+1285,2026-01-16,205,Monitor,Informatique,Île-de-France,2,278.07,PAID
+386,2026-01-17,51,Mouse,Accessoires,Occitanie,1,27.02,PAID
+519,2026-01-17,93,Laptop,Informatique,Occitanie,1,834.66,SHIPPED
+945,2026-01-17,96,Monitor,Informatique,Auvergne-Rhône-Alpes,2,273.36,PAID
+1145,2026-01-17,83,Mouse,Accessoires,Bretagne,3,26.01,PAID
+205,2026-01-18,236,Headset,Accessoires,Île-de-France,1,54.46,SHIPPED
+259,2026-01-18,261,Keyboard,Accessoires,Occitanie,1,47.94,PAID
+459,2026-01-18,91,Monitor,Informatique,Auvergne-Rhône-Alpes,4,307.81,PAID
+667,2026-01-18,296,Laptop,Informatique,Bretagne,5,790.89,PAID
+917,2026-01-18,186,Mouse,Accessoires,Occitanie,2,23.68,PAID
+402,2026-01-19,179,Printer,Bureautique,Île-de-France,1,172.42,PAID
+669,2026-01-19,11,Printer,Bureautique,Auvergne-Rhône-Alpes,1,179.18,PAID
+88,2026-01-20,298,Headset,Accessoires,Île-de-France,4,64.36,SHIPPED
+255,2026-01-20,56,Headset,Accessoires,Occitanie,1,54.5,PAID
+1423,2026-01-20,9,Headset,Accessoires,Hauts-de-France,1,64.39,SHIPPED
+442,2026-01-21,158,Headset,Accessoires,Bretagne,1,64.23,PAID
+1143,2026-01-21,191,Desk,Mobilier,Hauts-de-France,4,342.46,PAID
+1217,2026-01-21,80,Desk,Mobilier,Île-de-France,4,339.73,PAID
+1279,2026-01-21,194,Monitor,Informatique,Île-de-France,5,312.09,PAID
+1408,2026-01-21,200,Mouse,Accessoires,Hauts-de-France,1,24.57,PAID
+98,2026-01-22,264,Headset,Accessoires,Auvergne-Rhône-Alpes,1,59.59,PAID
+590,2026-01-22,36,Desk Chair,Mobilier,Bretagne,2,231.08,SHIPPED
+804,2026-01-22,190,Printer,Bureautique,Bretagne,5,178.33,PAID
+1178,2026-01-22,227,Printer,Bureautique,Île-de-France,4,173.1,PAID
+593,2026-01-23,252,Desk Chair,Mobilier,Occitanie,1,202.02,PAID
+1165,2026-01-23,201,Desk,Mobilier,Île-de-France,2,334.12,PAID
+1187,2026-01-23,248,Keyboard,Accessoires,Île-de-France,5,42.7,PAID
+1274,2026-01-23,142,Desk,Mobilier,Hauts-de-France,2,371.3,SHIPPED
+146,2026-01-24,167,Desk Chair,Mobilier,Hauts-de-France,1,208.11,PAID
+1329,2026-01-24,57,Headset,Accessoires,Occitanie,1,65.68,PAID
+1333,2026-01-24,110,Headset,Accessoires,Île-de-France,4,55.23,PAID
+1500,2026-01-24,94,Monitor,Informatique,Bretagne,1,308.79,PAID
+130,2026-01-25,275,Printer,Bureautique,Occitanie,5,165.15,PAID
+639,2026-01-25,159,Printer,Bureautique,Hauts-de-France,1,166.59,PAID
+940,2026-01-25,38,Printer,Bureautique,Hauts-de-France,3,183.97,SHIPPED
+1053,2026-01-25,257,Headset,Accessoires,Occitanie,5,60.5,PAID
+1246,2026-01-25,283,Keyboard,Accessoires,Hauts-de-France,1,40.54,PAID
+180,2026-01-26,60,Desk Chair,Mobilier,Île-de-France,1,232.95,PAID
+1016,2026-01-26,24,Headset,Accessoires,Hauts-de-France,1,55.81,PAID
+1168,2026-01-26,43,Desk,Mobilier,Bretagne,3,360.26,PAID
+1198,2026-01-26,153,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,44.61,PAID
+526,2026-01-27,296,Keyboard,Accessoires,Île-de-France,1,42.33,PAID
+891,2026-01-27,81,Mouse,Accessoires,Hauts-de-France,1,26.51,PAID
+922,2026-01-27,137,Laptop,Informatique,Hauts-de-France,4,802.15,SHIPPED
+1067,2026-01-27,125,Printer,Bureautique,Île-de-France,3,179.14,PAID
+168,2026-01-28,269,Headset,Accessoires,Hauts-de-France,4,57.04,SHIPPED
+493,2026-01-28,206,Desk Chair,Mobilier,Occitanie,1,200.23,PAID
+573,2026-01-28,143,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,199.19,PAID
+691,2026-01-28,33,Keyboard,Accessoires,Bretagne,4,47.37,PAID
+980,2026-01-28,290,Headset,Accessoires,Hauts-de-France,3,55.6,SHIPPED
+1247,2026-01-28,47,Headset,Accessoires,Hauts-de-France,1,61.18,SHIPPED
+155,2026-01-29,111,Monitor,Informatique,Hauts-de-France,5,307.07,SHIPPED
+470,2026-01-30,194,Laptop,Informatique,Hauts-de-France,2,906.47,PAID
+749,2026-01-31,183,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,24.12,PAID
+1468,2026-01-31,292,Desk Chair,Mobilier,Occitanie,5,213.73,PAID
+677,2026-02-01,55,Keyboard,Accessoires,Bretagne,1,44.1,SHIPPED
+1046,2026-02-01,134,Keyboard,Accessoires,Bretagne,1,46.7,PAID
+1304,2026-02-01,33,Keyboard,Accessoires,Bretagne,5,48.29,PAID
+1458,2026-02-01,27,Mouse,Accessoires,Île-de-France,1,26.03,PAID
+271,2026-02-02,236,Laptop,Informatique,Hauts-de-France,1,818.27,SHIPPED
+875,2026-02-02,288,Printer,Bureautique,Auvergne-Rhône-Alpes,4,192.33,PAID
+1156,2026-02-02,184,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,226.91,PAID
+1324,2026-02-02,195,Desk,Mobilier,Île-de-France,2,331.77,SHIPPED
+977,2026-02-03,136,Mouse,Accessoires,Île-de-France,3,24.16,SHIPPED
+1185,2026-02-03,238,Printer,Bureautique,Auvergne-Rhône-Alpes,1,171.24,SHIPPED
+1361,2026-02-03,123,Laptop,Informatique,Hauts-de-France,3,886.37,SHIPPED
+447,2026-02-04,151,Laptop,Informatique,Occitanie,2,791.32,PAID
+502,2026-02-04,50,Printer,Bureautique,Auvergne-Rhône-Alpes,3,170.18,PAID
+570,2026-02-04,159,Monitor,Informatique,Hauts-de-France,1,299.89,SHIPPED
+605,2026-02-04,74,Desk,Mobilier,Occitanie,1,382.6,PAID
+1021,2026-02-04,10,Laptop,Informatique,Bretagne,1,771.03,PAID
+1489,2026-02-04,104,Keyboard,Accessoires,Bretagne,4,47.94,PAID
+304,2026-02-05,39,Printer,Bureautique,Auvergne-Rhône-Alpes,1,169.96,PAID
+858,2026-02-06,269,Keyboard,Accessoires,Occitanie,2,48.14,PAID
+1334,2026-02-06,40,Mouse,Accessoires,Auvergne-Rhône-Alpes,4,22.84,PAID
+1354,2026-02-06,224,Laptop,Informatique,Hauts-de-France,1,861.51,SHIPPED
+199,2026-02-07,256,Monitor,Informatique,Bretagne,4,310.98,SHIPPED
+400,2026-02-07,153,Desk,Mobilier,Île-de-France,1,339.5,PAID
+703,2026-02-07,134,Desk Chair,Mobilier,Occitanie,1,216.87,PAID
+986,2026-02-07,293,Desk,Mobilier,Île-de-France,1,325.17,CANCELLED
+1374,2026-02-07,182,Monitor,Informatique,Île-de-France,3,310.35,PAID
+50,2026-02-08,76,Desk Chair,Mobilier,Hauts-de-France,1,198.73,SHIPPED
+548,2026-02-08,223,Laptop,Informatique,Auvergne-Rhône-Alpes,1,803.6,PAID
+806,2026-02-08,280,Laptop,Informatique,Occitanie,3,786.61,PAID
+1113,2026-02-08,21,Monitor,Informatique,Auvergne-Rhône-Alpes,2,271.4,PAID
+1237,2026-02-08,116,Keyboard,Accessoires,Bretagne,2,47.85,PAID
+1338,2026-02-08,99,Desk Chair,Mobilier,Hauts-de-France,1,199.26,PAID
+189,2026-02-09,48,Printer,Bureautique,Auvergne-Rhône-Alpes,1,191.67,PAID
+166,2026-02-10,223,Headset,Accessoires,Île-de-France,2,58.38,PAID
+517,2026-02-10,263,Monitor,Informatique,Occitanie,1,328.94,PAID
+538,2026-02-10,264,Printer,Bureautique,Occitanie,1,188.43,PAID
+564,2026-02-10,130,Headset,Accessoires,Occitanie,3,61.57,PAID
+966,2026-02-10,227,Mouse,Accessoires,Occitanie,1,25.69,PAID
+1027,2026-02-10,257,Printer,Bureautique,Hauts-de-France,1,162.58,PAID
+1166,2026-02-10,256,Keyboard,Accessoires,Auvergne-Rhône-Alpes,5,42.73,PAID
+177,2026-02-11,197,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,198.1,PAID
+412,2026-02-11,260,Laptop,Informatique,Île-de-France,1,805.09,PAID
+577,2026-02-11,157,Laptop,Informatique,Île-de-France,5,806.23,PAID
+883,2026-02-11,194,Desk Chair,Mobilier,Île-de-France,3,207.71,PAID
+1267,2026-02-11,191,Laptop,Informatique,Auvergne-Rhône-Alpes,1,811.7,PAID
+1383,2026-02-11,263,Mouse,Accessoires,Île-de-France,2,23.56,SHIPPED
+209,2026-02-12,163,Desk,Mobilier,Hauts-de-France,3,353.49,PAID
+437,2026-02-12,18,Printer,Bureautique,Île-de-France,3,194.19,SHIPPED
+841,2026-02-12,211,Printer,Bureautique,Hauts-de-France,2,178.56,PAID
+958,2026-02-12,34,Headset,Accessoires,Occitanie,1,64.57,SHIPPED
+1205,2026-02-12,291,Printer,Bureautique,Auvergne-Rhône-Alpes,1,186.85,PAID
+1336,2026-02-12,84,Headset,Accessoires,Hauts-de-France,4,64.91,PAID
+37,2026-02-13,50,Monitor,Informatique,Occitanie,1,276.36,PAID
+204,2026-02-13,61,Monitor,Informatique,Hauts-de-France,4,283.53,PAID
+767,2026-02-13,86,Headset,Accessoires,Hauts-de-France,5,65.72,PAID
+1120,2026-02-13,1,Desk Chair,Mobilier,Hauts-de-France,3,214.72,PAID
+78,2026-02-14,287,Laptop,Informatique,Auvergne-Rhône-Alpes,1,821.78,CANCELLED
+96,2026-02-14,277,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,44.62,PAID
+120,2026-02-14,222,Printer,Bureautique,Bretagne,1,174.72,SHIPPED
+369,2026-02-14,106,Laptop,Informatique,Île-de-France,1,814.29,PAID
+489,2026-02-14,74,Desk Chair,Mobilier,Hauts-de-France,2,225.91,SHIPPED
+520,2026-02-14,59,Mouse,Accessoires,Bretagne,1,23.68,PAID
+1030,2026-02-14,240,Desk Chair,Mobilier,Occitanie,1,231.96,PAID
+1493,2026-02-14,165,Mouse,Accessoires,Occitanie,1,25.94,CANCELLED
+75,2026-02-15,151,Monitor,Informatique,Bretagne,5,307.99,PAID
+457,2026-02-15,138,Desk Chair,Mobilier,Île-de-France,1,220.99,CANCELLED
+659,2026-02-15,255,Printer,Bureautique,Île-de-France,4,179.43,SHIPPED
+884,2026-02-15,40,Desk,Mobilier,Île-de-France,1,366.3,PAID
+1347,2026-02-15,284,Printer,Bureautique,Île-de-France,1,165.27,SHIPPED
+253,2026-02-16,116,Keyboard,Accessoires,Hauts-de-France,3,41.15,PAID
+318,2026-02-16,97,Monitor,Informatique,Bretagne,3,327.07,PAID
+341,2026-02-16,129,Desk,Mobilier,Île-de-France,2,330.6,PAID
+497,2026-02-16,292,Keyboard,Accessoires,Île-de-France,1,44.72,PAID
+501,2026-02-16,204,Desk Chair,Mobilier,Occitanie,2,202.76,PAID
+681,2026-02-16,37,Desk Chair,Mobilier,Île-de-France,3,218.89,PAID
+314,2026-02-17,114,Monitor,Informatique,Île-de-France,5,286.43,SHIPPED
+464,2026-02-17,295,Printer,Bureautique,Hauts-de-France,3,167.43,SHIPPED
+789,2026-02-17,218,Mouse,Accessoires,Hauts-de-France,2,22.64,SHIPPED
+794,2026-02-17,4,Printer,Bureautique,Auvergne-Rhône-Alpes,3,162.58,PAID
+795,2026-02-17,147,Headset,Accessoires,Auvergne-Rhône-Alpes,1,63.73,PAID
+895,2026-02-17,99,Keyboard,Accessoires,Bretagne,1,42.58,PAID
+441,2026-02-18,15,Mouse,Accessoires,Bretagne,2,26.24,CANCELLED
+466,2026-02-18,9,Headset,Accessoires,Auvergne-Rhône-Alpes,1,57.57,PAID
+194,2026-02-19,243,Mouse,Accessoires,Île-de-France,2,23.26,SHIPPED
+697,2026-02-19,281,Desk Chair,Mobilier,Occitanie,1,220.73,SHIPPED
+827,2026-02-19,9,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,208.52,PAID
+1259,2026-02-19,174,Laptop,Informatique,Hauts-de-France,2,871.46,SHIPPED
+133,2026-02-20,87,Desk Chair,Mobilier,Occitanie,1,198.83,PAID
+342,2026-02-20,89,Desk Chair,Mobilier,Bretagne,1,211.6,PAID
+572,2026-02-20,245,Printer,Bureautique,Occitanie,4,185.26,SHIPPED
+739,2026-02-20,261,Printer,Bureautique,Occitanie,1,187.28,PAID
+819,2026-02-20,2,Desk,Mobilier,Occitanie,4,319.25,PAID
+623,2026-02-21,50,Desk,Mobilier,Île-de-France,2,355.52,PAID
+633,2026-02-21,195,Laptop,Informatique,Auvergne-Rhône-Alpes,1,894.41,SHIPPED
+879,2026-02-21,296,Desk Chair,Mobilier,Île-de-France,1,226.19,PAID
+1229,2026-02-21,32,Printer,Bureautique,Île-de-France,5,178.58,PAID
+270,2026-02-22,131,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,234.47,PAID
+652,2026-02-22,161,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,26.61,SHIPPED
+1037,2026-02-22,112,Desk Chair,Mobilier,Bretagne,4,216.36,PAID
+1231,2026-02-22,91,Printer,Bureautique,Île-de-France,2,183.57,SHIPPED
+413,2026-02-23,245,Keyboard,Accessoires,Bretagne,5,43.8,PAID
+500,2026-02-23,272,Headset,Accessoires,Occitanie,1,59.83,PAID
+575,2026-02-23,217,Headset,Accessoires,Auvergne-Rhône-Alpes,2,64.22,PAID
+646,2026-02-23,186,Desk,Mobilier,Occitanie,3,372.86,PAID
+731,2026-02-23,298,Monitor,Informatique,Occitanie,3,287.13,SHIPPED
+1026,2026-02-23,234,Headset,Accessoires,Occitanie,3,56.6,PAID
+1035,2026-02-23,10,Mouse,Accessoires,Occitanie,4,22.53,PAID
+263,2026-02-24,78,Printer,Bureautique,Auvergne-Rhône-Alpes,1,189.23,PAID
+835,2026-02-24,148,Printer,Bureautique,Île-de-France,4,176.23,SHIPPED
+1007,2026-02-24,183,Printer,Bureautique,Occitanie,5,195.46,PAID
+185,2026-02-25,49,Laptop,Informatique,Hauts-de-France,4,797.59,SHIPPED
+910,2026-02-25,83,Monitor,Informatique,Île-de-France,2,294.92,SHIPPED
+1028,2026-02-25,1,Monitor,Informatique,Hauts-de-France,1,287.66,PAID
+15,2026-02-26,163,Laptop,Informatique,Occitanie,1,839.54,SHIPPED
+284,2026-02-26,154,Mouse,Accessoires,Occitanie,4,24.7,PAID
+1278,2026-02-26,282,Headset,Accessoires,Bretagne,1,64.91,SHIPPED
+1436,2026-02-26,46,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,43.45,PAID
+197,2026-02-27,223,Monitor,Informatique,Île-de-France,2,309.25,SHIPPED
+293,2026-02-27,192,Monitor,Informatique,Bretagne,2,294.65,CANCELLED
+562,2026-02-27,229,Desk Chair,Mobilier,Hauts-de-France,2,198.46,SHIPPED
+1111,2026-02-27,272,Desk Chair,Mobilier,Île-de-France,3,230.55,PAID
+1386,2026-02-27,261,Headset,Accessoires,Île-de-France,1,54.35,SHIPPED
+241,2026-02-28,70,Laptop,Informatique,Occitanie,1,853.67,SHIPPED
+461,2026-02-28,125,Desk Chair,Mobilier,Hauts-de-France,1,229.81,SHIPPED
+610,2026-02-28,280,Desk,Mobilier,Auvergne-Rhône-Alpes,3,330.03,PAID
+1122,2026-02-28,228,Desk,Mobilier,Auvergne-Rhône-Alpes,2,363.78,CANCELLED
+554,2026-03-01,271,Laptop,Informatique,Bretagne,4,916.34,PAID
+965,2026-03-01,172,Printer,Bureautique,Bretagne,3,169.95,PAID
+1110,2026-03-01,110,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,40.85,SHIPPED
+1199,2026-03-01,59,Mouse,Accessoires,Hauts-de-France,2,23.17,SHIPPED
+1292,2026-03-02,184,Keyboard,Accessoires,Hauts-de-France,1,48.56,SHIPPED
+1317,2026-03-02,217,Keyboard,Accessoires,Hauts-de-France,1,47.26,PAID
+343,2026-03-03,109,Monitor,Informatique,Hauts-de-France,3,304.59,SHIPPED
+491,2026-03-03,162,Desk Chair,Mobilier,Île-de-France,5,238.05,PAID
+603,2026-03-03,246,Printer,Bureautique,Bretagne,3,163.96,PAID
+1298,2026-03-03,164,Mouse,Accessoires,Bretagne,1,26.1,PAID
+622,2026-03-04,17,Keyboard,Accessoires,Bretagne,2,46.15,PAID
+1272,2026-03-04,99,Desk Chair,Mobilier,Bretagne,1,226.85,CANCELLED
+1415,2026-03-04,279,Desk,Mobilier,Île-de-France,1,328.56,SHIPPED
+1038,2026-03-05,239,Headset,Accessoires,Hauts-de-France,1,54.24,PAID
+1281,2026-03-05,141,Desk,Mobilier,Hauts-de-France,1,373.75,PAID
+1359,2026-03-05,263,Laptop,Informatique,Occitanie,1,811.76,PAID
+1482,2026-03-05,164,Headset,Accessoires,Hauts-de-France,4,59.76,PAID
+115,2026-03-07,242,Keyboard,Accessoires,Hauts-de-France,3,46.95,SHIPPED
+316,2026-03-07,140,Laptop,Informatique,Île-de-France,4,905.46,PAID
+61,2026-03-08,22,Headset,Accessoires,Bretagne,2,55.95,PAID
+300,2026-03-08,194,Headset,Accessoires,Île-de-France,3,55.22,PAID
+582,2026-03-08,95,Printer,Bureautique,Occitanie,2,163.3,SHIPPED
+1299,2026-03-08,149,Printer,Bureautique,Bretagne,2,196.99,PAID
+1410,2026-03-08,167,Printer,Bureautique,Bretagne,1,188.51,SHIPPED
+171,2026-03-09,57,Headset,Accessoires,Bretagne,2,54.02,PAID
+421,2026-03-09,102,Headset,Accessoires,Hauts-de-France,5,58.78,PAID
+666,2026-03-09,249,Laptop,Informatique,Hauts-de-France,1,840.02,PAID
+808,2026-03-09,99,Printer,Bureautique,Occitanie,3,190.25,PAID
+939,2026-03-09,59,Desk Chair,Mobilier,Île-de-France,1,230.08,PAID
+1140,2026-03-09,146,Monitor,Informatique,Auvergne-Rhône-Alpes,1,302.07,PAID
+1352,2026-03-09,237,Laptop,Informatique,Auvergne-Rhône-Alpes,2,873.53,PAID
+71,2026-03-10,91,Desk Chair,Mobilier,Hauts-de-France,5,207.69,PAID
+581,2026-03-10,179,Monitor,Informatique,Hauts-de-France,4,317.66,PAID
+1095,2026-03-10,252,Desk,Mobilier,Île-de-France,2,347.93,PAID
+1161,2026-03-10,110,Headset,Accessoires,Bretagne,1,62.49,PAID
+39,2026-03-11,83,Headset,Accessoires,Auvergne-Rhône-Alpes,2,54.75,PAID
+866,2026-03-11,108,Mouse,Accessoires,Hauts-de-France,3,22.68,SHIPPED
+1455,2026-03-11,245,Desk,Mobilier,Île-de-France,5,327.63,PAID
+807,2026-03-12,21,Desk Chair,Mobilier,Île-de-France,4,203.64,SHIPPED
+1050,2026-03-12,273,Headset,Accessoires,Île-de-France,5,63.83,PAID
+1146,2026-03-12,39,Headset,Accessoires,Île-de-France,4,57.63,PAID
+1,2026-03-13,258,Monitor,Informatique,Bretagne,1,323.05,CANCELLED
+624,2026-03-13,13,Monitor,Informatique,Auvergne-Rhône-Alpes,1,277.28,PAID
+1182,2026-03-13,65,Desk Chair,Mobilier,Bretagne,4,227.94,PAID
+1241,2026-03-13,22,Desk Chair,Mobilier,Occitanie,1,240.9,PAID
+1040,2026-03-14,153,Keyboard,Accessoires,Occitanie,1,41.33,PAID
+906,2026-03-15,270,Printer,Bureautique,Bretagne,2,174.57,PAID
+99,2026-03-16,75,Keyboard,Accessoires,Bretagne,1,44.74,PAID
+215,2026-03-16,296,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,23.83,PAID
+391,2026-03-16,58,Desk Chair,Mobilier,Occitanie,2,231.11,PAID
+561,2026-03-16,296,Headset,Accessoires,Bretagne,5,55.19,PAID
+450,2026-03-18,194,Desk Chair,Mobilier,Hauts-de-France,1,200.63,PAID
+474,2026-03-18,46,Desk Chair,Mobilier,Occitanie,1,207.8,PAID
+946,2026-03-18,254,Headset,Accessoires,Île-de-France,1,61.77,PAID
+995,2026-03-18,179,Laptop,Informatique,Auvergne-Rhône-Alpes,1,874.67,PAID
+1275,2026-03-18,45,Keyboard,Accessoires,Occitanie,1,41.79,PAID
+1284,2026-03-18,272,Desk,Mobilier,Bretagne,2,376.5,SHIPPED
+1389,2026-03-18,294,Laptop,Informatique,Île-de-France,5,766.27,PAID
+589,2026-03-19,259,Keyboard,Accessoires,Hauts-de-France,1,42.76,PAID
+784,2026-03-19,36,Keyboard,Accessoires,Île-de-France,3,45.62,CANCELLED
+1065,2026-03-19,76,Desk,Mobilier,Occitanie,5,345.26,PAID
+1108,2026-03-19,54,Laptop,Informatique,Bretagne,4,775.12,CANCELLED
+434,2026-03-20,231,Mouse,Accessoires,Bretagne,4,23.11,CANCELLED
+632,2026-03-20,52,Headset,Accessoires,Auvergne-Rhône-Alpes,3,59.89,PAID
+831,2026-03-20,127,Printer,Bureautique,Hauts-de-France,1,173.4,PAID
+1343,2026-03-20,232,Desk,Mobilier,Île-de-France,4,320.92,PAID
+371,2026-03-21,53,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,48.55,PAID
+513,2026-03-21,280,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,201.62,PAID
+1009,2026-03-21,39,Desk,Mobilier,Bretagne,2,374.25,SHIPPED
+1353,2026-03-21,72,Laptop,Informatique,Hauts-de-France,5,781.11,PAID
+290,2026-03-22,198,Keyboard,Accessoires,Auvergne-Rhône-Alpes,5,45.62,PAID
+687,2026-03-22,137,Headset,Accessoires,Occitanie,1,62.19,PAID
+933,2026-03-22,178,Laptop,Informatique,Île-de-France,1,909.21,CANCELLED
+1456,2026-03-22,250,Monitor,Informatique,Île-de-France,4,305.23,SHIPPED
+894,2026-03-23,46,Keyboard,Accessoires,Bretagne,2,48.52,PAID
+1301,2026-03-23,278,Mouse,Accessoires,Hauts-de-France,3,25.62,PAID
+1447,2026-03-23,126,Mouse,Accessoires,Bretagne,1,26.42,PAID
+159,2026-03-24,78,Monitor,Informatique,Occitanie,4,275.97,PAID
+332,2026-03-24,17,Desk,Mobilier,Auvergne-Rhône-Alpes,1,348.27,SHIPPED
+467,2026-03-24,296,Monitor,Informatique,Occitanie,2,326.84,PAID
+503,2026-03-24,156,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,46.16,PAID
+1430,2026-03-24,110,Desk Chair,Mobilier,Île-de-France,4,210.09,PAID
+1449,2026-03-24,193,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,22.53,PAID
+85,2026-03-25,178,Printer,Bureautique,Auvergne-Rhône-Alpes,5,171.19,PAID
+365,2026-03-25,243,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,44.59,SHIPPED
+376,2026-03-25,256,Desk,Mobilier,Île-de-France,4,318.3,PAID
+549,2026-03-25,294,Mouse,Accessoires,Île-de-France,3,24.14,PAID
+914,2026-03-25,78,Monitor,Informatique,Île-de-France,3,316.41,PAID
+1022,2026-03-25,56,Laptop,Informatique,Auvergne-Rhône-Alpes,2,824.08,CANCELLED
+1171,2026-03-25,61,Printer,Bureautique,Île-de-France,1,186.06,PAID
+1269,2026-03-25,240,Monitor,Informatique,Auvergne-Rhône-Alpes,2,329.13,CANCELLED
+741,2026-03-26,122,Printer,Bureautique,Île-de-France,2,163.38,CANCELLED
+1314,2026-03-26,239,Desk Chair,Mobilier,Occitanie,2,220.31,CANCELLED
+750,2026-03-27,164,Laptop,Informatique,Auvergne-Rhône-Alpes,5,808.62,PAID
+1321,2026-03-27,172,Printer,Bureautique,Île-de-France,2,187.76,PAID
+301,2026-03-28,127,Desk,Mobilier,Bretagne,1,368.02,PAID
+574,2026-03-28,39,Mouse,Accessoires,Bretagne,4,23.66,PAID
+637,2026-03-28,14,Mouse,Accessoires,Bretagne,2,24.86,PAID
+916,2026-03-28,159,Laptop,Informatique,Bretagne,1,911.27,PAID
+1126,2026-03-28,205,Headset,Accessoires,Bretagne,1,55.95,CANCELLED
+1373,2026-03-28,216,Keyboard,Accessoires,Occitanie,3,45.27,PAID
+175,2026-03-29,129,Desk Chair,Mobilier,Occitanie,1,213.85,SHIPPED
+206,2026-03-29,89,Desk,Mobilier,Occitanie,1,372.02,CANCELLED
+302,2026-03-29,149,Keyboard,Accessoires,Bretagne,1,48.18,CANCELLED
+660,2026-03-29,235,Laptop,Informatique,Occitanie,2,784.0,PAID
+756,2026-03-29,66,Desk Chair,Mobilier,Occitanie,4,198.34,PAID
+1422,2026-03-29,193,Keyboard,Accessoires,Auvergne-Rhône-Alpes,3,45.63,SHIPPED
+35,2026-03-30,81,Laptop,Informatique,Auvergne-Rhône-Alpes,2,783.65,PAID
+100,2026-03-30,132,Monitor,Informatique,Auvergne-Rhône-Alpes,1,279.83,PAID
+414,2026-03-30,23,Laptop,Informatique,Hauts-de-France,5,905.23,SHIPPED
+672,2026-03-30,182,Mouse,Accessoires,Occitanie,2,25.07,PAID
+1404,2026-03-30,55,Desk,Mobilier,Bretagne,2,379.32,CANCELLED
+273,2026-03-31,41,Desk Chair,Mobilier,Occitanie,2,222.03,SHIPPED
+48,2026-04-01,213,Keyboard,Accessoires,Occitanie,4,42.65,PAID
+475,2026-04-01,100,Desk Chair,Mobilier,Bretagne,4,211.7,PAID
+658,2026-04-01,251,Headset,Accessoires,Occitanie,3,59.19,SHIPPED
+849,2026-04-01,192,Printer,Bureautique,Île-de-France,4,197.23,PAID
+981,2026-04-01,72,Mouse,Accessoires,Île-de-France,4,22.96,PAID
+1313,2026-04-01,6,Keyboard,Accessoires,Bretagne,1,42.77,PAID
+55,2026-04-02,236,Printer,Bureautique,Occitanie,5,194.29,CANCELLED
+740,2026-04-02,253,Headset,Accessoires,Hauts-de-France,1,55.32,SHIPPED
+763,2026-04-02,232,Desk Chair,Mobilier,Île-de-France,1,207.53,PAID
+928,2026-04-02,110,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,232.45,PAID
+1092,2026-04-02,210,Headset,Accessoires,Bretagne,4,63.63,SHIPPED
+294,2026-04-03,273,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,230.53,PAID
+492,2026-04-03,124,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,24.44,SHIPPED
+868,2026-04-03,230,Monitor,Informatique,Hauts-de-France,3,291.27,PAID
+901,2026-04-03,50,Monitor,Informatique,Île-de-France,4,287.01,SHIPPED
+984,2026-04-03,30,Desk,Mobilier,Île-de-France,5,315.32,SHIPPED
+1379,2026-04-03,24,Mouse,Accessoires,Bretagne,1,24.58,PAID
+1073,2026-04-04,272,Desk Chair,Mobilier,Occitanie,1,202.34,SHIPPED
+1074,2026-04-04,36,Monitor,Informatique,Occitanie,1,327.59,CANCELLED
+1170,2026-04-04,111,Mouse,Accessoires,Occitanie,2,24.35,PAID
+267,2026-04-05,233,Desk Chair,Mobilier,Île-de-France,4,200.12,PAID
+362,2026-04-05,74,Desk,Mobilier,Occitanie,1,337.11,SHIPPED
+611,2026-04-05,295,Laptop,Informatique,Bretagne,1,797.89,PAID
+1375,2026-04-05,269,Keyboard,Accessoires,Bretagne,2,42.52,SHIPPED
+188,2026-04-06,296,Laptop,Informatique,Île-de-France,2,858.92,PAID
+524,2026-04-06,251,Laptop,Informatique,Auvergne-Rhône-Alpes,3,811.72,SHIPPED
+595,2026-04-06,133,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,25.72,PAID
+676,2026-04-06,76,Monitor,Informatique,Occitanie,2,318.4,PAID
+257,2026-04-07,61,Laptop,Informatique,Île-de-France,2,855.4,PAID
+642,2026-04-07,151,Printer,Bureautique,Occitanie,1,167.86,PAID
+970,2026-04-07,77,Keyboard,Accessoires,Île-de-France,3,43.98,PAID
+1158,2026-04-07,205,Printer,Bureautique,Île-de-France,4,181.81,PAID
+17,2026-04-08,50,Desk,Mobilier,Hauts-de-France,4,325.25,PAID
+182,2026-04-08,286,Desk Chair,Mobilier,Occitanie,2,238.95,PAID
+1109,2026-04-08,45,Monitor,Informatique,Occitanie,1,290.05,PAID
+102,2026-04-09,82,Mouse,Accessoires,Bretagne,4,26.11,SHIPPED
+717,2026-04-09,239,Desk,Mobilier,Bretagne,5,358.93,SHIPPED
+1494,2026-04-09,105,Mouse,Accessoires,Bretagne,4,24.77,PAID
+124,2026-04-10,44,Headset,Accessoires,Auvergne-Rhône-Alpes,1,65.24,PAID
+222,2026-04-10,232,Laptop,Informatique,Île-de-France,2,771.15,SHIPPED
+455,2026-04-10,73,Headset,Accessoires,Bretagne,2,61.83,PAID
+536,2026-04-10,251,Keyboard,Accessoires,Bretagne,1,45.23,SHIPPED
+650,2026-04-10,240,Laptop,Informatique,Île-de-France,5,855.74,PAID
+1411,2026-04-10,221,Printer,Bureautique,Île-de-France,2,169.5,SHIPPED
+23,2026-04-11,8,Mouse,Accessoires,Île-de-France,4,26.94,PAID
+308,2026-04-12,190,Laptop,Informatique,Auvergne-Rhône-Alpes,3,920.44,PAID
+483,2026-04-12,110,Keyboard,Accessoires,Île-de-France,1,46.03,PAID
+683,2026-04-12,80,Keyboard,Accessoires,Bretagne,2,44.17,PAID
+774,2026-04-12,186,Mouse,Accessoires,Bretagne,1,23.79,PAID
+1081,2026-04-12,220,Desk,Mobilier,Hauts-de-France,1,341.79,PAID
+1486,2026-04-12,164,Mouse,Accessoires,Île-de-France,2,23.75,CANCELLED
+556,2026-04-13,27,Headset,Accessoires,Occitanie,3,57.33,PAID
+580,2026-04-13,38,Headset,Accessoires,Bretagne,4,59.0,PAID
+805,2026-04-13,58,Desk Chair,Mobilier,Occitanie,5,216.5,PAID
+954,2026-04-13,67,Laptop,Informatique,Île-de-France,2,798.35,SHIPPED
+1365,2026-04-13,217,Keyboard,Accessoires,Occitanie,2,47.38,PAID
+1392,2026-04-13,94,Headset,Accessoires,Auvergne-Rhône-Alpes,4,57.29,CANCELLED
+142,2026-04-14,3,Keyboard,Accessoires,Occitanie,1,41.37,PAID
+942,2026-04-14,1,Desk Chair,Mobilier,Île-de-France,1,234.14,PAID
+31,2026-04-15,157,Monitor,Informatique,Hauts-de-France,3,280.48,SHIPPED
+423,2026-04-15,220,Desk Chair,Mobilier,Île-de-France,1,234.84,PAID
+738,2026-04-15,159,Headset,Accessoires,Île-de-France,1,63.74,PAID
+964,2026-04-15,246,Desk Chair,Mobilier,Occitanie,1,214.15,PAID
+1066,2026-04-15,213,Desk,Mobilier,Bretagne,2,368.03,SHIPPED
+1226,2026-04-15,257,Headset,Accessoires,Occitanie,3,63.84,SHIPPED
+1439,2026-04-15,243,Desk Chair,Mobilier,Bretagne,3,238.17,PAID
+315,2026-04-16,100,Desk,Mobilier,Bretagne,4,360.71,PAID
+411,2026-04-16,264,Printer,Bureautique,Île-de-France,4,197.0,PAID
+1125,2026-04-16,62,Desk Chair,Mobilier,Occitanie,4,222.68,PAID
+1291,2026-04-16,124,Keyboard,Accessoires,Hauts-de-France,5,42.78,PAID
+537,2026-04-17,90,Mouse,Accessoires,Île-de-France,2,26.7,PAID
+579,2026-04-17,88,Mouse,Accessoires,Occitanie,1,26.8,PAID
+864,2026-04-17,56,Keyboard,Accessoires,Bretagne,1,46.4,PAID
+1087,2026-04-17,6,Keyboard,Accessoires,Île-de-France,2,48.1,SHIPPED
+269,2026-04-18,279,Keyboard,Accessoires,Occitanie,5,41.48,CANCELLED
+380,2026-04-18,161,Mouse,Accessoires,Bretagne,4,27.29,PAID
+393,2026-04-18,96,Desk Chair,Mobilier,Occitanie,5,207.16,SHIPPED
+495,2026-04-18,271,Keyboard,Accessoires,Île-de-France,1,41.74,PAID
+826,2026-04-18,70,Headset,Accessoires,Île-de-France,4,64.1,PAID
+1255,2026-04-18,275,Desk,Mobilier,Île-de-France,1,323.65,PAID
+1297,2026-04-18,93,Desk,Mobilier,Auvergne-Rhône-Alpes,4,376.24,SHIPPED
+1307,2026-04-18,275,Mouse,Accessoires,Île-de-France,5,27.25,PAID
+1445,2026-04-18,118,Headset,Accessoires,Auvergne-Rhône-Alpes,3,57.09,PAID
+266,2026-04-19,27,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,22.61,CANCELLED
+394,2026-04-19,219,Desk Chair,Mobilier,Bretagne,5,201.19,PAID
+735,2026-04-19,83,Printer,Bureautique,Bretagne,3,185.69,PAID
+348,2026-04-20,174,Keyboard,Accessoires,Bretagne,2,43.73,CANCELLED
+385,2026-04-20,49,Headset,Accessoires,Bretagne,1,55.45,SHIPPED
+439,2026-04-20,282,Monitor,Informatique,Auvergne-Rhône-Alpes,2,291.02,SHIPPED
+768,2026-04-20,64,Laptop,Informatique,Occitanie,1,859.47,PAID
+1320,2026-04-20,194,Mouse,Accessoires,Bretagne,1,26.08,PAID
+347,2026-04-21,189,Keyboard,Accessoires,Île-de-France,1,47.9,PAID
+1472,2026-04-21,22,Printer,Bureautique,Bretagne,4,197.67,SHIPPED
+833,2026-04-22,10,Printer,Bureautique,Occitanie,3,171.84,SHIPPED
+1262,2026-04-22,246,Desk,Mobilier,Bretagne,4,336.13,PAID
+54,2026-04-23,185,Keyboard,Accessoires,Hauts-de-France,2,43.59,PAID
+116,2026-04-23,123,Mouse,Accessoires,Bretagne,3,24.59,SHIPPED
+12,2026-04-24,222,Desk,Mobilier,Hauts-de-France,2,373.23,PAID
+123,2026-04-24,3,Desk Chair,Mobilier,Hauts-de-France,2,200.25,PAID
+265,2026-04-24,21,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,201.88,CANCELLED
+913,2026-04-24,189,Mouse,Accessoires,Île-de-France,1,24.4,PAID
+996,2026-04-24,185,Mouse,Accessoires,Occitanie,5,23.39,PAID
+1207,2026-04-24,268,Headset,Accessoires,Bretagne,4,56.86,PAID
+42,2026-04-25,162,Laptop,Informatique,Bretagne,2,865.99,PAID
+202,2026-04-25,276,Printer,Bureautique,Île-de-France,1,177.6,PAID
+842,2026-04-25,190,Desk,Mobilier,Île-de-France,2,327.58,PAID
+1118,2026-04-25,30,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,44.74,SHIPPED
+164,2026-04-27,93,Laptop,Informatique,Occitanie,1,808.48,SHIPPED
+277,2026-04-27,12,Desk,Mobilier,Île-de-France,1,368.0,PAID
+72,2026-04-28,196,Printer,Bureautique,Hauts-de-France,1,177.9,CANCELLED
+403,2026-04-28,45,Desk,Mobilier,Hauts-de-France,5,338.6,PAID
+1283,2026-04-28,54,Headset,Accessoires,Occitanie,2,58.27,PAID
+1491,2026-04-28,291,Headset,Accessoires,Hauts-de-France,1,54.86,CANCELLED
+399,2026-04-29,177,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,43.23,CANCELLED
+828,2026-04-29,8,Mouse,Accessoires,Hauts-de-France,1,26.09,SHIPPED
+1025,2026-04-29,130,Mouse,Accessoires,Île-de-France,1,25.92,PAID
+1049,2026-04-29,87,Desk Chair,Mobilier,Bretagne,1,227.52,PAID
+1191,2026-04-29,190,Printer,Bureautique,Hauts-de-France,1,195.74,SHIPPED
+131,2026-04-30,198,Laptop,Informatique,Bretagne,1,839.99,CANCELLED
+1005,2026-04-30,269,Laptop,Informatique,Auvergne-Rhône-Alpes,2,822.99,PAID
+32,2026-05-01,148,Desk,Mobilier,Occitanie,1,337.81,SHIPPED
+40,2026-05-01,8,Headset,Accessoires,Île-de-France,1,56.82,PAID
+388,2026-05-01,259,Monitor,Informatique,Occitanie,1,298.02,PAID
+1440,2026-05-01,108,Desk,Mobilier,Île-de-France,2,365.9,PAID
+1454,2026-05-01,251,Monitor,Informatique,Île-de-France,4,278.98,PAID
+45,2026-05-02,164,Headset,Accessoires,Bretagne,1,60.51,PAID
+51,2026-05-02,136,Desk,Mobilier,Auvergne-Rhône-Alpes,1,381.1,CANCELLED
+158,2026-05-02,121,Monitor,Informatique,Auvergne-Rhône-Alpes,2,323.85,PAID
+844,2026-05-02,207,Desk Chair,Mobilier,Hauts-de-France,4,234.97,PAID
+1098,2026-05-02,24,Keyboard,Accessoires,Île-de-France,1,41.27,PAID
+1179,2026-05-02,24,Keyboard,Accessoires,Occitanie,1,45.9,PAID
+1123,2026-05-03,186,Monitor,Informatique,Bretagne,1,305.05,PAID
+9,2026-05-04,289,Headset,Accessoires,Occitanie,1,60.91,PAID
+532,2026-05-04,108,Headset,Accessoires,Île-de-France,1,54.86,PAID
+540,2026-05-04,167,Printer,Bureautique,Île-de-France,3,171.34,PAID
+662,2026-05-04,60,Printer,Bureautique,Auvergne-Rhône-Alpes,1,178.98,PAID
+1409,2026-05-04,116,Desk,Mobilier,Occitanie,5,339.79,SHIPPED
+101,2026-05-05,222,Monitor,Informatique,Hauts-de-France,1,284.47,SHIPPED
+409,2026-05-05,23,Desk,Mobilier,Auvergne-Rhône-Alpes,2,335.07,SHIPPED
+944,2026-05-05,4,Desk Chair,Mobilier,Occitanie,1,236.74,PAID
+1396,2026-05-05,47,Desk Chair,Mobilier,Occitanie,5,211.43,PAID
+77,2026-05-06,181,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,27.11,PAID
+165,2026-05-06,56,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,22.55,PAID
+535,2026-05-06,190,Headset,Accessoires,Île-de-France,1,62.41,CANCELLED
+597,2026-05-06,29,Keyboard,Accessoires,Hauts-de-France,2,47.96,PAID
+1382,2026-05-06,238,Mouse,Accessoires,Occitanie,4,27.21,PAID
+1244,2026-05-07,250,Printer,Bureautique,Hauts-de-France,4,187.77,SHIPPED
+1251,2026-05-07,152,Laptop,Informatique,Auvergne-Rhône-Alpes,1,930.27,PAID
+1487,2026-05-07,76,Keyboard,Accessoires,Occitanie,4,40.52,PAID
+92,2026-05-08,261,Mouse,Accessoires,Bretagne,1,25.07,PAID
+326,2026-05-08,6,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,240.45,PAID
+824,2026-05-08,64,Keyboard,Accessoires,Île-de-France,2,43.16,PAID
+1305,2026-05-08,75,Mouse,Accessoires,Hauts-de-France,2,25.68,SHIPPED
+73,2026-05-09,138,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,43.38,SHIPPED
+696,2026-05-09,118,Desk,Mobilier,Auvergne-Rhône-Alpes,1,345.27,PAID
+1428,2026-05-09,244,Printer,Bureautique,Bretagne,2,164.59,PAID
+601,2026-05-10,217,Mouse,Accessoires,Hauts-de-France,1,26.79,PAID
+773,2026-05-10,183,Mouse,Accessoires,Auvergne-Rhône-Alpes,4,25.58,PAID
+803,2026-05-10,25,Mouse,Accessoires,Île-de-France,2,25.94,PAID
+1034,2026-05-10,11,Laptop,Informatique,Hauts-de-France,4,916.49,PAID
+156,2026-05-11,263,Keyboard,Accessoires,Hauts-de-France,3,40.78,PAID
+552,2026-05-11,160,Monitor,Informatique,Auvergne-Rhône-Alpes,1,312.87,PAID
+1124,2026-05-11,67,Headset,Accessoires,Occitanie,5,65.26,PAID
+1176,2026-05-11,224,Headset,Accessoires,Auvergne-Rhône-Alpes,3,57.4,SHIPPED
+1431,2026-05-11,263,Printer,Bureautique,Hauts-de-France,2,191.25,PAID
+44,2026-05-12,13,Laptop,Informatique,Auvergne-Rhône-Alpes,3,814.22,PAID
+719,2026-05-12,182,Laptop,Informatique,Occitanie,2,816.86,CANCELLED
+1078,2026-05-12,132,Printer,Bureautique,Hauts-de-France,5,164.48,PAID
+1252,2026-05-12,66,Laptop,Informatique,Occitanie,3,855.44,PAID
+1407,2026-05-12,196,Desk Chair,Mobilier,Bretagne,2,227.75,PAID
+1457,2026-05-12,288,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,204.67,PAID
+788,2026-05-13,113,Laptop,Informatique,Bretagne,4,918.4,PAID
+229,2026-05-14,22,Desk Chair,Mobilier,Bretagne,1,232.42,CANCELLED
+558,2026-05-14,166,Monitor,Informatique,Bretagne,1,277.22,PAID
+227,2026-05-15,45,Mouse,Accessoires,Occitanie,5,22.99,PAID
+331,2026-05-15,88,Monitor,Informatique,Hauts-de-France,1,282.27,PAID
+410,2026-05-15,80,Monitor,Informatique,Île-de-France,4,323.88,PAID
+621,2026-05-15,106,Mouse,Accessoires,Occitanie,2,22.6,PAID
+818,2026-05-15,162,Printer,Bureautique,Auvergne-Rhône-Alpes,4,177.29,CANCELLED
+150,2026-05-16,193,Keyboard,Accessoires,Occitanie,1,46.01,PAID
+221,2026-05-16,27,Monitor,Informatique,Hauts-de-France,1,299.57,PAID
+484,2026-05-16,299,Monitor,Informatique,Île-de-France,1,297.29,PAID
+553,2026-05-16,220,Laptop,Informatique,Auvergne-Rhône-Alpes,2,831.01,PAID
+655,2026-05-16,283,Laptop,Informatique,Occitanie,1,852.59,SHIPPED
+778,2026-05-16,185,Monitor,Informatique,Bretagne,3,314.52,SHIPPED
+848,2026-05-16,155,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,49.04,SHIPPED
+918,2026-05-16,242,Desk Chair,Mobilier,Occitanie,2,226.9,PAID
+1133,2026-05-16,240,Keyboard,Accessoires,Hauts-de-France,5,49.04,PAID
+1293,2026-05-16,206,Desk,Mobilier,Hauts-de-France,2,342.42,PAID
+144,2026-05-17,211,Headset,Accessoires,Occitanie,2,64.32,PAID
+375,2026-05-17,244,Laptop,Informatique,Île-de-France,1,803.04,PAID
+857,2026-05-17,242,Printer,Bureautique,Île-de-France,3,175.52,PAID
+934,2026-05-17,128,Keyboard,Accessoires,Occitanie,1,46.21,PAID
+1033,2026-05-17,227,Monitor,Informatique,Hauts-de-France,1,295.63,PAID
+1215,2026-05-17,234,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,23.25,CANCELLED
+1221,2026-05-17,145,Desk Chair,Mobilier,Hauts-de-France,4,236.61,CANCELLED
+223,2026-05-18,271,Desk,Mobilier,Île-de-France,4,382.65,PAID
+283,2026-05-18,82,Desk,Mobilier,Île-de-France,2,321.42,PAID
+840,2026-05-18,98,Monitor,Informatique,Bretagne,2,315.93,PAID
+1393,2026-05-18,103,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,26.69,SHIPPED
+1471,2026-05-18,102,Mouse,Accessoires,Occitanie,5,26.48,SHIPPED
+25,2026-05-19,167,Headset,Accessoires,Île-de-France,5,65.39,CANCELLED
+699,2026-05-19,9,Printer,Bureautique,Bretagne,3,167.61,PAID
+1088,2026-05-19,191,Mouse,Accessoires,Hauts-de-France,1,23.67,PAID
+1135,2026-05-19,251,Desk,Mobilier,Bretagne,5,335.88,PAID
+1364,2026-05-19,192,Desk,Mobilier,Hauts-de-France,4,365.21,PAID
+16,2026-05-20,94,Headset,Accessoires,Occitanie,5,65.28,PAID
+406,2026-05-20,283,Laptop,Informatique,Bretagne,5,815.57,PAID
+415,2026-05-20,158,Printer,Bureautique,Bretagne,5,181.53,PAID
+656,2026-05-20,74,Printer,Bureautique,Hauts-de-France,5,169.54,PAID
+1157,2026-05-20,146,Monitor,Informatique,Auvergne-Rhône-Alpes,1,278.88,CANCELLED
+184,2026-05-21,294,Monitor,Informatique,Occitanie,5,296.47,PAID
+379,2026-05-21,222,Desk,Mobilier,Île-de-France,2,378.57,PAID
+708,2026-05-21,225,Desk Chair,Mobilier,Occitanie,3,225.06,PAID
+887,2026-05-21,282,Keyboard,Accessoires,Occitanie,4,48.89,SHIPPED
+1368,2026-05-21,185,Monitor,Informatique,Île-de-France,3,328.71,CANCELLED
+516,2026-05-22,208,Headset,Accessoires,Bretagne,4,54.24,PAID
+668,2026-05-22,223,Mouse,Accessoires,Occitanie,2,24.72,SHIPPED
+791,2026-05-22,73,Desk Chair,Mobilier,Île-de-France,3,234.73,PAID
+1075,2026-05-22,2,Headset,Accessoires,Occitanie,1,54.14,PAID
+1427,2026-05-22,163,Printer,Bureautique,Bretagne,1,174.99,SHIPPED
+1438,2026-05-22,24,Laptop,Informatique,Occitanie,1,861.0,SHIPPED
+6,2026-05-23,73,Headset,Accessoires,Bretagne,2,54.3,PAID
+295,2026-05-23,138,Laptop,Informatique,Bretagne,3,784.59,PAID
+885,2026-05-23,76,Keyboard,Accessoires,Bretagne,2,45.94,PAID
+382,2026-05-24,143,Headset,Accessoires,Île-de-France,3,65.9,SHIPPED
+473,2026-05-24,194,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,212.85,PAID
+643,2026-05-24,69,Desk Chair,Mobilier,Île-de-France,5,220.75,SHIPPED
+903,2026-05-24,79,Mouse,Accessoires,Occitanie,3,24.07,PAID
+1225,2026-05-24,254,Headset,Accessoires,Auvergne-Rhône-Alpes,2,54.72,PAID
+7,2026-05-25,217,Printer,Bureautique,Île-de-France,4,194.07,SHIPPED
+628,2026-05-25,30,Mouse,Accessoires,Bretagne,2,25.42,PAID
+1164,2026-05-25,110,Desk,Mobilier,Bretagne,2,360.84,PAID
+1194,2026-05-25,34,Keyboard,Accessoires,Île-de-France,1,42.27,PAID
+190,2026-05-26,286,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,23.35,PAID
+494,2026-05-26,123,Monitor,Informatique,Auvergne-Rhône-Alpes,4,288.67,PAID
+1014,2026-05-26,185,Mouse,Accessoires,Occitanie,5,22.99,PAID
+1017,2026-05-26,112,Monitor,Informatique,Île-de-France,1,292.3,PAID
+1162,2026-05-26,142,Laptop,Informatique,Occitanie,4,855.04,PAID
+1210,2026-05-26,203,Keyboard,Accessoires,Auvergne-Rhône-Alpes,3,40.56,PAID
+87,2026-05-27,102,Headset,Accessoires,Auvergne-Rhône-Alpes,2,60.15,PAID
+187,2026-05-27,198,Mouse,Accessoires,Île-de-France,3,24.45,PAID
+1327,2026-05-27,151,Monitor,Informatique,Hauts-de-France,3,274.19,PAID
+1419,2026-05-27,121,Mouse,Accessoires,Île-de-France,2,26.06,SHIPPED
+110,2026-05-28,178,Desk,Mobilier,Bretagne,1,371.95,PAID
+246,2026-05-28,203,Keyboard,Accessoires,Île-de-France,1,41.36,CANCELLED
+281,2026-05-28,225,Monitor,Informatique,Auvergne-Rhône-Alpes,4,326.08,PAID
+367,2026-05-28,116,Desk,Mobilier,Hauts-de-France,4,334.17,PAID
+615,2026-05-28,189,Mouse,Accessoires,Auvergne-Rhône-Alpes,5,25.2,CANCELLED
+663,2026-05-28,167,Laptop,Informatique,Occitanie,1,785.87,PAID
+1270,2026-05-28,212,Laptop,Informatique,Auvergne-Rhône-Alpes,4,851.79,PAID
+504,2026-05-29,145,Monitor,Informatique,Île-de-France,3,289.13,PAID
+523,2026-05-29,19,Desk Chair,Mobilier,Hauts-de-France,4,209.64,SHIPPED
+1097,2026-05-29,17,Printer,Bureautique,Auvergne-Rhône-Alpes,1,193.75,PAID
+1132,2026-05-29,213,Laptop,Informatique,Île-de-France,3,867.4,SHIPPED
+203,2026-05-30,75,Laptop,Informatique,Occitanie,4,785.45,PAID
+433,2026-05-30,79,Desk,Mobilier,Île-de-France,1,381.01,SHIPPED
+635,2026-05-30,91,Headset,Accessoires,Occitanie,5,60.32,CANCELLED
+685,2026-05-30,228,Laptop,Informatique,Occitanie,5,920.68,SHIPPED
+816,2026-05-30,27,Mouse,Accessoires,Île-de-France,2,26.77,PAID
+1080,2026-05-30,89,Monitor,Informatique,Occitanie,1,280.9,SHIPPED
+21,2026-05-31,68,Mouse,Accessoires,Bretagne,2,22.92,PAID
+68,2026-05-31,256,Printer,Bureautique,Île-de-France,2,191.83,SHIPPED
+230,2026-05-31,11,Desk,Mobilier,Auvergne-Rhône-Alpes,5,357.25,PAID
+701,2026-05-31,42,Mouse,Accessoires,Île-de-France,1,23.72,CANCELLED
+907,2026-05-31,78,Printer,Bureautique,Occitanie,2,192.41,PAID
+1218,2026-05-31,272,Mouse,Accessoires,Île-de-France,3,24.66,PAID
+79,2026-06-01,248,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,199.65,PAID
+476,2026-06-01,218,Mouse,Accessoires,Bretagne,3,26.59,PAID
+1357,2026-06-01,242,Laptop,Informatique,Île-de-France,2,920.52,PAID
+107,2026-06-02,267,Laptop,Informatique,Occitanie,2,907.88,SHIPPED
+507,2026-06-02,274,Printer,Bureautique,Bretagne,5,185.05,CANCELLED
+776,2026-06-02,247,Keyboard,Accessoires,Île-de-France,1,46.89,PAID
+889,2026-06-02,206,Mouse,Accessoires,Occitanie,2,22.61,SHIPPED
+1381,2026-06-02,4,Printer,Bureautique,Occitanie,4,178.58,CANCELLED
+196,2026-06-03,162,Monitor,Informatique,Auvergne-Rhône-Alpes,2,277.86,PAID
+991,2026-06-03,191,Laptop,Informatique,Occitanie,2,788.51,PAID
+800,2026-06-04,45,Desk,Mobilier,Occitanie,5,379.67,PAID
+1159,2026-06-04,150,Mouse,Accessoires,Hauts-de-France,2,24.34,PAID
+1340,2026-06-04,166,Desk,Mobilier,Occitanie,5,316.89,PAID
+89,2026-06-05,47,Headset,Accessoires,Bretagne,3,59.87,PAID
+372,2026-06-05,205,Printer,Bureautique,Occitanie,3,185.8,PAID
+377,2026-06-05,198,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,238.79,CANCELLED
+896,2026-06-05,90,Monitor,Informatique,Auvergne-Rhône-Alpes,1,314.19,CANCELLED
+1002,2026-06-05,85,Headset,Accessoires,Hauts-de-France,1,58.59,SHIPPED
+721,2026-06-06,174,Mouse,Accessoires,Occitanie,5,25.24,PAID
+856,2026-06-06,228,Keyboard,Accessoires,Hauts-de-France,1,49.27,PAID
+886,2026-06-06,57,Monitor,Informatique,Île-de-France,5,276.88,PAID
+1064,2026-06-06,258,Desk Chair,Mobilier,Hauts-de-France,1,209.07,PAID
+232,2026-06-07,52,Keyboard,Accessoires,Bretagne,4,41.61,SHIPPED
+915,2026-06-07,218,Desk,Mobilier,Bretagne,3,368.13,PAID
+1228,2026-06-07,219,Mouse,Accessoires,Bretagne,1,25.83,CANCELLED
+1459,2026-06-07,111,Monitor,Informatique,Hauts-de-France,3,278.72,PAID
+443,2026-06-08,13,Laptop,Informatique,Île-de-France,2,846.39,PAID
+481,2026-06-08,271,Headset,Accessoires,Auvergne-Rhône-Alpes,3,61.74,PAID
+545,2026-06-08,244,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,22.75,PAID
+1197,2026-06-08,251,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,219.89,PAID
+250,2026-06-09,152,Keyboard,Accessoires,Occitanie,3,48.24,PAID
+790,2026-06-10,46,Desk Chair,Mobilier,Bretagne,1,198.72,PAID
+1101,2026-06-10,183,Headset,Accessoires,Bretagne,2,62.9,PAID
+320,2026-06-11,75,Monitor,Informatique,Auvergne-Rhône-Alpes,4,293.97,PAID
+760,2026-06-11,280,Keyboard,Accessoires,Bretagne,3,48.04,PAID
+1149,2026-06-11,48,Desk Chair,Mobilier,Hauts-de-France,3,217.18,PAID
+163,2026-06-12,32,Desk,Mobilier,Occitanie,5,339.61,PAID
+706,2026-06-12,166,Keyboard,Accessoires,Bretagne,1,47.35,PAID
+865,2026-06-12,109,Mouse,Accessoires,Auvergne-Rhône-Alpes,4,27.44,PAID
+881,2026-06-12,159,Laptop,Informatique,Occitanie,4,870.1,PAID
+1245,2026-06-12,30,Monitor,Informatique,Hauts-de-France,4,295.45,PAID
+1446,2026-06-12,76,Laptop,Informatique,Hauts-de-France,1,911.71,SHIPPED
+1464,2026-06-12,113,Desk,Mobilier,Hauts-de-France,2,366.57,PAID
+236,2026-06-13,213,Desk Chair,Mobilier,Bretagne,1,241.45,PAID
+418,2026-06-13,42,Desk,Mobilier,Hauts-de-France,2,349.78,PAID
+937,2026-06-13,221,Headset,Accessoires,Hauts-de-France,4,58.63,PAID
+957,2026-06-13,126,Desk,Mobilier,Occitanie,5,339.15,PAID
+998,2026-06-13,211,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,208.84,CANCELLED
+1115,2026-06-14,223,Desk,Mobilier,Occitanie,1,323.93,PAID
+1193,2026-06-14,51,Desk,Mobilier,Île-de-France,2,319.07,CANCELLED
+508,2026-06-15,193,Headset,Accessoires,Auvergne-Rhône-Alpes,1,56.12,PAID
+638,2026-06-15,235,Mouse,Accessoires,Hauts-de-France,2,26.72,PAID
+620,2026-06-16,92,Desk,Mobilier,Auvergne-Rhône-Alpes,3,335.23,PAID
+1369,2026-06-16,242,Headset,Accessoires,Bretagne,1,60.17,PAID
+1467,2026-06-16,253,Headset,Accessoires,Auvergne-Rhône-Alpes,2,59.19,SHIPPED
+333,2026-06-17,173,Desk,Mobilier,Auvergne-Rhône-Alpes,3,348.25,PAID
+1131,2026-06-17,242,Printer,Bureautique,Bretagne,1,162.28,PAID
+1288,2026-06-17,107,Desk Chair,Mobilier,Hauts-de-France,4,236.52,CANCELLED
+60,2026-06-18,54,Keyboard,Accessoires,Île-de-France,1,47.09,PAID
+307,2026-06-18,6,Headset,Accessoires,Auvergne-Rhône-Alpes,2,65.81,SHIPPED
+344,2026-06-18,52,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,26.49,PAID
+1349,2026-06-18,163,Headset,Accessoires,Auvergne-Rhône-Alpes,2,63.67,PAID
+319,2026-06-19,31,Monitor,Informatique,Occitanie,3,292.94,SHIPPED
+378,2026-06-19,124,Desk,Mobilier,Occitanie,4,350.3,PAID
+1070,2026-06-19,20,Desk Chair,Mobilier,Hauts-de-France,5,205.62,PAID
+1287,2026-06-19,299,Mouse,Accessoires,Hauts-de-France,5,23.55,PAID
+1444,2026-06-19,237,Laptop,Informatique,Île-de-France,2,921.65,PAID
+5,2026-06-20,40,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,222.53,PAID
+599,2026-06-20,218,Keyboard,Accessoires,Auvergne-Rhône-Alpes,4,43.28,PAID
+716,2026-06-20,107,Keyboard,Accessoires,Hauts-de-France,4,46.99,PAID
+810,2026-06-20,199,Keyboard,Accessoires,Hauts-de-France,3,41.2,CANCELLED
+1180,2026-06-20,6,Desk,Mobilier,Bretagne,2,380.26,PAID
+511,2026-06-21,44,Headset,Accessoires,Bretagne,5,61.03,PAID
+1052,2026-06-21,279,Desk Chair,Mobilier,Bretagne,1,199.15,PAID
+64,2026-06-22,16,Keyboard,Accessoires,Hauts-de-France,3,45.35,PAID
+607,2026-06-22,100,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,211.7,PAID
+707,2026-06-22,120,Desk,Mobilier,Bretagne,2,324.97,PAID
+899,2026-06-22,153,Desk,Mobilier,Hauts-de-France,1,382.66,PAID
+992,2026-06-22,86,Desk Chair,Mobilier,Île-de-France,1,217.76,PAID
+217,2026-06-23,39,Desk,Mobilier,Bretagne,1,333.61,PAID
+355,2026-06-23,268,Laptop,Informatique,Hauts-de-France,2,805.1,PAID
+592,2026-06-23,268,Printer,Bureautique,Île-de-France,1,196.61,PAID
+947,2026-06-23,297,Desk,Mobilier,Occitanie,1,346.61,PAID
+1136,2026-06-23,245,Keyboard,Accessoires,Occitanie,5,42.13,PAID
+310,2026-06-24,216,Monitor,Informatique,Hauts-de-France,2,271.74,PAID
+57,2026-06-25,210,Printer,Bureautique,Île-de-France,1,165.03,PAID
+1335,2026-06-25,156,Laptop,Informatique,Bretagne,1,860.77,PAID
+306,2026-06-26,168,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,209.82,PAID
+445,2026-06-26,12,Monitor,Informatique,Auvergne-Rhône-Alpes,2,290.3,PAID
+989,2026-06-26,151,Desk Chair,Mobilier,Bretagne,2,229.56,PAID
+1089,2026-06-26,142,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,27.24,PAID
+169,2026-06-27,236,Headset,Accessoires,Auvergne-Rhône-Alpes,4,62.86,PAID
+796,2026-06-27,220,Laptop,Informatique,Hauts-de-France,1,788.5,PAID
+1477,2026-06-27,215,Desk,Mobilier,Bretagne,2,332.12,SHIPPED
+121,2026-06-29,63,Keyboard,Accessoires,Bretagne,3,47.75,CANCELLED
+608,2026-06-29,236,Monitor,Informatique,Hauts-de-France,3,277.78,PAID
+1358,2026-06-29,221,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,230.6,PAID
+66,2026-06-30,79,Mouse,Accessoires,Bretagne,2,23.13,PAID
+771,2026-06-30,251,Monitor,Informatique,Hauts-de-France,1,278.61,PAID
+955,2026-06-30,41,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,199.31,PAID
+1348,2026-06-30,112,Printer,Bureautique,Hauts-de-France,2,172.93,SHIPPED
+323,2026-07-01,33,Desk,Mobilier,Occitanie,4,351.18,SHIPPED
+419,2026-07-01,251,Keyboard,Accessoires,Hauts-de-France,1,46.7,PAID
+675,2026-07-01,4,Keyboard,Accessoires,Bretagne,4,43.16,PAID
+1024,2026-07-01,215,Headset,Accessoires,Île-de-France,3,64.23,CANCELLED
+1204,2026-07-01,19,Desk Chair,Mobilier,Bretagne,3,225.83,SHIPPED
+983,2026-07-02,204,Desk Chair,Mobilier,Bretagne,1,236.3,PAID
+1235,2026-07-02,116,Desk,Mobilier,Auvergne-Rhône-Alpes,2,380.13,CANCELLED
+551,2026-07-03,122,Mouse,Accessoires,Bretagne,1,25.04,PAID
+586,2026-07-03,277,Printer,Bureautique,Bretagne,3,165.13,SHIPPED
+350,2026-07-04,204,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,44.37,PAID
+374,2026-07-04,296,Printer,Bureautique,Hauts-de-France,2,191.48,CANCELLED
+870,2026-07-04,234,Printer,Bureautique,Auvergne-Rhône-Alpes,1,170.3,PAID
+1006,2026-07-04,93,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,26.44,CANCELLED
+1114,2026-07-04,124,Monitor,Informatique,Bretagne,5,306.75,SHIPPED
+1224,2026-07-04,106,Printer,Bureautique,Auvergne-Rhône-Alpes,2,163.14,PAID
+1254,2026-07-04,238,Desk,Mobilier,Île-de-France,1,354.66,PAID
+62,2026-07-05,147,Headset,Accessoires,Auvergne-Rhône-Alpes,1,65.67,PAID
+684,2026-07-05,250,Mouse,Accessoires,Bretagne,3,23.16,CANCELLED
+693,2026-07-05,163,Desk,Mobilier,Bretagne,5,316.54,PAID
+1362,2026-07-05,205,Mouse,Accessoires,Occitanie,1,26.49,PAID
+1435,2026-07-05,219,Desk,Mobilier,Occitanie,4,355.74,PAID
+1476,2026-07-05,32,Printer,Bureautique,Auvergne-Rhône-Alpes,2,179.39,CANCELLED
+673,2026-07-06,7,Laptop,Informatique,Île-de-France,1,882.95,PAID
+813,2026-07-06,238,Laptop,Informatique,Hauts-de-France,4,779.44,PAID
+1013,2026-07-06,112,Desk Chair,Mobilier,Hauts-de-France,3,217.75,CANCELLED
+1129,2026-07-06,195,Mouse,Accessoires,Île-de-France,3,22.91,SHIPPED
+598,2026-07-07,171,Mouse,Accessoires,Île-de-France,3,23.58,SHIPPED
+1483,2026-07-07,61,Printer,Bureautique,Occitanie,5,174.33,SHIPPED
+106,2026-07-08,75,Laptop,Informatique,Auvergne-Rhône-Alpes,2,890.65,PAID
+407,2026-07-08,135,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,41.7,PAID
+587,2026-07-08,126,Keyboard,Accessoires,Hauts-de-France,3,47.59,PAID
+953,2026-07-08,182,Laptop,Informatique,Hauts-de-France,3,842.19,PAID
+1276,2026-07-08,31,Laptop,Informatique,Occitanie,4,866.4,PAID
+76,2026-07-09,169,Laptop,Informatique,Occitanie,3,781.15,SHIPPED
+734,2026-07-09,266,Headset,Accessoires,Auvergne-Rhône-Alpes,1,62.12,PAID
+398,2026-07-10,160,Monitor,Informatique,Bretagne,1,299.82,SHIPPED
+1296,2026-07-10,170,Desk Chair,Mobilier,Bretagne,1,229.69,PAID
+122,2026-07-11,88,Monitor,Informatique,Occitanie,4,318.47,PAID
+160,2026-07-11,249,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,23.12,PAID
+322,2026-07-11,12,Printer,Bureautique,Hauts-de-France,3,194.07,SHIPPED
+451,2026-07-11,227,Laptop,Informatique,Auvergne-Rhône-Alpes,2,772.36,PAID
+469,2026-07-11,14,Keyboard,Accessoires,Bretagne,3,49.04,PAID
+555,2026-07-11,136,Desk,Mobilier,Île-de-France,2,377.77,CANCELLED
+629,2026-07-11,279,Headset,Accessoires,Hauts-de-France,3,64.56,SHIPPED
+923,2026-07-11,81,Headset,Accessoires,Bretagne,1,57.27,SHIPPED
+1426,2026-07-11,103,Monitor,Informatique,Île-de-France,1,294.26,SHIPPED
+1057,2026-07-13,17,Printer,Bureautique,Bretagne,1,164.42,SHIPPED
+154,2026-07-14,300,Mouse,Accessoires,Occitanie,3,26.82,PAID
+219,2026-07-14,1,Laptop,Informatique,Île-de-France,1,915.26,PAID
+358,2026-07-14,123,Headset,Accessoires,Auvergne-Rhône-Alpes,2,59.98,PAID
+892,2026-07-14,16,Keyboard,Accessoires,Occitanie,1,44.68,PAID
+46,2026-07-15,29,Mouse,Accessoires,Île-de-France,1,25.59,PAID
+151,2026-07-15,153,Printer,Bureautique,Occitanie,2,197.42,SHIPPED
+499,2026-07-15,7,Laptop,Informatique,Auvergne-Rhône-Alpes,1,820.23,PAID
+809,2026-07-15,72,Printer,Bureautique,Île-de-France,1,189.79,PAID
+1385,2026-07-15,79,Printer,Bureautique,Auvergne-Rhône-Alpes,1,164.05,CANCELLED
+838,2026-07-16,120,Desk Chair,Mobilier,Hauts-de-France,4,213.11,PAID
+1051,2026-07-16,182,Keyboard,Accessoires,Hauts-de-France,4,42.72,SHIPPED
+288,2026-07-17,140,Keyboard,Accessoires,Occitanie,1,43.84,PAID
+424,2026-07-17,120,Printer,Bureautique,Hauts-de-France,1,173.91,PAID
+446,2026-07-17,54,Monitor,Informatique,Bretagne,4,288.93,PAID
+1328,2026-07-17,175,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,2,217.84,SHIPPED
+134,2026-07-18,265,Keyboard,Accessoires,Hauts-de-France,5,48.34,PAID
+720,2026-07-18,54,Headset,Accessoires,Auvergne-Rhône-Alpes,4,61.3,PAID
+1230,2026-07-18,47,Monitor,Informatique,Bretagne,3,308.29,PAID
+36,2026-07-19,151,Mouse,Accessoires,Bretagne,2,25.85,PAID
+431,2026-07-19,151,Keyboard,Accessoires,Bretagne,1,49.48,PAID
+1177,2026-07-19,91,Headset,Accessoires,Auvergne-Rhône-Alpes,3,61.65,SHIPPED
+1342,2026-07-19,126,Monitor,Informatique,Bretagne,5,292.46,PAID
+324,2026-07-20,295,Headset,Accessoires,Bretagne,4,63.28,PAID
+2,2026-07-21,281,Desk Chair,Mobilier,Occitanie,5,208.56,CANCELLED
+59,2026-07-21,23,Headset,Accessoires,Occitanie,4,60.47,SHIPPED
+460,2026-07-21,299,Desk,Mobilier,Auvergne-Rhône-Alpes,1,347.14,PAID
+1048,2026-07-21,269,Monitor,Informatique,Hauts-de-France,1,309.14,SHIPPED
+337,2026-07-22,107,Printer,Bureautique,Occitanie,5,168.81,PAID
+727,2026-07-22,145,Desk,Mobilier,Occitanie,2,336.21,SHIPPED
+1019,2026-07-22,243,Headset,Accessoires,Bretagne,1,62.38,SHIPPED
+430,2026-07-24,72,Mouse,Accessoires,Bretagne,3,23.04,PAID
+449,2026-07-24,243,Headset,Accessoires,Occitanie,1,58.02,PAID
+1249,2026-07-24,105,Laptop,Informatique,Occitanie,2,866.29,PAID
+275,2026-07-25,273,Laptop,Informatique,Occitanie,4,862.52,PAID
+670,2026-07-26,94,Laptop,Informatique,Hauts-de-France,4,889.46,PAID
+783,2026-07-26,167,Keyboard,Accessoires,Bretagne,1,49.04,PAID
+814,2026-07-26,81,Printer,Bureautique,Bretagne,1,177.88,PAID
+952,2026-07-26,278,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,25.83,PAID
+174,2026-07-27,167,Desk,Mobilier,Bretagne,4,340.08,PAID
+312,2026-07-27,147,Desk Chair,Mobilier,Hauts-de-France,4,226.54,CANCELLED
+799,2026-07-27,282,Printer,Bureautique,Bretagne,3,188.42,PAID
+845,2026-07-27,17,Desk Chair,Mobilier,Occitanie,1,211.26,SHIPPED
+921,2026-07-27,118,Monitor,Informatique,Auvergne-Rhône-Alpes,2,296.24,SHIPPED
+1499,2026-07-27,42,Monitor,Informatique,Bretagne,1,305.36,PAID
+22,2026-07-28,157,Keyboard,Accessoires,Bretagne,4,44.01,PAID
+478,2026-07-28,213,Headset,Accessoires,Île-de-France,1,56.54,PAID
+547,2026-07-28,284,Headset,Accessoires,Île-de-France,5,63.54,PAID
+1137,2026-07-28,185,Monitor,Informatique,Bretagne,3,307.88,PAID
+1302,2026-07-28,245,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,48.27,SHIPPED
+550,2026-07-29,23,Desk,Mobilier,Bretagne,2,339.96,PAID
+118,2026-07-30,196,Desk,Mobilier,Occitanie,1,349.93,PAID
+228,2026-07-30,126,Keyboard,Accessoires,Île-de-France,1,48.5,PAID
+245,2026-07-30,187,Desk Chair,Mobilier,Occitanie,2,241.44,SHIPPED
+529,2026-07-30,282,Headset,Accessoires,Auvergne-Rhône-Alpes,1,61.33,PAID
+715,2026-07-30,111,Headset,Accessoires,Île-de-France,2,56.31,PAID
+871,2026-07-30,226,Monitor,Informatique,Auvergne-Rhône-Alpes,1,285.98,PAID
+1086,2026-07-30,71,Monitor,Informatique,Auvergne-Rhône-Alpes,2,295.68,PAID
+1418,2026-07-30,74,Laptop,Informatique,Île-de-France,2,794.42,PAID
+851,2026-07-31,170,Headset,Accessoires,Auvergne-Rhône-Alpes,1,56.62,PAID
+920,2026-07-31,16,Keyboard,Accessoires,Occitanie,1,44.98,PAID
+1105,2026-07-31,66,Laptop,Informatique,Auvergne-Rhône-Alpes,2,812.77,PAID
+1323,2026-07-31,214,Monitor,Informatique,Auvergne-Rhône-Alpes,5,270.94,PAID
+1470,2026-07-31,8,Laptop,Informatique,Auvergne-Rhône-Alpes,5,869.86,PAID
+117,2026-08-01,95,Mouse,Accessoires,Occitanie,2,26.34,CANCELLED
+138,2026-08-01,296,Headset,Accessoires,Bretagne,1,57.68,SHIPPED
+325,2026-08-01,235,Desk,Mobilier,Bretagne,3,337.15,PAID
+506,2026-08-01,8,Desk,Mobilier,Île-de-France,1,324.3,PAID
+755,2026-08-01,246,Laptop,Informatique,Hauts-de-France,1,885.83,PAID
+360,2026-08-02,277,Keyboard,Accessoires,Île-de-France,5,40.91,PAID
+876,2026-08-02,120,Headset,Accessoires,Bretagne,5,55.98,PAID
+982,2026-08-02,249,Desk Chair,Mobilier,Occitanie,1,229.84,PAID
+1432,2026-08-02,112,Desk Chair,Mobilier,Île-de-France,1,236.21,PAID
+1443,2026-08-02,254,Desk,Mobilier,Bretagne,1,368.2,PAID
+1479,2026-08-02,205,Keyboard,Accessoires,Hauts-de-France,2,49.36,PAID
+780,2026-08-03,276,Headset,Accessoires,Île-de-France,2,58.06,PAID
+1054,2026-08-03,102,Desk Chair,Mobilier,Occitanie,5,211.78,PAID
+704,2026-08-04,146,Mouse,Accessoires,Île-de-France,4,22.58,PAID
+880,2026-08-04,63,Mouse,Accessoires,Auvergne-Rhône-Alpes,3,27.13,PAID
+932,2026-08-04,213,Headset,Accessoires,Hauts-de-France,2,58.03,PAID
+1063,2026-08-04,4,Keyboard,Accessoires,Île-de-France,5,42.17,PAID
+1139,2026-08-04,142,Desk,Mobilier,Hauts-de-France,2,329.34,PAID
+1213,2026-08-04,83,Desk Chair,Mobilier,Hauts-de-France,3,225.17,CANCELLED
+1388,2026-08-04,226,Mouse,Accessoires,Île-de-France,4,23.51,SHIPPED
+176,2026-08-05,12,Laptop,Informatique,Auvergne-Rhône-Alpes,1,784.75,PAID
+960,2026-08-05,129,Headset,Accessoires,Hauts-de-France,1,61.41,PAID
+1043,2026-08-05,66,Printer,Bureautique,Bretagne,2,174.76,PAID
+1325,2026-08-05,278,Desk,Mobilier,Occitanie,3,322.37,PAID
+941,2026-08-06,205,Desk,Mobilier,Bretagne,1,315.44,PAID
+1079,2026-08-06,25,Desk,Mobilier,Île-de-France,1,357.78,PAID
+63,2026-08-07,246,Laptop,Informatique,Occitanie,3,903.06,SHIPPED
+510,2026-08-07,220,Printer,Bureautique,Bretagne,1,170.2,SHIPPED
+613,2026-08-07,117,Headset,Accessoires,Hauts-de-France,5,61.49,PAID
+943,2026-08-07,277,Mouse,Accessoires,Hauts-de-France,4,26.95,SHIPPED
+109,2026-08-08,25,Desk Chair,Mobilier,Bretagne,3,231.22,PAID
+173,2026-08-08,193,Desk,Mobilier,Île-de-France,3,375.86,PAID
+298,2026-08-08,170,Monitor,Informatique,Bretagne,4,273.87,PAID
+1282,2026-08-08,18,Headset,Accessoires,Hauts-de-France,1,60.42,PAID
+1496,2026-08-08,89,Keyboard,Accessoires,Hauts-de-France,1,46.04,SHIPPED
+993,2026-08-09,164,Headset,Accessoires,Île-de-France,3,58.17,PAID
+1045,2026-08-09,83,Desk Chair,Mobilier,Île-de-France,4,210.2,SHIPPED
+1473,2026-08-09,29,Monitor,Informatique,Bretagne,4,325.93,SHIPPED
+145,2026-08-10,281,Monitor,Informatique,Île-de-France,2,282.8,PAID
+525,2026-08-10,174,Monitor,Informatique,Île-de-France,5,283.71,PAID
+563,2026-08-10,130,Desk Chair,Mobilier,Hauts-de-France,1,224.11,SHIPPED
+1076,2026-08-10,194,Desk,Mobilier,Hauts-de-France,2,340.84,PAID
+1397,2026-08-10,52,Headset,Accessoires,Hauts-de-France,2,60.45,CANCELLED
+1452,2026-08-10,90,Mouse,Accessoires,Île-de-France,1,25.89,PAID
+112,2026-08-11,246,Desk,Mobilier,Bretagne,1,325.72,PAID
+1015,2026-08-11,111,Headset,Accessoires,Hauts-de-France,5,56.14,PAID
+1425,2026-08-11,103,Mouse,Accessoires,Hauts-de-France,2,25.56,CANCELLED
+1112,2026-08-12,122,Monitor,Informatique,Hauts-de-France,3,275.61,CANCELLED
+1490,2026-08-12,18,Mouse,Accessoires,Hauts-de-France,1,22.8,PAID
+279,2026-08-13,267,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,42.18,SHIPPED
+1169,2026-08-13,287,Mouse,Accessoires,Hauts-de-France,1,26.32,PAID
+766,2026-08-14,226,Monitor,Informatique,Hauts-de-France,1,276.31,CANCELLED
+830,2026-08-14,18,Headset,Accessoires,Occitanie,1,64.48,CANCELLED
+908,2026-08-14,108,Desk,Mobilier,Auvergne-Rhône-Alpes,1,348.88,CANCELLED
+1238,2026-08-14,62,Desk,Mobilier,Auvergne-Rhône-Alpes,5,323.88,PAID
+1400,2026-08-14,48,Headset,Accessoires,Île-de-France,2,56.75,PAID
+81,2026-08-15,190,Headset,Accessoires,Île-de-France,2,60.47,PAID
+211,2026-08-15,209,Headset,Accessoires,Occitanie,5,54.51,PAID
+1003,2026-08-15,137,Headset,Accessoires,Bretagne,5,58.26,PAID
+1160,2026-08-15,228,Monitor,Informatique,Occitanie,2,294.2,PAID
+1344,2026-08-15,231,Mouse,Accessoires,Île-de-France,5,24.63,PAID
+193,2026-08-16,147,Keyboard,Accessoires,Bretagne,1,49.4,PAID
+1163,2026-08-17,128,Printer,Bureautique,Bretagne,3,189.17,PAID
+247,2026-08-18,56,Desk Chair,Mobilier,Hauts-de-France,1,206.38,PAID
+408,2026-08-18,132,Laptop,Informatique,Hauts-de-France,3,779.34,CANCELLED
+630,2026-08-18,298,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,48.03,SHIPPED
+863,2026-08-18,55,Monitor,Informatique,Hauts-de-France,3,317.74,SHIPPED
+91,2026-08-19,55,Desk Chair,Mobilier,Bretagne,2,199.27,PAID
+836,2026-08-19,34,Laptop,Informatique,Hauts-de-France,3,784.5,SHIPPED
+1047,2026-08-19,103,Monitor,Informatique,Auvergne-Rhône-Alpes,2,295.09,PAID
+458,2026-08-20,106,Printer,Bureautique,Occitanie,1,194.77,PAID
+618,2026-08-20,238,Laptop,Informatique,Bretagne,2,815.27,PAID
+710,2026-08-20,264,Laptop,Informatique,Bretagne,3,880.65,SHIPPED
+962,2026-08-20,183,Headset,Accessoires,Bretagne,5,59.15,PAID
+167,2026-08-21,43,Desk Chair,Mobilier,Bretagne,2,212.04,CANCELLED
+220,2026-08-21,68,Printer,Bureautique,Île-de-France,1,179.62,PAID
+330,2026-08-21,143,Desk Chair,Mobilier,Île-de-France,2,204.11,PAID
+440,2026-08-21,35,Headset,Accessoires,Bretagne,3,59.86,SHIPPED
+1201,2026-08-21,277,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,40.56,SHIPPED
+1295,2026-08-21,120,Monitor,Informatique,Hauts-de-France,3,287.6,PAID
+1462,2026-08-21,236,Mouse,Accessoires,Hauts-de-France,2,23.91,PAID
+569,2026-08-22,202,Desk,Mobilier,Auvergne-Rhône-Alpes,1,347.97,PAID
+847,2026-08-22,26,Desk,Mobilier,Hauts-de-France,4,325.51,SHIPPED
+1413,2026-08-22,136,Monitor,Informatique,Auvergne-Rhône-Alpes,3,291.15,CANCELLED
+1478,2026-08-22,211,Monitor,Informatique,Île-de-France,2,306.04,PAID
+289,2026-08-23,192,Keyboard,Accessoires,Hauts-de-France,1,41.0,PAID
+705,2026-08-24,33,Headset,Accessoires,Bretagne,2,55.59,SHIPPED
+994,2026-08-24,201,Keyboard,Accessoires,Île-de-France,2,45.47,PAID
+1041,2026-08-24,240,Keyboard,Accessoires,Bretagne,1,44.12,PAID
+559,2026-08-25,221,Laptop,Informatique,Île-de-France,1,779.58,PAID
+737,2026-08-25,119,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,3,214.27,PAID
+877,2026-08-25,119,Laptop,Informatique,Auvergne-Rhône-Alpes,1,899.43,SHIPPED
+1077,2026-08-25,74,Printer,Bureautique,Occitanie,1,191.35,PAID
+305,2026-08-26,196,Mouse,Accessoires,Bretagne,5,25.33,PAID
+1175,2026-08-26,121,Mouse,Accessoires,Île-de-France,4,24.98,SHIPPED
+24,2026-08-27,181,Printer,Bureautique,Île-de-France,1,180.37,PAID
+147,2026-08-27,275,Printer,Bureautique,Occitanie,2,184.19,PAID
+429,2026-08-27,70,Mouse,Accessoires,Occitanie,1,24.38,PAID
+452,2026-08-27,59,Laptop,Informatique,Auvergne-Rhône-Alpes,2,849.51,PAID
+1104,2026-08-27,198,Printer,Bureautique,Île-de-France,1,191.59,PAID
+1466,2026-08-27,105,Keyboard,Accessoires,Occitanie,2,47.82,PAID
+28,2026-08-28,279,Laptop,Informatique,Île-de-France,5,912.58,PAID
+313,2026-08-28,158,Monitor,Informatique,Hauts-de-France,2,274.47,CANCELLED
+692,2026-08-28,143,Desk,Mobilier,Auvergne-Rhône-Alpes,1,384.26,SHIPPED
+869,2026-08-28,281,Monitor,Informatique,Bretagne,3,306.03,PAID
+578,2026-08-29,82,Desk,Mobilier,Île-de-France,5,323.64,PAID
+987,2026-08-29,32,Laptop,Informatique,Occitanie,1,793.01,PAID
+303,2026-08-30,34,Keyboard,Accessoires,Bretagne,1,43.05,CANCELLED
+1058,2026-08-30,8,Desk,Mobilier,Hauts-de-France,4,350.46,SHIPPED
+1485,2026-08-30,75,Headset,Accessoires,Auvergne-Rhône-Alpes,4,64.25,SHIPPED
+591,2026-08-31,276,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,210.31,PAID
+1380,2026-08-31,80,Mouse,Accessoires,Île-de-France,4,23.68,PAID
+568,2026-09-01,79,Mouse,Accessoires,Occitanie,2,27.3,PAID
+1214,2026-09-01,285,Keyboard,Accessoires,Bretagne,1,41.62,SHIPPED
+606,2026-09-02,231,Monitor,Informatique,Île-de-France,3,323.26,PAID
+832,2026-09-02,45,Monitor,Informatique,Île-de-France,2,288.87,PAID
+1219,2026-09-02,185,Monitor,Informatique,Occitanie,5,283.25,SHIPPED
+1273,2026-09-02,300,Laptop,Informatique,Auvergne-Rhône-Alpes,5,860.92,PAID
+522,2026-09-03,88,Mouse,Accessoires,Bretagne,4,26.6,SHIPPED
+709,2026-09-03,107,Laptop,Informatique,Auvergne-Rhône-Alpes,1,910.84,PAID
+963,2026-09-03,129,Printer,Bureautique,Occitanie,3,193.61,SHIPPED
+999,2026-09-03,125,Desk,Mobilier,Occitanie,5,324.49,SHIPPED
+1072,2026-09-03,112,Printer,Bureautique,Île-de-France,3,182.7,PAID
+1082,2026-09-03,286,Mouse,Accessoires,Bretagne,5,23.08,PAID
+80,2026-09-04,138,Monitor,Informatique,Auvergne-Rhône-Alpes,1,316.79,SHIPPED
+627,2026-09-05,209,Keyboard,Accessoires,Bretagne,2,41.57,SHIPPED
+1152,2026-09-05,95,Printer,Bureautique,Bretagne,2,194.65,PAID
+152,2026-09-06,260,Headset,Accessoires,Auvergne-Rhône-Alpes,3,63.01,SHIPPED
+234,2026-09-06,207,Laptop,Informatique,Occitanie,3,818.38,SHIPPED
+327,2026-09-06,211,Mouse,Accessoires,Occitanie,1,25.2,SHIPPED
+383,2026-09-06,97,Desk,Mobilier,Hauts-de-France,2,347.1,PAID
+1465,2026-09-06,252,Desk Chair,Mobilier,Bretagne,3,212.21,PAID
+95,2026-09-07,18,Laptop,Informatique,Auvergne-Rhône-Alpes,2,924.97,PAID
+764,2026-09-07,56,Desk,Mobilier,Île-de-France,5,324.16,PAID
+1351,2026-09-07,119,Printer,Bureautique,Bretagne,1,178.43,PAID
+384,2026-09-08,200,Desk Chair,Mobilier,Hauts-de-France,1,240.31,PAID
+641,2026-09-08,228,Desk,Mobilier,Bretagne,5,341.74,PAID
+929,2026-09-08,141,Monitor,Informatique,Occitanie,1,275.92,PAID
+1093,2026-09-08,198,Mouse,Accessoires,Île-de-France,1,24.25,PAID
+1271,2026-09-08,85,Printer,Bureautique,Auvergne-Rhône-Alpes,1,182.18,PAID
+1084,2026-09-09,280,Printer,Bureautique,Bretagne,1,180.03,SHIPPED
+1371,2026-09-09,270,Headset,Accessoires,Auvergne-Rhône-Alpes,1,65.86,PAID
+425,2026-09-10,25,Desk,Mobilier,Île-de-France,2,343.64,SHIPPED
+533,2026-09-10,247,Desk,Mobilier,Bretagne,1,344.8,SHIPPED
+1055,2026-09-10,231,Desk Chair,Mobilier,Île-de-France,1,222.18,PAID
+1181,2026-09-10,133,Keyboard,Accessoires,Occitanie,5,40.58,PAID
+1183,2026-09-10,37,Monitor,Informatique,Bretagne,2,318.95,CANCELLED
+1311,2026-09-10,278,Keyboard,Accessoires,Hauts-de-France,2,48.29,PAID
+530,2026-09-11,90,Headset,Accessoires,Hauts-de-France,1,57.42,PAID
+765,2026-09-11,48,Monitor,Informatique,Île-de-France,1,314.64,PAID
+911,2026-09-11,90,Monitor,Informatique,Auvergne-Rhône-Alpes,2,323.3,CANCELLED
+1134,2026-09-11,232,Printer,Bureautique,Occitanie,1,176.8,PAID
+588,2026-09-12,161,Mouse,Accessoires,Auvergne-Rhône-Alpes,1,24.01,PAID
+900,2026-09-12,42,Monitor,Informatique,Bretagne,5,316.85,CANCELLED
+1042,2026-09-12,260,Desk,Mobilier,Auvergne-Rhône-Alpes,5,335.2,PAID
+1277,2026-09-12,258,Desk,Mobilier,Bretagne,1,318.23,PAID
+27,2026-09-13,36,Mouse,Accessoires,Bretagne,4,22.67,PAID
+216,2026-09-13,146,Laptop,Informatique,Hauts-de-France,2,896.96,PAID
+479,2026-09-13,39,Desk Chair,Mobilier,Hauts-de-France,1,219.25,PAID
+725,2026-09-13,218,Mouse,Accessoires,Île-de-France,4,26.0,PAID
+1103,2026-09-13,198,Monitor,Informatique,Hauts-de-France,5,328.88,PAID
+949,2026-09-14,119,Desk Chair,Mobilier,Bretagne,5,208.74,SHIPPED
+961,2026-09-14,200,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,41.33,SHIPPED
+1200,2026-09-14,108,Desk,Mobilier,Île-de-France,1,334.13,SHIPPED
+137,2026-09-15,11,Monitor,Informatique,Auvergne-Rhône-Alpes,2,276.93,PAID
+191,2026-09-15,62,Headset,Accessoires,Occitanie,2,61.06,SHIPPED
+242,2026-09-15,187,Laptop,Informatique,Île-de-France,4,775.24,PAID
+1167,2026-09-15,55,Desk,Mobilier,Occitanie,1,377.29,PAID
+238,2026-09-16,83,Desk,Mobilier,Occitanie,2,330.69,PAID
+640,2026-09-16,24,Printer,Bureautique,Hauts-de-France,1,166.65,SHIPPED
+726,2026-09-16,42,Desk,Mobilier,Auvergne-Rhône-Alpes,2,328.12,PAID
+752,2026-09-16,77,Headset,Accessoires,Île-de-France,1,58.22,PAID
+1039,2026-09-16,223,Mouse,Accessoires,Bretagne,1,26.61,PAID
+1216,2026-09-16,187,Keyboard,Accessoires,Île-de-France,2,44.88,PAID
+1421,2026-09-16,37,Keyboard,Accessoires,Hauts-de-France,5,49.07,SHIPPED
+43,2026-09-17,192,Monitor,Informatique,Bretagne,2,293.34,PAID
+1195,2026-09-17,278,Monitor,Informatique,Bretagne,1,318.04,CANCELLED
+1405,2026-09-17,284,Laptop,Informatique,Auvergne-Rhône-Alpes,2,921.56,PAID
+543,2026-09-18,48,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,43.36,PAID
+1399,2026-09-18,119,Printer,Bureautique,Île-de-France,5,197.0,PAID
+249,2026-09-19,297,Desk Chair,Mobilier,Occitanie,3,207.0,PAID
+682,2026-09-19,50,Mouse,Accessoires,Île-de-France,3,24.26,PAID
+689,2026-09-19,103,Desk,Mobilier,Auvergne-Rhône-Alpes,2,373.59,PAID
+798,2026-09-19,41,Laptop,Informatique,Île-de-France,1,915.53,SHIPPED
+853,2026-09-19,63,Printer,Bureautique,Bretagne,5,174.94,PAID
+1186,2026-09-19,19,Desk,Mobilier,Île-de-France,1,340.21,PAID
+1322,2026-09-19,163,Mouse,Accessoires,Île-de-France,2,26.45,PAID
+14,2026-09-20,249,Headset,Accessoires,Occitanie,5,63.7,SHIPPED
+404,2026-09-20,55,Desk,Mobilier,Occitanie,1,381.88,PAID
+722,2026-09-20,247,Headset,Accessoires,Auvergne-Rhône-Alpes,1,59.63,SHIPPED
+728,2026-09-20,32,Desk Chair,Mobilier,Bretagne,2,215.64,PAID
+126,2026-09-21,240,Printer,Bureautique,Bretagne,1,196.45,PAID
+148,2026-09-21,135,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,5,208.67,SHIPPED
+212,2026-09-21,47,Headset,Accessoires,Île-de-France,2,64.0,SHIPPED
+389,2026-09-21,103,Headset,Accessoires,Île-de-France,5,56.77,SHIPPED
+680,2026-09-21,189,Keyboard,Accessoires,Bretagne,1,44.31,SHIPPED
+1202,2026-09-21,144,Desk,Mobilier,Auvergne-Rhône-Alpes,5,370.29,PAID
+1209,2026-09-21,147,Laptop,Informatique,Bretagne,2,779.58,PAID
+1376,2026-09-21,288,Headset,Accessoires,Auvergne-Rhône-Alpes,1,58.23,PAID
+172,2026-09-22,163,Printer,Bureautique,Île-de-France,3,176.62,PAID
+213,2026-09-22,35,Printer,Bureautique,Occitanie,4,188.81,PAID
+268,2026-09-22,113,Headset,Accessoires,Hauts-de-France,2,60.11,CANCELLED
+338,2026-09-22,157,Desk,Mobilier,Occitanie,1,336.48,SHIPPED
+762,2026-09-22,299,Desk,Mobilier,Bretagne,1,339.92,PAID
+1011,2026-09-22,200,Mouse,Accessoires,Auvergne-Rhône-Alpes,5,27.03,PAID
+1312,2026-09-22,249,Laptop,Informatique,Bretagne,5,806.33,PAID
+136,2026-09-23,255,Monitor,Informatique,Occitanie,3,300.74,PAID
+878,2026-09-23,139,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,4,206.7,PAID
+971,2026-09-23,252,Laptop,Informatique,Auvergne-Rhône-Alpes,3,805.07,CANCELLED
+1294,2026-09-23,16,Desk,Mobilier,Auvergne-Rhône-Alpes,5,328.62,PAID
+129,2026-09-24,280,Monitor,Informatique,Hauts-de-France,2,299.72,PAID
+405,2026-09-24,93,Desk Chair,Mobilier,Auvergne-Rhône-Alpes,1,203.05,SHIPPED
+1142,2026-09-24,48,Mouse,Accessoires,Île-de-France,1,25.23,PAID
+1266,2026-09-24,158,Laptop,Informatique,Occitanie,2,795.34,CANCELLED
+695,2026-09-25,117,Keyboard,Accessoires,Bretagne,5,49.03,PAID
+872,2026-09-25,282,Printer,Bureautique,Auvergne-Rhône-Alpes,2,185.3,CANCELLED
+1261,2026-09-25,274,Mouse,Accessoires,Occitanie,2,22.88,SHIPPED
+10,2026-09-26,268,Laptop,Informatique,Île-de-France,4,844.91,SHIPPED
+103,2026-09-26,108,Printer,Bureautique,Auvergne-Rhône-Alpes,5,195.66,SHIPPED
+609,2026-09-26,277,Desk Chair,Mobilier,Occitanie,2,229.65,PAID
+634,2026-09-26,178,Desk,Mobilier,Île-de-France,3,320.05,SHIPPED
+785,2026-09-26,139,Laptop,Informatique,Hauts-de-France,2,870.79,SHIPPED
+867,2026-09-26,189,Desk Chair,Mobilier,Occitanie,1,235.36,PAID
+935,2026-09-26,31,Monitor,Informatique,Île-de-France,1,303.9,PAID
+125,2026-09-27,288,Mouse,Accessoires,Île-de-France,5,25.25,PAID
+487,2026-09-27,293,Printer,Bureautique,Occitanie,3,197.17,PAID
+557,2026-09-27,254,Monitor,Informatique,Hauts-de-France,3,284.43,PAID
+786,2026-09-27,122,Headset,Accessoires,Hauts-de-France,2,57.65,PAID
+837,2026-09-27,127,Keyboard,Accessoires,Auvergne-Rhône-Alpes,1,43.96,SHIPPED
+1263,2026-09-27,296,Desk,Mobilier,Bretagne,1,324.24,CANCELLED
+1481,2026-09-27,243,Mouse,Accessoires,Auvergne-Rhône-Alpes,2,24.28,CANCELLED
+170,2026-09-28,227,Mouse,Accessoires,Hauts-de-France,3,26.57,PAID
+733,2026-09-28,18,Laptop,Informatique,Île-de-France,1,822.63,PAID
+1367,2026-09-28,203,Keyboard,Accessoires,Auvergne-Rhône-Alpes,2,46.5,SHIPPED
+29,2026-09-30,11,Desk,Mobilier,Hauts-de-France,2,369.98,SHIPPED
+1056,2026-09-30,33,Laptop,Informatique,Hauts-de-France,3,924.86,SHIPPED
+1289,2026-09-30,64,Laptop,Informatique,Occitanie,1,799.18,PAID
+1406,2026-09-30,102,Mouse,Accessoires,Île-de-France,2,27.21,PAID
