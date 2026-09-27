@@ -124,3 +124,15 @@ def test_versioned_guide_is_up_to_date():
     versioned = Path("powerbi/observability_report_guide.md").read_text(encoding="utf-8")
 
     assert versioned == render_report_guide(build_report_spec())
+
+
+def test_guide_gives_measure_formats_and_daily_axis():
+    from src.powerbi.report_spec import render_report_guide
+
+    guide = render_report_guide(build_report_spec())
+
+    assert "- Average Duration (s) : Nombre décimal, 2 décimales" in guide
+    assert "- Success Rate : Pourcentage, 1 décimale" in guide
+    assert "`started_at_date = DATE(YEAR(pipeline_runs[started_at])" in guide
+    assert "  - Axe X : « pipeline_runs > started_at_date »" in guide
+    assert "remplacer la hiérarchie" not in guide

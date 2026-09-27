@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 
 from src.powerbi.kpi_dax import kpi_measures, parse_formula, to_dax
-from src.powerbi.measures import RUNS, STEPS
+from src.powerbi.measures import OBSERVABILITY_MEASURES, RUNS, STEPS
 from src.recommendation.dashboard_planner import DashboardPlan
 from src.recommendation.dashboard_review import ensure_dashboard_approved
 from src.recommendation.kpi_recommender import KpiRecommendation
@@ -291,6 +291,24 @@ WELLS_FR = {
 
 GRANULARITY_FR = {"day": "jour", "month": "mois"}
 
+# Formats d'affichage : « Outils de mesure » > Format.
+FORMATS_FR = {
+    "0": "Nombre entier",
+    "0.0%": "Pourcentage, 1 décimale",
+    "0.00": "Nombre décimal, 2 décimales",
+    "currency": "Devise, 2 décimales",
+    "number": "Nombre décimal, 2 décimales",
+    "percent": "Pourcentage, 1 décimale",
+}
+
+
+def _date_column(field: str) -> tuple[str, str, str]:
+    """ "t[started_at]" -> ("t", "started_at", "started_at_date"). """
+
+    table, column = field.rstrip("]").split("[", 1)
+    table = table.strip(chr(39))
+    return table, column, f"{column}_date"
+
 
 def _field_label(field: str) -> str:
     """ "[Total Runs]" -> "mesure Total Runs" ; "t[col]" -> "t > col". """
@@ -307,9 +325,24 @@ def _visual_lines(visual: dict) -> list[str]:
     lines = [f"- **{visual['title']}** : {VISUAL_LABELS_FR[visual['visual_type']]}"]
     placed = set()
 
+    granularity = visual["fields"].get("date_granularity")
+
     for key, value in visual["fields"].items():
         if key == "date_granularity":
             continue
+
+        if key == "axis" and granularity == "day":
+            # Un horodatage donnerait un point par instant : on passe
+            # par une colonne de date sans l'heure.
+            table, column, date_column = _date_column(value)
+            lines.append(
+                f"  - Créer d'abord, dans la table {table}, une colonne calculée "
+                f"(« Nouvelle colonne ») : `{date_column} = DATE(YEAR({table}[{column}]), "
+                f"MONTH({table}[{column}]), DAY({table}[{column}]))`. "
+                "Si « Nouvelle colonne » est indisponible (modèle Direct Lake), "
+                "voir powerbi/README.md."
+            )
+            value = f"{table}[{date_column}]"
 
         well = wells[key]
         values = value if isinstance(value, list) else [value]
@@ -322,11 +355,34 @@ def _visual_lines(visual: dict) -> list[str]:
         placed.add((well, label))
         lines.append(f"  - {well} : {label}")
 
-    if "date_granularity" in visual["fields"]:
+    if granularity == "day":
         lines.append(
-            "  - Dans l'axe, remplacer la hiérarchie de dates par le champ "
-            f"lui-même (granularité : {GRANULARITY_FR[visual['fields']['date_granularity']]})."
+            "  - Dans l'axe, choisir le champ lui-même et non sa hiérarchie de "
+            "dates, pour obtenir un point par jour."
         )
+
+    if granularity == "month":
+        lines.append(
+            "  - Dans l'axe, garder la hiérarchie de dates avec seulement Année "
+            "et Mois, pour obtenir un point par mois."
+        )
+
+    return lines
+
+
+def _format_lines(spec: dict) -> list[str]:
+    measures = [(m.name, m.format_string) for m in OBSERVABILITY_MEASURES]
+    measures += [(m["name"], m["format"]) for m in spec.get("dataset_measures", [])]
+
+    lines = [
+        "## Formats des mesures",
+        "",
+        "Sélectionner la mesure dans le volet « Données », puis choisir le format",
+        "dans le ruban « Outils de mesure ».",
+        "",
+    ]
+    lines += [f"- {name} : {FORMATS_FR[fmt]}" for name, fmt in measures]
+    lines.append("")
 
     return lines
 
@@ -343,6 +399,7 @@ def render_report_guide(spec: dict) -> str:
         "« Visualisations », puis faire glisser les champs indiqués depuis le volet",
         "« Données » dans les zones du volet « Générer un visuel ».",
         "",
+        *_format_lines(spec),
     ]
 
     for number, page in enumerate(spec["pages"], start=1):

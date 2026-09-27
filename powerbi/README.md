@@ -36,6 +36,12 @@ sémantique DAX et la compare aux KPI Python (`calculate_pipeline_kpis`,
 
 ## Rapport
 
+**Modèle Direct Lake et colonnes calculées.** Un modèle sémantique Direct
+Lake (créé depuis le Lakehouse) n'accepte pas de colonne calculée. La courbe
+« Runs over time » a besoin d'une date sans l'heure : dans ce cas, la colonne
+doit être ajoutée en amont, dans la table `pipeline_runs` (évolution du schéma
+à décider), ou le visuel utilise `started_at` tel quel en attendant.
+
 **Pour construire les pages, suivre `observability_report_guide.md`** :
 visuel par visuel, avec les noms de l'interface Power BI en français et les
 champs à glisser dans chaque zone.

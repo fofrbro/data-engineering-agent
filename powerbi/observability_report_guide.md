@@ -6,6 +6,28 @@ Pour chaque visuel : cliquer sur l'icône du visuel dans le volet
 « Visualisations », puis faire glisser les champs indiqués depuis le volet
 « Données » dans les zones du volet « Générer un visuel ».
 
+## Formats des mesures
+
+Sélectionner la mesure dans le volet « Données », puis choisir le format
+dans le ruban « Outils de mesure ».
+
+- Total Runs : Nombre entier
+- Successful Runs : Nombre entier
+- Failed Runs : Nombre entier
+- Assess Only Runs : Nombre entier
+- Ingest Runs : Nombre entier
+- Quarantine Runs : Nombre entier
+- Reject Runs : Nombre entier
+- Success Rate : Pourcentage, 1 décimale
+- Quarantine Rate : Pourcentage, 1 décimale
+- Reject Rate : Pourcentage, 1 décimale
+- Average Duration (s) : Nombre décimal, 2 décimales
+- Step Executions : Nombre entier
+- Failed Steps : Nombre entier
+- Succeeded Steps : Nombre entier
+- Step Success Rate : Pourcentage, 1 décimale
+- Average Step Duration (s) : Nombre décimal, 2 décimales
+
 ## Page 1 - AGENT OBSERVABILITY
 
 Renommer la page : « AGENT OBSERVABILITY ».
@@ -35,9 +57,10 @@ Renommer la page : « AGENT OBSERVABILITY ».
   - Axe X : « pipeline_runs > execution_mode »
   - Axe Y : mesure « Total Runs »
 - **Runs over time** : Graphique en courbes
-  - Axe X : « pipeline_runs > started_at »
+  - Créer d'abord, dans la table pipeline_runs, une colonne calculée (« Nouvelle colonne ») : `started_at_date = DATE(YEAR(pipeline_runs[started_at]), MONTH(pipeline_runs[started_at]), DAY(pipeline_runs[started_at]))`. Si « Nouvelle colonne » est indisponible (modèle Direct Lake), voir powerbi/README.md.
+  - Axe X : « pipeline_runs > started_at_date »
   - Axe Y : mesure « Total Runs »
-  - Dans l'axe, remplacer la hiérarchie de dates par le champ lui-même (granularité : jour).
+  - Dans l'axe, choisir le champ lui-même et non sa hiérarchie de dates, pour obtenir un point par jour.
 
 ### Segments (filtres de page)
 
