@@ -85,6 +85,8 @@ class AgentPlan:
     contract_origin: str = CONTRACT_PROPOSED
     file_paths: list[str] = field(default_factory=list)
     file_previews: list[dict] = field(default_factory=list)
+    # Fichiers sur lesquels portent profil et recommandations.
+    profiled_files: list[str] = field(default_factory=list)
     enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
@@ -186,18 +188,15 @@ def enrichment_transformations(
 
 def _refresh(plan: AgentPlan) -> None:
     """
-    Recalcule ce qui dépend du contrat, dont la décision
-    prévisionnelle. Elle n'est pas auditée : la décision qui compte
-    est recalculée au moment de l'exécution.
+    Recalcule ce qui dépend du contrat : décisions prévisionnelles par
+    fichier (non auditées ; la décision qui compte est recalculée à
+    l'exécution), puis profil et recommandations.
+
+    Dans un lot, le profil ne porte que sur les fichiers qui seront
+    ingérés : un fichier refusé ne doit pas influencer Silver, Gold,
+    les KPI ni le tableau de bord (par exemple rendre une clé non unique).
     """
 
-    schema = plan.discovery.schema
-    plan.recommendation = recommend_pipeline(
-        schema, plan.semantics, plan.contract, plan.dataset,
-    )
-    plan.recommendation.transformations.extend(
-        enrichment_transformations(plan.recommendation, plan.enrichments)
-    )
     previews = []
 
     for path in plan.file_paths:
@@ -222,16 +221,53 @@ def _refresh(plan: AgentPlan) -> None:
     if len(previews) == 1:
         plan.quality_preview = previews[0]["quality"]
         plan.decision_preview = previews[0]["decision"]
-        return
+    else:
+        plan.quality_preview = {
+            "issues": [
+                {**issue, "file": preview["file"]}
+                for preview in previews
+                for issue in preview["quality"]["issues"]
+            ]
+        }
+        plan.decision_preview = _batch_decision(plan.file_previews)
 
-    plan.quality_preview = {
-        "issues": [
-            {**issue, "file": preview["file"]}
-            for preview in previews
-            for issue in preview["quality"]["issues"]
-        ]
-    }
-    plan.decision_preview = _batch_decision(plan.file_previews)
+    admitted = [p["file"] for p in plan.file_previews if p["decision"] == "INGEST"]
+    profiled = admitted or plan.file_paths
+
+    if profiled != plan.profiled_files:
+        _reprofile(plan, profiled)
+
+    plan.recommendation = recommend_pipeline(
+        plan.discovery.schema, plan.semantics, plan.contract, plan.dataset,
+    )
+    plan.recommendation.transformations.extend(
+        enrichment_transformations(plan.recommendation, plan.enrichments)
+    )
+
+
+def _reprofile(plan: AgentPlan, file_paths: list[str]) -> None:
+    """Recalcule profil, sémantique, KPI et tableau de bord sur ces fichiers."""
+
+    discovery = _discover(file_paths)
+    plan.discovery, plan.semantics = _restrict_to_contract(
+        discovery, profile_semantics(discovery.schema), plan.contract,
+    )
+    plan.kpis = recommend_kpis(plan.discovery.schema, plan.semantics, plan.dataset)
+
+    if plan.dashboard is not None and plan.dashboard.status != "PROPOSED":
+        # Le tableau de bord revu portait sur un autre profil : il doit
+        # être revu à nouveau.
+        plan.history.append(
+            {
+                "action": "DASHBOARD_RESET",
+                "reviewed_by": None,
+                "reviewed_at": _now().isoformat(),
+                "comment": "Profil recalculé sur les fichiers admis : tableau de bord à revoir.",
+            }
+        )
+
+    plan.dashboard = plan_dashboard(plan.kpis, plan.discovery.schema, plan.semantics)
+    plan.profiled_files = list(file_paths)
 
 
 def _batch_decision(file_previews: list[dict]) -> dict:
@@ -429,6 +465,7 @@ def plan_file(
         contracts_dir=str(contracts_dir),
         contract_origin=contract_origin,
         file_paths=file_paths,
+        profiled_files=list(file_paths),
         enrichments=list(enrichments or []),
     )
     _refresh(plan)
@@ -561,13 +598,16 @@ def render_plan_preview(plan: AgentPlan) -> str:
     decision = plan.decision_preview
     if len(plan.file_paths) > 1:
         source = [
-            f"Fichiers : {len(plan.file_paths)} ({schema.row_count} lignes au total, "
-            f"{schema.column_count} colonnes)",
+            f"Fichiers : {len(plan.file_paths)} "
+            f"({sum(p['rows'] for p in plan.file_previews)} lignes au total)",
             *[
                 f"  - {preview['file']} : {preview['rows']} lignes, "
                 f"décision prévue {preview['decision']} ({preview['policy_rule']})"
                 for preview in plan.file_previews
             ],
+            f"Profil et recommandations : {len(plan.profiled_files)} fichier(s) "
+            f"{'admis' if plan.profiled_files != plan.file_paths else 'du lot'}, "
+            f"{schema.row_count} lignes, {schema.column_count} colonnes",
         ]
     else:
         source = [
