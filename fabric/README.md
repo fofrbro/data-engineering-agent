@@ -74,4 +74,14 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   chargement d'un dataset remplaçait celles du précédent. Elles se nomment
   désormais `<dataset>_dim_<entité>` ; les anciennes tables `dim_customer`,
   `dim_product` et `dim_date` ne sont plus alimentées et peuvent être
-  supprimées du Lakehouse.
+  supprimées du Lakehouse. Confirmé dans Fabric le 2026-09-28 : 8 tables
+  `ventes_2025_2026_*` (dont les 3 dimensions préfixées), anciennes tables
+  supprimées.
+
+## Validations des tables Gold `ventes_2025_2026`
+
+Le 2026-09-28, après retraitement avec la règle « commandes annulées
+exclues », `ventes_2025_2026_summary` vaut dans Fabric : `total_sales`
+811 954,17, `total_quantity` 3 304, `avg_unit_price` 243,0021,
+`number_of_lines` 1 375, identique au calcul fait sur le fichier source hors
+`status = CANCELLED`. `gold_loads` trace 3 runs de 9 tables pour ce dataset.
