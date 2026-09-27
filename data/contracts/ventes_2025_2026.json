@@ -1,0 +1,169 @@
+{
+    "dataset": "ventes_2025_2026",
+    "version": "1.0",
+    "description": "Contrat proposé automatiquement pour ventes_2025_2026.",
+    "status": "VALIDATED",
+    "generated_by": "contract_generator",
+    "generated_at": "2026-09-27T05:44:52.144209+00:00",
+    "source_file": "uploads\\0a1f538f-002a-4f75-88fe-96c3d1a309ae_ventes_2025_2026.csv",
+    "domain": {
+        "name": "SALES",
+        "confidence": 0.95,
+        "evidence": [
+            "mesure PRICE",
+            "mesure QUANTITY",
+            "entité CUSTOMER",
+            "entité ORDER",
+            "entité PRODUCT"
+        ]
+    },
+    "candidate_keys": [
+        "order_id"
+    ],
+    "quality_rules": [
+        {
+            "rule": "no_duplicate_rows",
+            "enforced_by": "validate_csv"
+        }
+    ],
+    "review": {
+        "status": "VALIDATED",
+        "reviewed_by": "FOFANA",
+        "reviewed_at": "2026-09-27T05:44:55.809354+00:00",
+        "comment": null
+    },
+    "columns": {
+        "order_id": {
+            "type": "integer",
+            "nullable": false,
+            "unique": true,
+            "semantics": {
+                "semantic_role": "IDENTIFIER",
+                "business_role": null,
+                "entity": "ORDER",
+                "confidence": 0.95
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée",
+                "unique : clé primaire candidate"
+            ]
+        },
+        "order_date": {
+            "type": "datetime",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "TEMPORAL",
+                "business_role": "DATE",
+                "entity": "ORDER",
+                "confidence": 0.95
+            },
+            "rationale": [
+                "type datetime observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "customer_id": {
+            "type": "integer",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "IDENTIFIER",
+                "business_role": null,
+                "entity": "CUSTOMER",
+                "confidence": 0.85
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "product": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": null,
+                "entity": "PRODUCT",
+                "confidence": 0.85
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "category": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "CATEGORY",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "region": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "GEOGRAPHY",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "quantity": {
+            "type": "integer",
+            "nullable": false,
+            "min": 1,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "QUANTITY",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée",
+                "min=1 : quantité strictement positive observée"
+            ]
+        },
+        "unit_price": {
+            "type": "decimal",
+            "nullable": false,
+            "min": 0,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "PRICE",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type decimal observé",
+                "non nullable : aucune valeur nulle observée",
+                "min=0 : un price n'est pas négatif"
+            ]
+        },
+        "status": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "STATUS",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        }
+    }
+}
