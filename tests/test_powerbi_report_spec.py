@@ -136,3 +136,30 @@ def test_guide_gives_measure_formats_and_daily_axis():
     assert "`started_at_date = DATE(YEAR(pipeline_runs[started_at])" in guide
     assert "  - Axe X : « pipeline_runs > started_at_date »" in guide
     assert "remplacer la hiérarchie" not in guide
+
+
+def test_export_dataset_report_requires_approval_and_writes_files(tmp_path):
+    from src.powerbi.report_spec import export_dataset_report
+    from src.recommendation.dashboard_review import modify_dashboard
+
+    plan = plan_file("data/samples/ventes_2025_2026.csv", contracts_dir=tmp_path / "contracts")
+
+    with pytest.raises(DashboardReviewError):
+        export_dataset_report(plan.dashboard, plan.kpis, "fact_ventes_2025_2026", tmp_path / "pbi")
+
+    plan.dashboard = modify_dashboard(
+        plan.dashboard, "cheikhou", {"remove_charts": ["unit_price vs quantity"]},
+    )
+    approve_plan_dashboard(plan, "cheikhou")
+    files = export_dataset_report(plan.dashboard, plan.kpis, "fact_ventes_2025_2026", tmp_path / "pbi")
+
+    guide = files["guide"].read_text(encoding="utf-8")
+    dax = files["measures"].read_text(encoding="utf-8")
+
+    assert files["plan"].name == "ventes_2025_2026.json"
+    assert "## Page 3 - Suivi des ventes - Ventes 2025 2026" in guide
+    assert "- Orders : Nombre entier" in guide
+    assert "unit_price vs quantity" not in guide
+    assert "Total Runs" not in guide
+    assert "[Revenue] = CALCULATE(SUMX('fact_ventes_2025_2026'," in dax
+    assert "NOT 'fact_ventes_2025_2026'[status] IN {\"CANCELLED\"})" in dax

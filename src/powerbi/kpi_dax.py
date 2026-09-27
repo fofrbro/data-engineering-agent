@@ -186,7 +186,12 @@ def kpi_measures(
             measures[expression] = DaxMeasure(
                 name=kpi.name.split(" by ")[0],
                 expression=expression,
-                format=kpi.format,
+                # Un comptage s'affiche en nombre entier.
+                format=(
+                    "integer"
+                    if kpi.aggregation in ("COUNT", "COUNT_DISTINCT")
+                    else kpi.format
+                ),
                 source_kpis=[],
             )
 

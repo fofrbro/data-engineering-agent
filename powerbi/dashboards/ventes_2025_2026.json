@@ -1,0 +1,235 @@
+{
+    "title": "Suivi des ventes - Ventes 2025 2026",
+    "description": "Chiffre d'affaires, volumes et répartition des ventes.",
+    "audience": "Direction commerciale et équipes ventes",
+    "dataset": "ventes_2025_2026",
+    "status": "APPROVED",
+    "kpis": [
+        {
+            "type": "card",
+            "name": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED')",
+            "format": "currency",
+            "source_columns": [
+                "quantity",
+                "unit_price"
+            ],
+            "confidence": 0.85
+        },
+        {
+            "type": "card",
+            "name": "Orders",
+            "measure": "COUNT(DISTINCT order_id) WHERE status NOT IN ('CANCELLED')",
+            "format": "number",
+            "source_columns": [
+                "order_id"
+            ],
+            "confidence": 0.95
+        },
+        {
+            "type": "card",
+            "name": "Quantity Sold",
+            "measure": "SUM(quantity) WHERE status NOT IN ('CANCELLED')",
+            "format": "number",
+            "source_columns": [
+                "quantity"
+            ],
+            "confidence": 0.9
+        },
+        {
+            "type": "card",
+            "name": "Average Order Value",
+            "measure": "SUM(quantity * unit_price) / COUNT(DISTINCT order_id) WHERE status NOT IN ('CANCELLED')",
+            "format": "currency",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "order_id"
+            ],
+            "confidence": 0.85
+        },
+        {
+            "type": "card",
+            "name": "Customers",
+            "measure": "COUNT(DISTINCT customer_id) WHERE status NOT IN ('CANCELLED')",
+            "format": "number",
+            "source_columns": [
+                "customer_id"
+            ],
+            "confidence": 0.85
+        },
+        {
+            "type": "card",
+            "name": "Products",
+            "measure": "COUNT(DISTINCT product) WHERE status NOT IN ('CANCELLED')",
+            "format": "number",
+            "source_columns": [
+                "product"
+            ],
+            "confidence": 0.85
+        }
+    ],
+    "charts": [
+        {
+            "type": "line",
+            "title": "Revenue by Month",
+            "x_axis": "MONTH(order_date)",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY MONTH(order_date)",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "order_date"
+            ],
+            "rationale": "Une courbe montre l'évolution dans le temps.",
+            "legend": null,
+            "filters": []
+        },
+        {
+            "type": "stacked_column",
+            "title": "Revenue by Month and category",
+            "x_axis": "MONTH(order_date)",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY MONTH(order_date)",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "order_date",
+                "category"
+            ],
+            "rationale": "Décompose l'évolution mensuelle par category, dimension à peu de valeurs.",
+            "legend": "category",
+            "filters": []
+        },
+        {
+            "type": "bar",
+            "title": "Revenue by Product",
+            "x_axis": "product",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY product",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "product"
+            ],
+            "rationale": "Barres horizontales triées : compare les valeurs de product, libellés lisibles.",
+            "legend": null,
+            "filters": []
+        },
+        {
+            "type": "bar",
+            "title": "Revenue by Region",
+            "x_axis": "region",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY region",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "region"
+            ],
+            "rationale": "Barres horizontales triées : compare les valeurs de region, libellés lisibles.",
+            "legend": null,
+            "filters": []
+        },
+        {
+            "type": "donut",
+            "title": "Revenue by Category",
+            "x_axis": "category",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY category",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "category"
+            ],
+            "rationale": "Part de chaque category dans le total : 4 valeurs au plus.",
+            "legend": "category",
+            "filters": []
+        },
+        {
+            "type": "donut",
+            "title": "Revenue by Status",
+            "x_axis": "status",
+            "y_axis": "Revenue",
+            "measure": "SUM(quantity * unit_price) WHERE status NOT IN ('CANCELLED') GROUP BY status",
+            "source_columns": [
+                "quantity",
+                "unit_price",
+                "status"
+            ],
+            "rationale": "Part de chaque status dans le total : 3 valeurs au plus.",
+            "legend": "status",
+            "filters": []
+        }
+    ],
+    "filters": [
+        {
+            "column": "order_date",
+            "type": "date_range",
+            "rationale": "Restreindre la période analysée."
+        },
+        {
+            "column": "product",
+            "type": "list",
+            "rationale": "8 valeurs sélectionnables."
+        },
+        {
+            "column": "category",
+            "type": "list",
+            "rationale": "4 valeurs sélectionnables."
+        },
+        {
+            "column": "region",
+            "type": "list",
+            "rationale": "5 valeurs sélectionnables."
+        },
+        {
+            "column": "status",
+            "type": "list",
+            "rationale": "3 valeurs sélectionnables."
+        }
+    ],
+    "detail_tables": [
+        {
+            "type": "table",
+            "title": "Détail des lignes",
+            "x_axis": null,
+            "y_axis": null,
+            "measure": null,
+            "source_columns": [
+                "order_id",
+                "customer_id",
+                "order_date",
+                "product",
+                "category",
+                "region",
+                "status",
+                "quantity",
+                "unit_price"
+            ],
+            "rationale": "Permet de vérifier les valeurs derrière les indicateurs.",
+            "legend": null,
+            "filters": []
+        }
+    ],
+    "review_history": [
+        {
+            "action": "MODIFY",
+            "reviewed_by": "FOFANA",
+            "reviewed_at": "2026-09-27T07:09:28.116089+00:00",
+            "comment": "Retrait du nuage de points et de la matrice produit x catégorie. Décision prise par FOFANA en conversation le 2026-09-27.",
+            "changes": {
+                "remove_charts": [
+                    "unit_price vs quantity",
+                    "Revenue by product and category"
+                ]
+            }
+        },
+        {
+            "action": "APPROVE",
+            "reviewed_by": "FOFANA",
+            "reviewed_at": "2026-09-27T07:09:28.116251+00:00",
+            "comment": "Décision prise par FOFANA en conversation le 2026-09-27."
+        }
+    ]
+}

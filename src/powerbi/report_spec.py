@@ -297,6 +297,7 @@ FORMATS_FR = {
     "0.0%": "Pourcentage, 1 décimale",
     "0.00": "Nombre décimal, 2 décimales",
     "currency": "Devise, 2 décimales",
+    "integer": "Nombre entier",
     "number": "Nombre décimal, 2 décimales",
     "percent": "Pourcentage, 1 décimale",
 }
@@ -370,8 +371,12 @@ def _visual_lines(visual: dict) -> list[str]:
     return lines
 
 
-def _format_lines(spec: dict) -> list[str]:
-    measures = [(m.name, m.format_string) for m in OBSERVABILITY_MEASURES]
+def _format_lines(spec: dict, observability: bool = True) -> list[str]:
+    measures = (
+        [(m.name, m.format_string) for m in OBSERVABILITY_MEASURES]
+        if observability
+        else []
+    )
     measures += [(m["name"], m["format"]) for m in spec.get("dataset_measures", [])]
 
     lines = [
@@ -389,8 +394,16 @@ def _format_lines(spec: dict) -> list[str]:
     return lines
 
 
-def render_report_guide(spec: dict) -> str:
-    """Guide pas à pas pour construire le rapport dans Power BI."""
+def render_report_guide(
+    spec: dict,
+    observability: bool = True,
+    first_page: int = 1,
+) -> str:
+    """
+    Guide pas à pas pour construire le rapport dans Power BI.
+    observability=False omet les formats des mesures d'observabilité
+    (guide d'une page dataset seule).
+    """
 
     lines = [
         f"# Guide de construction du rapport « {spec['report']} »",
@@ -401,10 +414,10 @@ def render_report_guide(spec: dict) -> str:
         "« Visualisations », puis faire glisser les champs indiqués depuis le volet",
         "« Données » dans les zones du volet « Générer un visuel ».",
         "",
-        *_format_lines(spec),
+        *_format_lines(spec, observability),
     ]
 
-    for number, page in enumerate(spec["pages"], start=1):
+    for number, page in enumerate(spec["pages"], start=first_page):
         lines += [f"## Page {number} - {page['title']}", ""]
         lines.append(f"Renommer la page : « {page['title']} ».")
         lines += ["", "### Visuels", ""]
@@ -421,3 +434,60 @@ def render_report_guide(spec: dict) -> str:
         lines.append("")
 
     return "\n".join(lines)
+
+
+# ----------------------------------------------------------------------
+# Export de la page DATASET d'un tableau de bord approuvé
+# ----------------------------------------------------------------------
+
+def render_dataset_measures_script(measures: list[dict]) -> str:
+    """Script DAX des mesures de la page DATASET."""
+
+    lines = [
+        "// Mesures générées par src/powerbi/report_spec.py - ne pas modifier à la main.",
+        "",
+    ]
+
+    for measure in measures:
+        lines += [
+            f"// Table : {measure['table']} | Format : {FORMATS_FR[measure['format']]}",
+            f"[{measure['name']}] = {measure['expression']}",
+            "",
+        ]
+
+    return "\n".join(lines)
+
+
+def export_dataset_report(
+    plan: DashboardPlan,
+    kpis: KpiRecommendation,
+    table: str,
+    output_dir: str | Path = "powerbi",
+) -> dict[str, Path]:
+    """
+    Écrit, pour un tableau de bord APPROVED : le plan revu (traçabilité),
+    le script DAX de ses mesures et le guide de construction de sa page.
+    """
+
+    from src.recommendation.dashboard_review import save_dashboard_plan
+
+    page, measures = dataset_page(plan, kpis, table)
+    spec = {"report": plan.title, "pages": [page], "dataset_measures": measures}
+    folder = Path(output_dir)
+    folder.mkdir(parents=True, exist_ok=True)
+
+    guide = folder / f"{plan.dataset}_report_guide.md"
+    dax = folder / f"{plan.dataset}_measures.dax"
+    # Les pages 1 et 2 sont celles de l'observabilité.
+    guide.write_text(
+        render_report_guide(spec, observability=False, first_page=3),
+        encoding="utf-8",
+        newline="\n",
+    )
+    dax.write_text(render_dataset_measures_script(measures), encoding="utf-8", newline="\n")
+
+    return {
+        "plan": save_dashboard_plan(plan, folder / "dashboards" / f"{plan.dataset}.json"),
+        "guide": guide,
+        "measures": dax,
+    }
