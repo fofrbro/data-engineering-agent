@@ -6,8 +6,16 @@ en Python. Dans Power BI, la relation et les mesures ont été créées le
 2026-09-25. Le 2026-09-27, les pages 1 et 2 ont été construites avec le guide
 et leurs valeurs vérifiées sur le premier run (1 run INGEST, 7 étapes, durée
 moyenne 0,12 s, courbe par jour via la colonne calculée `started_at_date`).
-Restaient à finaliser : l'histogramme « Execution Mode », la valeur du visuel
-« Step status » et le format pourcentage des taux.
+Le même jour, après les runs INGEST, QUARANTINE et REJECT des fichiers
+`data/samples/`, les pages 1 et 2 ont été vérifiées avec un filtre sur le
+27/09 : 3 runs, 1 réussi (33,33 %), 1 quarantaine, 1 rejet, 3 runs en mode
+INGEST, durée moyenne 0,08 s, 15 étapes (13 SUCCESS, 1 QUARANTINED,
+1 REJECTED). Toutes les valeurs correspondent aux audits.
+
+Note de lecture : « Ingest Runs » compte le **mode d'exécution** INGEST, pas
+la décision INGEST ; un fichier mis en quarantaine lors d'une exécution avec
+ingestion demandée compte donc dans « Ingest Runs » et dans « Quarantine
+Runs ».
 
 ## Voir les modifications du modèle dans un rapport
 
