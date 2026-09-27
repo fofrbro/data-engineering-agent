@@ -63,7 +63,7 @@ def test_existing_sales_file_matches_current_sales_pipeline():
     ]
     assert by_product.metrics[0].expression == "SUM(line_amount)"
     assert gold_names(recommendation) == [
-        "fact_sales", "dim_customer", "dim_product",
+        "fact_sales", "sales_dim_customer", "sales_dim_product",
         "sales_by_product", "sales_summary",
     ]
 
@@ -101,8 +101,8 @@ def test_gold_tables_for_orders():
     tables = {table.name: table for table in recommendation.gold}
 
     assert tables["fact_orders"].table_type == "fact"
-    assert tables["dim_customer"].grain == ["customer_id"]
-    assert tables["dim_date"].table_type == "dimension"
+    assert tables["orders_dim_customer"].grain == ["customer_id"]
+    assert tables["orders_dim_date"].table_type == "dimension"
     assert tables["orders_by_status"].grain == ["status"]
     assert tables["orders_by_month"].grain == ["year", "month"]
     assert tables["orders_summary"].grain == []

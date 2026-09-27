@@ -169,7 +169,7 @@ def test_verification_detects_inconsistent_gold(workspace):
     silver = pd.read_parquet(result.outputs["silver"])
     gold = {
         name: pd.read_parquet(result.outputs[name])
-        for name in ("fact_sales", "dim_customer", "dim_product", "sales_by_product", "sales_summary")
+        for name in ("fact_sales", "sales_dim_customer", "sales_dim_product", "sales_by_product", "sales_summary")
     }
     gold["sales_summary"]["total_sales"] = 0.0
 

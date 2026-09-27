@@ -69,3 +69,9 @@ Agent -> Parquet (data/audit/*_structured.parquet)
   exports.
 - **Exporter les audits après les exécutions** : un export fait avant les runs
   est vide et n'ajoute rien.
+- **Dimensions écrasées entre datasets** (avant le 2026-09-28) : `dim_customer`,
+  `dim_product` et `dim_date` n'étaient pas préfixées par le dataset, et le
+  chargement d'un dataset remplaçait celles du précédent. Elles se nomment
+  désormais `<dataset>_dim_<entité>` ; les anciennes tables `dim_customer`,
+  `dim_product` et `dim_date` ne sont plus alimentées et peuvent être
+  supprimées du Lakehouse.

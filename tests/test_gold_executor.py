@@ -49,10 +49,10 @@ def test_all_recommended_sales_tables_are_built():
     silver, gold = sales_silver_and_gold()
 
     assert list(gold) == [
-        "fact_sales", "dim_customer", "dim_product", "sales_by_product", "sales_summary",
+        "fact_sales", "sales_dim_customer", "sales_dim_product", "sales_by_product", "sales_summary",
     ]
     assert len(gold["fact_sales"]) == len(silver)
-    assert gold["dim_product"]["product"].tolist() == ["Keyboard", "Laptop", "Monitor", "Mouse"]
+    assert gold["sales_dim_product"]["product"].tolist() == ["Keyboard", "Laptop", "Monitor", "Mouse"]
     assert gold["sales_summary"]["total_sales"].iloc[0] == silver["line_amount"].sum()
 
 
@@ -69,13 +69,13 @@ def test_monthly_aggregate_and_date_dimension():
         "orders_by_month", "aggregate", ["year", "month"], ["year", "month"],
         [Metric("total_amount", "SUM(amount)", ["amount"])], "",
     )
-    dim_date = GoldTable("dim_date", "dimension", ["date"], [], [], "")
+    dim_date = GoldTable("orders_dim_date", "dimension", ["date"], [], [], "")
 
     tables = build_gold_tables(silver, [by_month, dim_date], date_column="order_date")
 
     assert tables["orders_by_month"]["total_amount"].tolist() == [30.0, 5.0]
-    assert tables["dim_date"]["quarter"].tolist() == [1, 1, 1]
-    assert len(tables["dim_date"]) == 3
+    assert tables["orders_dim_date"]["quarter"].tolist() == [1, 1, 1]
+    assert len(tables["orders_dim_date"]) == 3
 
 
 @pytest.mark.parametrize(

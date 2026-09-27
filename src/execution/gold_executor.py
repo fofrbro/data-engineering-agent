@@ -9,7 +9,7 @@ import re
 
 import pandas as pd
 
-from src.recommendation.pipeline_recommender import GoldTable
+from src.recommendation.pipeline_recommender import DATE_DIMENSION_SUFFIX, GoldTable
 
 
 METRIC_PATTERN = re.compile(r"^(SUM|AVG|COUNT)\((\w+)\)$")
@@ -76,7 +76,7 @@ def _aggregate(silver: pd.DataFrame, table: GoldTable) -> pd.DataFrame:
 
 def _date_dimension(silver: pd.DataFrame, date_column: str | None) -> pd.DataFrame:
     if not date_column or date_column not in silver.columns:
-        raise GoldBuildError("dim_date : colonne de date inconnue.")
+        raise GoldBuildError("Dimension date : colonne de date inconnue.")
 
     dates = pd.to_datetime(silver[date_column], utc=True).dt.normalize()
     dates = pd.Series(dates.dropna().unique()).sort_values(ignore_index=True)
@@ -100,7 +100,7 @@ def build_gold_table(
     if table.table_type == "aggregate":
         return _aggregate(silver, table)
 
-    if table.name == "dim_date":
+    if table.name.endswith(DATE_DIMENSION_SUFFIX):
         return _date_dimension(silver, date_column)
 
     _require(silver, table.columns, table.name)

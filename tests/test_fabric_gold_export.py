@@ -32,7 +32,7 @@ def test_export_writes_gold_files_and_manifest(executed, tmp_path):
     assert folder == tmp_path / "export" / "gold" / "sales"
     assert manifest["run_id"] == result.run_id
     assert [t["table_name"] for t in manifest["tables"]] == [
-        "fact_sales", "dim_customer", "dim_product", "sales_by_product", "sales_summary",
+        "fact_sales", "sales_dim_customer", "sales_dim_product", "sales_by_product", "sales_summary",
     ]
     assert manifest["tables"][0]["rows"] == 5
     assert (folder / "sales_summary.parquet").exists()
@@ -92,3 +92,23 @@ def test_manifest_row_count_mismatch_is_refused(executed, tmp_path):
 
     with pytest.raises(GoldExportError):
         load_gold_from_manifest(LocalLakehouse(tmp_path / "lakehouse"), folder)
+
+
+def test_two_datasets_do_not_overwrite_each_other(tmp_path):
+    lakehouse = LocalLakehouse(tmp_path / "lakehouse")
+
+    for source in ("data/sales.csv", "data/samples/ventes_2025_2026.csv"):
+        plan = plan_file(source, contracts_dir=tmp_path / "contracts")
+        approve_plan_contract(plan, "cheikhou")
+        result = execute_plan(
+            plan, output_root=tmp_path / "lake", audit_path=tmp_path / "runs.jsonl",
+        )
+        load_gold_from_manifest(
+            lakehouse, export_gold_for_fabric(plan, result, tmp_path / "export"),
+        )
+
+    # Dimensions préfixées : les clients de sales restent intacts.
+    assert len(lakehouse.read_table("sales_dim_customer")) == 5
+    # Tous les clients de la table de faits, annulations comprises.
+    assert len(lakehouse.read_table("ventes_2025_2026_dim_customer")) == 298
+    assert not lakehouse.table_exists("dim_customer")

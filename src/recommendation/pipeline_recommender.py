@@ -521,7 +521,7 @@ def _gold_tables(
             )
         )
 
-    tables.extend(_dimension_tables(ctx))
+    tables.extend(_dimension_tables(ctx, dataset))
 
     for dimension in _group_by_dimensions(ctx):
         tables.append(
@@ -563,7 +563,15 @@ def _gold_tables(
     return tables
 
 
-def _dimension_tables(ctx: _Context) -> list[GoldTable]:
+DATE_DIMENSION_SUFFIX = "_dim_date"
+
+
+def _dimension_tables(ctx: _Context, dataset: str) -> list[GoldTable]:
+    """
+    Dimensions du dataset, préfixées par son nom : deux datasets
+    chargés dans le même Lakehouse ne s'écrasent pas.
+    """
+
     tables = []
     seen = set()
 
@@ -585,7 +593,7 @@ def _dimension_tables(ctx: _Context) -> list[GoldTable]:
         ]
         tables.append(
             GoldTable(
-                name=f"dim_{entity.lower()}",
+                name=f"{dataset}_dim_{entity.lower()}",
                 table_type="dimension",
                 grain=[key],
                 columns=[key, *attributes],
@@ -601,7 +609,7 @@ def _dimension_tables(ctx: _Context) -> list[GoldTable]:
             seen.add(entity)
             tables.append(
                 GoldTable(
-                    name=f"dim_{entity.lower()}",
+                    name=f"{dataset}_dim_{entity.lower()}",
                     table_type="dimension",
                     grain=[name],
                     columns=[name],
@@ -615,7 +623,7 @@ def _dimension_tables(ctx: _Context) -> list[GoldTable]:
     if temporal:
         tables.append(
             GoldTable(
-                name="dim_date",
+                name=f"{dataset}{DATE_DIMENSION_SUFFIX}",
                 table_type="dimension",
                 grain=["date"],
                 columns=["date", "year", "quarter", "month", "day"],
