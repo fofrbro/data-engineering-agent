@@ -21,7 +21,11 @@ Agent -> Parquet (data/audit/*_structured.parquet)
 - `notebooks/incremental_load_audit_tables.py` : chargement incrémental
   (anti-join sur `run_id`, puis sur `run_id` + `step_order`). Logique
   testée localement via `src/fabric/incremental_load.py`
-  (`tests/test_fabric_incremental_load.py`).
+  (`tests/test_fabric_incremental_load.py`). La source est convertie au type
+  de la table existante avant l'ajout. Le 2026-09-27, après une exécution
+  interrompue (étapes écrites, runs en échec), le passage suivant a ajouté les
+  3 runs manquants sans dupliquer les 15 étapes déjà écrites : 4 runs et
+  22 étapes au total (rattrapage confirmé dans Fabric).
   Exécuté dans Fabric le 2026-09-24 : crée les tables Delta
   `pipeline_runs` et `pipeline_steps` et la vue `pipeline_observability`
   (type VIEW confirmé). Seconde exécution : aucun `run_id` en double dans

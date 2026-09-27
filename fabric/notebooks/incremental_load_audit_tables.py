@@ -13,6 +13,9 @@
 # exécution ne crée aucun run_id en double.
 # Colonnes d'horodatage des étapes (mergeSchema) et vue
 # pipeline_step_observability : confirmées dans Fabric le 2026-09-25.
+# Conversion des sources au type des tables et rattrapage d'un chargement
+# interrompu : confirmés dans Fabric le 2026-09-27 (3 runs ajoutés, 0 étape
+# dupliquée, 4 runs et 22 étapes au total).
 
 # %%
 from pyspark.sql import functions as F
