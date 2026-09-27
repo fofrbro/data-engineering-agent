@@ -180,3 +180,16 @@ def test_notebook_step_columns_match_local_schema():
 
     assert namespace["STEP_COLUMNS"] == STEP_COLUMNS
     assert '.option("mergeSchema", "true")' in notebook
+
+
+def test_notebook_aligns_sources_to_existing_table_types():
+    from pathlib import Path
+
+    notebook = Path("fabric/notebooks/incremental_load_audit_tables.py").read_text(
+        encoding="utf-8"
+    )
+
+    # Sans conversion, un export typé autrement (durée en entier) fait
+    # échouer l'ajout Delta : DELTA_FAILED_TO_MERGE_FIELDS.
+    assert 'align_to_table(spark.read.parquet(RUNS_SOURCE), "pipeline_runs", RUN_COLUMNS)' in notebook
+    assert 'align_to_table(raw_steps, "pipeline_steps", STEP_COLUMNS)' in notebook

@@ -55,10 +55,34 @@ STEP_TIMING_TYPES = {
 RUNS_SOURCE = "Files/audit/pipeline_runs_structured.parquet"
 STEPS_SOURCE = "Files/audit/pipeline_steps_structured.parquet"
 
+
+def align_to_table(frame, table, columns):
+    """
+    Convertit chaque colonne source au type de la table Delta existante.
+    Un export peut typer une colonne autrement (ex. durée en entier sur
+    un export vide) : sans conversion, Delta refuse l'ajout
+    (DELTA_FAILED_TO_MERGE_FIELDS). Les colonnes absentes de la table
+    gardent leur type et sont ajoutées par mergeSchema.
+    """
+
+    if not spark.catalog.tableExists(table):
+        return frame.select(*columns)
+
+    target = {field.name: field.dataType for field in spark.table(table).schema.fields}
+
+    return frame.select(
+        *[
+            F.col(column).cast(target[column]).alias(column)
+            if column in target
+            else F.col(column)
+            for column in columns
+        ]
+    )
+
+
 # %%
 source_runs = (
-    spark.read.parquet(RUNS_SOURCE)
-    .select(*RUN_COLUMNS)
+    align_to_table(spark.read.parquet(RUNS_SOURCE), "pipeline_runs", RUN_COLUMNS)
     .dropDuplicates(["run_id"])
 )
 
@@ -69,8 +93,7 @@ for column, column_type in STEP_TIMING_TYPES.items():
         raw_steps = raw_steps.withColumn(column, F.lit(None).cast(column_type))
 
 source_steps = (
-    raw_steps
-    .select(*STEP_COLUMNS)
+    align_to_table(raw_steps, "pipeline_steps", STEP_COLUMNS)
     .join(source_runs.select("run_id"), "run_id", "left_semi")
     .dropDuplicates(["run_id", "step_order"])
 )
