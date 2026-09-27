@@ -104,5 +104,16 @@ Générés par `src.powerbi.report_spec.export_dataset_report()` à partir d'un
 Pour `ventes_2025_2026` (table `fact_ventes_2025_2026`), le plan a été modifié
 puis approuvé par FOFANA le 2026-09-27 (retrait du nuage de points et de la
 matrice produit × catégorie). Les mesures excluent les commandes annulées
-(`status = CANCELLED`), comme les agrégats Gold. **Rapport non encore construit
-dans Power BI.**
+(`status = CANCELLED`), comme les agrégats Gold.
+
+Rapport construit le 2026-09-27 sur un modèle sémantique dédié ; valeurs
+vérifiées contre le fichier source : CA 811 954,17, 1 375 commandes, 3 304
+unités, panier moyen 590,51, 297 clients, 8 produits, catégories 53,89 % /
+30,76 % / 8,31 % / 7,04 %, statuts PAID 623 684,38 et SHIPPED 188 269,79 (plus
+de part CANCELLED depuis le passage des mesures à `KEEPFILTERS`).
+
+La table de détail liste les lignes de la table de faits, annulations
+comprises : la règle s'applique aux indicateurs. Pour l'aligner sur les
+indicateurs, filtrer le visuel sur `status` (CANCELLED décoché) ; sinon régler
+`quantity` et `unit_price` sur « Ne pas résumer » pour éviter un total incluant
+les annulations.
