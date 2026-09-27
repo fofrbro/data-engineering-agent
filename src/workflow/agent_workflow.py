@@ -26,7 +26,11 @@ from src.contract.contract_lifecycle import (
     load_contract_file,
     save_contract,
 )
+import pandas as pd
+
 from src.discovery.dataset_discovery import DiscoveryResult, discover_dataset
+from src.discovery.readers import read_dataset
+from src.discovery.schema_profiler import profile_schema
 from src.recommendation.dashboard_planner import DashboardPlan, plan_dashboard
 from src.recommendation.dashboard_review import (
     APPROVED,
@@ -79,6 +83,8 @@ class AgentPlan:
     dashboard: DashboardPlan
     contracts_dir: str
     contract_origin: str = CONTRACT_PROPOSED
+    file_paths: list[str] = field(default_factory=list)
+    file_previews: list[dict] = field(default_factory=list)
     enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
@@ -192,10 +198,87 @@ def _refresh(plan: AgentPlan) -> None:
     plan.recommendation.transformations.extend(
         enrichment_transformations(plan.recommendation, plan.enrichments)
     )
-    plan.quality_preview = validate_csv(plan.file_path, plan.contract_path)
-    plan.decision_preview = determine_ingestion_decision(
-        validate_contract(plan.file_path, plan.contract_path),
-        plan.quality_preview,
+    previews = []
+
+    for path in plan.file_paths:
+        quality = validate_csv(path, plan.contract_path)
+        decision = determine_ingestion_decision(
+            validate_contract(path, plan.contract_path),
+            quality,
+        )
+        previews.append({"file": path, "quality": quality, "decision": decision})
+
+    plan.file_previews = [
+        {
+            "file": preview["file"],
+            "rows": preview["quality"]["rows"],
+            "decision": preview["decision"]["decision"],
+            "policy_rule": preview["decision"]["policy_rule"],
+            "reason": preview["decision"]["reason"],
+        }
+        for preview in previews
+    ]
+
+    if len(previews) == 1:
+        plan.quality_preview = previews[0]["quality"]
+        plan.decision_preview = previews[0]["decision"]
+        return
+
+    plan.quality_preview = {
+        "issues": [
+            {**issue, "file": preview["file"]}
+            for preview in previews
+            for issue in preview["quality"]["issues"]
+        ]
+    }
+    plan.decision_preview = _batch_decision(plan.file_previews)
+
+
+def _batch_decision(file_previews: list[dict]) -> dict:
+    """Synthèse des décisions prévisionnelles d'un lot de fichiers."""
+
+    decisions = [preview["decision"] for preview in file_previews]
+
+    if len(set(decisions)) == 1:
+        return {
+            "decision": decisions[0],
+            "policy_rule": "PER_FILE",
+            "reason": f"Même décision pour les {len(decisions)} fichiers.",
+        }
+
+    counts = ", ".join(
+        f"{decisions.count(decision)} {decision}"
+        for decision in ("INGEST", "QUARANTINE", "REJECT")
+        if decision in decisions
+    )
+
+    return {
+        "decision": "PARTIAL",
+        "policy_rule": "PER_FILE",
+        "reason": (
+            f"Décision par fichier : {counts}. Seuls les fichiers INGEST "
+            "seront combinés ; les autres seront isolés."
+        ),
+    }
+
+
+def _discover(file_paths: list[str]) -> DiscoveryResult:
+    """
+    Découverte d'un fichier ou d'un lot : pour un lot, le profil de
+    schéma porte sur l'ensemble des lignes de tous les fichiers.
+    """
+
+    if len(file_paths) == 1:
+        return discover_dataset(file_paths[0])
+
+    datasets = [read_dataset(path) for path in file_paths]
+    combined = pd.concat([frame for _, _, frame in datasets], ignore_index=True)
+    file_info, format_info, _ = datasets[0]
+
+    return DiscoveryResult(
+        file=file_info,
+        format=format_info,
+        schema=profile_schema(combined),
     )
 
 
@@ -235,7 +318,7 @@ def quality_warnings(plan: AgentPlan) -> list[dict]:
 
 
 def plan_file(
-    file_path: str,
+    file_path: str | list[str],
     contract_path: str | None = None,
     dataset: str | None = None,
     contracts_dir: str | Path = DEFAULT_CONTRACTS_DIR,
@@ -253,9 +336,19 @@ def plan_file(
     3. sinon, un contrat PROPOSED généré dans <contracts_dir>/proposed/.
     Un contrat réutilisé est confronté au nouveau fichier comme tout
     autre : s'il ne correspond plus, la décision sera REJECT.
+
+    file_path peut être une liste : les fichiers forment alors un seul
+    dataset (voir src.workflow.batch.group_files) ; chaque fichier aura
+    sa propre décision.
     """
 
-    discovery = discover_dataset(file_path)
+    file_paths = [file_path] if isinstance(file_path, str) else list(file_path)
+
+    if not file_paths:
+        raise WorkflowError("Aucun fichier à planifier.")
+
+    file_path = file_paths[0]
+    discovery = _discover(file_paths)
     semantics = profile_semantics(discovery.schema)
     contract_origin = CONTRACT_PROVIDED
 
@@ -279,7 +372,7 @@ def plan_file(
             discovery.schema,
             semantics,
             dataset=dataset,
-            source_file=file_path,
+            source_file=", ".join(file_paths),
         )
         contract_path = save_contract(
             contract,
@@ -303,6 +396,7 @@ def plan_file(
         dashboard=plan_dashboard(kpis, discovery.schema, semantics),
         contracts_dir=str(contracts_dir),
         contract_origin=contract_origin,
+        file_paths=file_paths,
         enrichments=list(enrichments or []),
     )
     _refresh(plan)
@@ -433,10 +527,25 @@ def render_plan_preview(plan: AgentPlan) -> str:
     schema = plan.discovery.schema
     status = validation_status(plan)
     decision = plan.decision_preview
+    if len(plan.file_paths) > 1:
+        source = [
+            f"Fichiers : {len(plan.file_paths)} ({schema.row_count} lignes au total, "
+            f"{schema.column_count} colonnes)",
+            *[
+                f"  - {preview['file']} : {preview['rows']} lignes, "
+                f"décision prévue {preview['decision']} ({preview['policy_rule']})"
+                for preview in plan.file_previews
+            ],
+        ]
+    else:
+        source = [
+            f"Fichier : {plan.file_path} ({plan.discovery.format.format}, "
+            f"{schema.row_count} lignes, {schema.column_count} colonnes)",
+        ]
+
     lines = [
         "AGENT PLAN",
-        f"Fichier : {plan.file_path} ({plan.discovery.format.format}, "
-        f"{schema.row_count} lignes, {schema.column_count} colonnes)",
+        *source,
         f"Dataset : {plan.dataset}",
         f"Métier détecté : {plan.recommendation.domain}",
         f"Contrat : {plan.contract_path} ({plan.contract_status}, "
