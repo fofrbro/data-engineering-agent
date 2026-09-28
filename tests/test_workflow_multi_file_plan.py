@@ -134,3 +134,22 @@ def test_contract_approval_reprofiles_on_admitted_files(tmp_path):
     # pas de minimum ; c'est le contrôle qualité (quantité <= 0, bloquant)
     # qui met ventes_rejet en quarantaine.
     assert [p["decision"] for p in plan.file_previews] == ["INGEST", "QUARANTINE"]
+
+
+
+def test_file_sharing_no_column_with_the_reused_contract_is_rejected(tmp_path):
+    import shutil
+
+    # Cas réel : l'ancien data/sales.csv, nommé « sales » lui aussi,
+    # face au contrat validé Adventure Works : aucune colonne commune.
+    contracts = tmp_path / "contracts"
+    contracts.mkdir()
+    shutil.copy("data/contracts/sales.json", contracts / "sales.json")
+
+    plan = plan_file("data/sales.csv", contracts_dir=contracts)
+
+    assert plan.contract_origin == "REUSED"
+    assert plan.decision_preview["decision"] == "REJECT"
+    assert [c.name for c in plan.discovery.schema.columns] == [
+        "customer_id", "product", "quantity", "price",
+    ]

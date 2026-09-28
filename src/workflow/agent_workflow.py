@@ -324,20 +324,22 @@ def _restrict_to_contract(
     Les recommandations suivent le contrat : une colonne hors contrat
     (signalée comme inattendue par la validation) n'est ni transformée
     ni utilisée dans Gold, les KPI ou le tableau de bord. Sans colonnes
-    dans le contrat, le profil complet est gardé.
+    dans le contrat, le profil complet est gardé ; sans aucune colonne
+    commune aussi : le fichier sera rejeté, mais son plan reste lisible.
     """
 
     contract_columns = set(contract.get("columns") or {})
     schema = discovery.schema
+    kept = [c for c in schema.columns if c.name in contract_columns]
 
-    if not contract_columns or {c.name for c in schema.columns} <= contract_columns:
+    if not kept or len(kept) == len(schema.columns):
         return discovery, semantics
 
     restricted = SchemaProfile(
         row_count=schema.row_count,
-        column_count=len([c for c in schema.columns if c.name in contract_columns]),
+        column_count=len(kept),
         duplicate_rows=schema.duplicate_rows,
-        columns=[c for c in schema.columns if c.name in contract_columns],
+        columns=kept,
     )
 
     return (
