@@ -196,37 +196,54 @@ def _trend(
         return None
 
     months = dates[known].dt.to_period("M")
-    grouped = measure[known].groupby(months).agg(["sum", "count"]).sort_index()
     covered = coverage.dropna().dt.normalize()
     start, end = covered.min(), covered.max()
+
+    # Tous les mois de la période, y compris ceux sans ligne (valeur 0) :
+    # des mois sans embauche ne doivent ni disparaître ni fausser les
+    # comparaisons.
+    calendar = pd.period_range(start.to_period("M"), end.to_period("M"), freq="M")
+    grouped = (
+        measure[known].groupby(months).agg(["sum", "count"])
+        .reindex(calendar, fill_value=0)
+    )
 
     series = [
         {"month": str(period), "value": _number(row["sum"]), "rows": int(row["count"])}
         for period, row in grouped.iterrows()
+    ]
+    incomplete = [
+        str(period)
+        for period in (calendar[0], calendar[-1])
+        if (period == calendar[0] and start.day > 1)
+        or (period == calendar[-1] and end.day < period.days_in_month)
     ]
     trend = {
         "date_column": date_column,
         "start": start.date().isoformat(),
         "end": end.date().isoformat(),
         "months": series,
-        "incomplete_months": [
-            str(period)
-            for period in (grouped.index[0], grouped.index[-1])
-            if (period == grouped.index[0] and start.day > 1)
-            or (period == grouped.index[-1] and end.day < period.days_in_month)
-        ],
+        "incomplete_months": sorted(set(incomplete)),
     }
 
-    years = measure[known].groupby(months.dt.year).sum()
-    year_months = months.groupby(months.dt.year).nunique()
+    by_year = grouped["sum"].groupby(grouped.index.year)
     trend["years"] = [
-        {"year": int(year), "value": _number(value), "months": int(year_months[year])}
-        for year, value in years.items()
+        {
+            "year": int(year),
+            "value": _number(values.sum()),
+            "months": int(len(values)),
+            # Année entièrement couverte par la période du fichier.
+            "complete": len(values) == 12
+            and not any(str(p) in trend["incomplete_months"] for p in values.index),
+        }
+        for year, values in by_year
     ]
-    full_years = [y for y in trend["years"] if y["months"] == 12]
+    complete_years = {y["year"]: y for y in trend["years"] if y["complete"]}
+    last_year = max(complete_years, default=None)
 
-    if len(full_years) >= 2 and full_years[-2]["value"]:
-        last, previous = full_years[-1], full_years[-2]
+    # Deux années complètes et consécutives, jamais 2024 face à 2022.
+    if last_year and last_year - 1 in complete_years and complete_years[last_year - 1]["value"]:
+        last, previous = complete_years[last_year], complete_years[last_year - 1]
         trend["year_change"] = {
             "year": last["year"],
             "previous": previous["year"],
