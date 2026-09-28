@@ -29,8 +29,10 @@ from src.workflow.agent_workflow import (
     approve_destructive_transformations,
     approve_plan_contract,
     approve_plan_dashboard,
+    decide_semantic_suggestions,
     plan_file,
     render_plan_preview,
+    review_plan_semantics,
     validation_status,
 )
 from src.workflow.plan_executor import execute_plan
@@ -45,12 +47,16 @@ class WorkflowService:
         audit_path: str | Path = DEFAULT_AUDIT_PATH,
         fabric_export_root: str | Path = "data/fabric_export",
         results_dir: str | Path = "results",
+        llm_client=None,
     ):
         self.contracts_dir = contracts_dir
         self.output_root = output_root
         self.audit_path = audit_path
         self.fabric_export_root = fabric_export_root
         self.results_dir = Path(results_dir)
+        # Sans client, la relecture sémantique est indisponible ; le
+        # reste du workflow n'en dépend pas.
+        self.llm_client = llm_client
         self._plans: dict[str, AgentPlan] = {}
 
     def get(self, plan_id: str) -> AgentPlan:
@@ -78,6 +84,10 @@ class WorkflowService:
             "recommendation": plan.recommendation.to_dict(),
             "kpis": plan.kpis.to_dict(),
             "dashboard": plan.dashboard.to_dict(),
+            "semantic_review": (
+                plan.semantic_review.to_dict() if plan.semantic_review else None
+            ),
+            "semantic_overrides": plan.semantic_overrides,
             "history": plan.history,
         }
 
@@ -135,6 +145,20 @@ class WorkflowService:
 
     def approve_contract(self, plan_id: str, reviewer: str, comment=None) -> dict:
         approve_plan_contract(self.get(plan_id), reviewer, comment)
+        return self.view(plan_id)
+
+    def review_semantics(self, plan_id: str) -> dict:
+        review_plan_semantics(self.get(plan_id), self.llm_client)
+        return self.view(plan_id)
+
+    def decide_semantics(
+        self,
+        plan_id: str,
+        reviewer: str,
+        accepted_ids: list[str],
+        comment=None,
+    ) -> dict:
+        decide_semantic_suggestions(self.get(plan_id), reviewer, accepted_ids, comment)
         return self.view(plan_id)
 
     def approve_transformations(self, plan_id: str, reviewer: str, comment=None) -> dict:

@@ -147,6 +147,11 @@ class DashboardReviewRequest(WorkflowReviewRequest):
     changes: Dict[str, Any] = Field(default_factory=dict)
 
 
+class SemanticDecisionRequest(WorkflowReviewRequest):
+    """Suggestions sémantiques acceptées ; les autres sont rejetées."""
+    accepted: List[str] = Field(default_factory=list)
+
+
 def _archive_name(filename: str, contents: bytes, uploaded_at: datetime) -> str:
     """Construit un nom d’archive lisible et stable dans le temps."""
     stem = Path(filename).stem.replace("_", " ").replace("-", " ").strip()
@@ -408,7 +413,7 @@ async def health_check():
 # Workflow agent : PLAN -> VALIDATE -> EXECUTE
 # ============================================
 
-workflow_service = WorkflowService()
+workflow_service = WorkflowService(llm_client=llm_client)
 
 
 def _workflow_call(action):
@@ -491,6 +496,24 @@ async def get_workflow_plan(plan_id: str):
 async def approve_workflow_contract(plan_id: str, review: WorkflowReviewRequest):
     return _workflow_call(
         lambda: workflow_service.approve_contract(plan_id, review.reviewer, review.comment)
+    )
+
+
+@app.post("/api/workflow/{plan_id}/semantic-review")
+async def review_workflow_semantics(plan_id: str):
+    """
+    Le LLM relit l'interprétation des colonnes et propose des
+    corrections, vérifiées par le code ; rien n'est appliqué.
+    """
+    return _workflow_call(lambda: workflow_service.review_semantics(plan_id))
+
+
+@app.post("/api/workflow/{plan_id}/semantic-review/decide")
+async def decide_workflow_semantics(plan_id: str, decision: SemanticDecisionRequest):
+    return _workflow_call(
+        lambda: workflow_service.decide_semantics(
+            plan_id, decision.reviewer, decision.accepted, decision.comment,
+        )
     )
 
 

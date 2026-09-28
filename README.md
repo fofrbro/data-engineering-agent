@@ -21,9 +21,10 @@ FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet)
 
 ## Principes
 
-- **Le LLM propose, le code déterministe décide.** Le LLM traduit une demande
-  en intention (créer un plan, expliquer un run) ; il n'a aucune action pour
-  valider ou exécuter.
+- **Le LLM propose, le code déterministe décide.** Le LLM relit
+  l'interprétation des colonnes et traduit une demande en intention (créer un
+  plan, expliquer un run) ; il n'a aucune action pour valider ou exécuter, et
+  ses suggestions ne s'appliquent qu'après contrôle et acceptation.
 - **Rien n'est validé implicitement.** Le contrat, les transformations
   destructives et le tableau de bord sont validés explicitement par un
   relecteur nommé. Sans contrat validé, rien n'est exécuté.
@@ -37,8 +38,8 @@ FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet)
 ## Démarrage rapide (Windows)
 
 Prérequis : Python 3.14 et un fichier `.env` (voir `.env.example`) contenant
-`OPENAI_API_KEY` (le serveur l'exige au démarrage, même si le parcours de
-l'interface n'appelle pas le LLM).
+`OPENAI_API_KEY` (le serveur l'exige au démarrage ; seules la relecture
+sémantique et la demande en langage naturel appellent le LLM).
 
 ```bash
 python -m venv .venv
@@ -60,6 +61,8 @@ Puis ouvrir http://localhost:8000 :
 3. dans l'onglet **Agent** : saisir le nom du relecteur, **valider le
    contrat**, et si besoin les transformations destructives et le tableau de
    bord ;
+   Avant de valider le contrat, **« Lancer la relecture »** (facultatif)
+   demande au LLM de relire l'interprétation des colonnes (voir plus bas) ;
 4. **« Exécuter le plan validé »** : contrôles VERIFY, explication du run,
    rapport Data Analyst et dossier préparé pour Fabric.
 
@@ -96,6 +99,33 @@ Pour les deux derniers, saisir `ventes_2025_2026` dans « Nom du Dataset » afin
 de réutiliser le contrat validé. Les trois fichiers peuvent aussi être envoyés
 ensemble avec ce nom : un seul plan, trois décisions.
 
+### Relecture sémantique (LLM)
+
+L'interprétation des colonnes (mesure, montant, taxe, dimension, date…) est
+faite par des règles sur les noms et les données. Une règle peut se tromper :
+`TotalDiscount` est pris pour le chiffre d'affaires à cause du mot « total ».
+La relecture demande au LLM de signaler ces erreurs :
+
+- chaque suggestion est **vérifiée par le code** (colonne existante, rôles
+  connus et compatibles avec le type observé, changement réel) ; les autres
+  sont écartées avec leur raison ;
+- **rien n'est appliqué sans décision** d'un relecteur nommé : les cases
+  cochées sont acceptées, les autres rejetées ;
+- une fois acceptés, les rôles pilotent KPI, Gold et tableau de bord ; un
+  contrat encore proposé est régénéré avec ces rôles, **un contrat validé
+  n'est jamais modifié** ;
+- seuls les noms, types, statistiques et rôles des colonnes sont envoyés au
+  LLM ; les valeurs d'exemple uniquement pour les colonnes catégorielles qui
+  ne sont ni des identifiants ni des coordonnées personnelles ;
+- sans clé valide, la relecture est marquée indisponible et le workflow
+  continue normalement.
+
+Vérifié le 2026-09-28 avec le LLM réel : aucune suggestion sur
+`ventes_2025_2026` (interprétation correcte) ; sur un extrait Adventure Works
+avec une colonne `TotalDiscount`, le LLM a proposé de ne plus la traiter
+comme un montant, et après acceptation le chiffre d'affaires est redevenu
+`SUM(quantity * unit_price)`.
+
 ## Règles de décision
 
 | Situation | Décision | Règle |
@@ -123,6 +153,8 @@ agrégats Gold ; la table de faits garde toutes les lignes.
 | POST | `/api/workflow/plan` | créer les plans d'un lot uploadé (`{"plans": [...]}`, un par dataset) |
 | POST | `/api/workflow/ask` | demande en langage naturel (LLM → plan ou explication), un fichier à la fois |
 | GET | `/api/workflow/{plan_id}` | consulter un plan |
+| POST | `/api/workflow/{plan_id}/semantic-review` | relecture sémantique par le LLM (suggestions seulement) |
+| POST | `/api/workflow/{plan_id}/semantic-review/decide` | accepter des suggestions (`accepted`), les autres sont rejetées |
 | POST | `/api/workflow/{plan_id}/approve-contract` | valider le contrat |
 | POST | `/api/workflow/{plan_id}/approve-transformations` | approuver les transformations destructives |
 | POST | `/api/workflow/{plan_id}/dashboard` | revue du tableau de bord : APPROVE, MODIFY, REJECT |

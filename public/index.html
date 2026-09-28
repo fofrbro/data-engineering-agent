@@ -751,6 +751,59 @@
             agentAction(planId, 'dashboard', { action, reviewer, comment });
         }
 
+        async function reviewAgentSemantics(planId) {
+            showMessage("Relecture sémantique en cours (LLM)...", 'info');
+            await agentAction(planId, 'semantic-review');
+        }
+
+        function decideAgentSemantics(planId) {
+            const reviewer = reviewerName();
+            if (!reviewer) return;
+            const accepted = [...document.querySelectorAll(`input[name="semantic-${planId}"]:checked`)]
+                .map(box => box.value);
+            agentAction(planId, 'semantic-review/decide', { reviewer, accepted });
+        }
+
+        function semanticReviewBlock(view) {
+            const id = view.plan_id;
+            const review = view.semantic_review;
+            const role = (semantic, business) => escapeHtml(business ? `${semantic} / ${business}` : semantic);
+            const launch = label => `<button ${smallButton} onclick="reviewAgentSemantics('${id}')">${label}</button>`;
+            const line = (icon, text, action = '') => `<li style="margin: 8px 0;">${icon} ${text} ${action}</li>`;
+
+            if (!review) {
+                return line('💡', 'Relecture sémantique par LLM (facultative, avant de valider le contrat)', launch('Lancer la relecture'));
+            }
+            if (review.status === 'UNAVAILABLE') {
+                return line('⚠️', `Relecture sémantique indisponible : ${escapeHtml(review.error)}`, launch('Relancer'));
+            }
+
+            const discarded = review.discarded.length ? ` ; ${review.discarded.length} écartée(s) par les contrôles` : '';
+            const pending = review.suggestions.filter(s => s.status === 'PROPOSED');
+
+            if (!pending.length) {
+                const accepted = review.suggestions.filter(s => s.status === 'ACCEPTED');
+                const detail = accepted.map(s => `${escapeHtml(s.column)} → ${role(s.semantic_role, s.business_role)}`).join(', ');
+                return line(
+                    '✅',
+                    `Relecture sémantique : ${review.suggestions.length} suggestion(s), ${accepted.length} acceptée(s)`
+                        + (detail ? ` (${detail})` : '') + discarded,
+                    launch('Relancer')
+                );
+            }
+
+            const rows = pending.map(s => `
+                <li style="margin: 6px 0 6px 24px;">
+                    <label><input type="checkbox" name="semantic-${id}" value="${escapeHtml(s.id)}" checked>
+                    <strong>${escapeHtml(s.column)}</strong> : ${role(s.current_semantic_role, s.current_business_role)}
+                    → <strong>${role(s.semantic_role, s.business_role)}</strong> - ${escapeHtml(s.reason)}</label>
+                </li>`).join('');
+
+            return line('🔎', `Relecture sémantique : ${pending.length} suggestion(s) à décider${discarded}. Les cases décochées seront rejetées.`)
+                + `<ul style="list-style: none;">${rows}</ul>`
+                + `<button ${smallButton} onclick="decideAgentSemantics('${id}')">Appliquer la sélection</button>`;
+        }
+
         async function executeAgentPlan(planId) {
             try {
                 showMessage('Exécution du plan...', 'info');
@@ -819,6 +872,7 @@
                         (${escapeHtml(d.policy_rule)}) - ${escapeHtml(d.reason)}
                     </p>
                     <ul style="list-style: none; margin-top: 12px;">
+                        ${semanticReviewBlock(view)}
                         ${item(v.contract_validated, `Data Contract : ${escapeHtml(view.contract_path)} (${escapeHtml(view.contract_status)}${view.contract_origin === 'REUSED' ? ', contrat validé existant réutilisé' : ''})`, contractAction)}
                         ${destructive}
                         ${warnings}

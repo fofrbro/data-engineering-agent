@@ -7,7 +7,9 @@ VALIDATE : l'utilisateur valide le contrat, les transformations
            destructives et le tableau de bord. Rien n'est validé
            implicitement.
 
-Toutes les étapes sont déterministes ; aucun LLM n'intervient.
+Toutes les étapes sont déterministes. Seule la relecture sémantique,
+facultative, fait appel à un LLM : ses suggestions sont vérifiées par
+le code et ne s'appliquent qu'après acceptation par un relecteur.
 """
 
 from dataclasses import dataclass, field
@@ -44,6 +46,14 @@ from src.recommendation.pipeline_recommender import (
     recommend_pipeline,
 )
 from src.semantic.semantic_profiler import SemanticProfile, profile_semantics
+from src.semantic.semantic_review import (
+    ACCEPTED,
+    COMPLETED,
+    REJECTED,
+    SemanticReview,
+    apply_semantic_overrides,
+    review_semantics,
+)
 from src.tools.contract_validation import validate_contract
 from src.tools.data_validation import validate_csv
 from src.tools.ingestion_decision import determine_ingestion_decision
@@ -90,6 +100,10 @@ class AgentPlan:
     enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
+    semantic_review: SemanticReview | None = None
+    # Rôles acceptés par un relecteur, par colonne : ils remplacent
+    # l'interprétation déterministe à chaque recalcul du profil.
+    semantic_overrides: dict[str, dict] = field(default_factory=dict)
     status: str = PLANNED
     history: list[dict] = field(default_factory=list)
 
@@ -251,6 +265,9 @@ def _reprofile(plan: AgentPlan, file_paths: list[str]) -> None:
     discovery = _discover(file_paths)
     plan.discovery, plan.semantics = _restrict_to_contract(
         discovery, profile_semantics(discovery.schema), plan.contract,
+    )
+    plan.semantics = apply_semantic_overrides(
+        plan.semantics, plan.discovery.schema, plan.semantic_overrides,
     )
     plan.kpis = recommend_kpis(plan.discovery.schema, plan.semantics, plan.dataset)
 
@@ -515,6 +532,107 @@ def approve_plan_contract(
     plan.contract_path = path.as_posix()
     _refresh(plan)
     _record(plan, "APPROVE_CONTRACT", reviewer, comment)
+
+    return plan
+
+
+def review_plan_semantics(plan: AgentPlan, client) -> AgentPlan:
+    """
+    Demande au LLM une relecture de l'interprétation des colonnes.
+    Rien n'est appliqué : les suggestions attendent une décision.
+    """
+
+    plan.semantic_review = review_semantics(
+        client, plan.discovery.schema, plan.semantics, plan.dataset,
+    )
+    review = plan.semantic_review
+    plan.history.append(
+        {
+            "action": "SEMANTIC_REVIEW",
+            "reviewed_by": None,
+            "reviewed_at": review.reviewed_at,
+            "comment": (
+                f"{len(review.suggestions)} suggestion(s), "
+                f"{len(review.discarded)} écartée(s) par les contrôles."
+                if review.status == COMPLETED
+                else review.error
+            ),
+        }
+    )
+
+    return plan
+
+
+def decide_semantic_suggestions(
+    plan: AgentPlan,
+    reviewer: str,
+    accepted_ids: list[str],
+    comment: str | None = None,
+) -> AgentPlan:
+    """
+    Accepte les suggestions listées et rejette les autres. Les rôles
+    acceptés sont appliqués et le plan est recalculé ; un contrat
+    encore proposé est régénéré avec ces rôles, un contrat validé
+    n'est jamais modifié.
+    """
+
+    reviewer = _check_reviewer(reviewer)
+    review = plan.semantic_review
+
+    if review is None or review.status != COMPLETED:
+        raise WorkflowError("Aucune relecture sémantique à décider.")
+
+    if not review.pending:
+        raise WorkflowError("Les suggestions de cette relecture sont déjà décidées.")
+
+    unknown = set(accepted_ids) - {s.id for s in review.pending}
+
+    if unknown:
+        raise WorkflowError(f"Suggestions inconnues : {', '.join(sorted(unknown))}")
+
+    accepted = []
+
+    for suggestion in review.pending:
+        if suggestion.id in accepted_ids:
+            suggestion.status = ACCEPTED
+            accepted.append(suggestion)
+            plan.semantic_overrides[suggestion.column] = {
+                "semantic_role": suggestion.semantic_role,
+                "business_role": suggestion.business_role,
+                "reason": suggestion.reason,
+                "accepted_by": reviewer,
+            }
+        else:
+            suggestion.status = REJECTED
+
+    review.decided_by = reviewer
+    review.decided_at = _now().isoformat()
+
+    if accepted:
+        _reprofile(plan, plan.profiled_files)
+
+        if plan.contract_status != VALIDATED:
+            plan.contract = generate_contract(
+                plan.discovery.schema,
+                plan.semantics,
+                dataset=plan.dataset,
+                source_file=", ".join(plan.file_paths),
+            )
+            save_contract(plan.contract, plan.contract_path)
+
+        _refresh(plan)
+
+    summary = f"{len(accepted)} acceptée(s) sur {len(review.suggestions)}"
+
+    if accepted and plan.contract_status == VALIDATED:
+        summary += " ; contrat validé inchangé"
+
+    _record(
+        plan,
+        "DECIDE_SEMANTIC_SUGGESTIONS",
+        reviewer,
+        f"{summary}. {comment}" if comment else f"{summary}.",
+    )
 
     return plan
 
