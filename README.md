@@ -1,6 +1,6 @@
 # Data Engineering Agent
 
-[![tests](https://github.com/VOTRE-COMPTE/data-engineering-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/VOTRE-COMPTE/data-engineering-agent/actions/workflows/tests.yml)
+[![tests](https://github.com/fofrbro/data-engineering-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/fofrbro/data-engineering-agent/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/python-3.14-blue)
 ![Licence](https://img.shields.io/badge/licence-MIT-green)
 

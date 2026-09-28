@@ -48,7 +48,7 @@ curl -fsSL https://get.docker.com | sh
 ## 4. Installer l'agent
 
 ```bash
-git clone https://github.com/VOTRE-COMPTE/data-engineering-agent.git
+git clone https://github.com/fofrbro/data-engineering-agent.git
 ```
 
 ```bash
