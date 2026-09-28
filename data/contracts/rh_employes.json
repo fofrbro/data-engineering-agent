@@ -1,0 +1,217 @@
+{
+    "dataset": "rh_employes",
+    "version": "1.0",
+    "description": "Contrat proposé automatiquement pour rh_employes.",
+    "status": "VALIDATED",
+    "generated_by": "contract_generator",
+    "generated_at": "2026-09-28T03:59:57.139093+00:00",
+    "source_file": "uploads\\425a043c-7759-46ca-9bbb-b395fb2d783c_rh_employes.csv",
+    "domain": {
+        "name": "UNKNOWN",
+        "confidence": 0.0,
+        "evidence": [
+            "aucun ensemble d'indices métier suffisant"
+        ]
+    },
+    "candidate_keys": [
+        "matricule"
+    ],
+    "quality_rules": [
+        {
+            "rule": "no_duplicate_rows",
+            "enforced_by": "validate_csv"
+        }
+    ],
+    "review": {
+        "status": "VALIDATED",
+        "reviewed_by": "FOFANA",
+        "reviewed_at": "2026-09-28T03:59:59.480720+00:00",
+        "comment": null
+    },
+    "columns": {
+        "matricule": {
+            "type": "string",
+            "nullable": false,
+            "unique": true,
+            "semantics": {
+                "semantic_role": "IDENTIFIER",
+                "business_role": null,
+                "entity": null,
+                "confidence": 0.6
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée",
+                "unique : clé primaire candidate"
+            ]
+        },
+        "nom": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "ATTRIBUTE",
+                "business_role": null,
+                "entity": null,
+                "confidence": 0.5
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "email": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "ATTRIBUTE",
+                "business_role": "CONTACT",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "departement": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "CATEGORY",
+                "entity": null,
+                "confidence": 0.95
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "poste": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "CATEGORY",
+                "entity": null,
+                "confidence": 0.6
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "ville": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "GEOGRAPHY",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "date_embauche": {
+            "type": "datetime",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "TEMPORAL",
+                "business_role": "DATE",
+                "entity": null,
+                "confidence": 0.95
+            },
+            "rationale": [
+                "type datetime observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "statut": {
+            "type": "string",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "DIMENSION",
+                "business_role": "STATUS",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type string observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "age": {
+            "type": "integer",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "LEVEL",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "salaire_annuel": {
+            "type": "decimal",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": null,
+                "entity": null,
+                "confidence": 0.6
+            },
+            "rationale": [
+                "type decimal observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "note_evaluation": {
+            "type": "decimal",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": "LEVEL",
+                "entity": null,
+                "confidence": 0.9
+            },
+            "rationale": [
+                "type decimal observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "heures_formation": {
+            "type": "integer",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": null,
+                "entity": null,
+                "confidence": 0.6
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        },
+        "jours_absence": {
+            "type": "integer",
+            "nullable": false,
+            "semantics": {
+                "semantic_role": "MEASURE",
+                "business_role": null,
+                "entity": null,
+                "confidence": 0.6
+            },
+            "rationale": [
+                "type integer observé",
+                "non nullable : aucune valeur nulle observée"
+            ]
+        }
+    }
+}
