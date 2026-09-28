@@ -385,5 +385,3 @@ tests/                      tests unitaires et de bout en bout
   fois ; l'interface et `/api/workflow/plan` acceptent un lot.
 - La détection des annulations s'appuie sur les valeurs d'exemple du profil
   (5 valeurs distinctes au plus par colonne).
-- Les routes de connexion Fabric (`/api/fabric/*`) ne sont plus utilisées
-  par l'interface.

@@ -1,27 +1,23 @@
 """
-API REST pour l'Agent Data Engineering.
+API REST et interface web de l'agent Data Engineering.
 
-Expose l'agent via une API FastAPI avec endpoints pour :
-- Upload de fichiers CSV
-- Exécution du pipeline
-- Récupération des résultats
-- Authentification Fabric interactif
+- Upload de fichiers (ou d'une archive ZIP) ;
+- workflow PLAN -> VALIDATE -> EXECUTE -> VERIFY -> AUDIT ;
+- revue des contrats, relecture sémantique, analyse des données.
+
+Les tables Gold et l'audit sont préparés pour Fabric dans
+data/fabric_export/ ; le dépôt dans le Lakehouse et les notebooks restent
+des opérations manuelles (voir fabric/README.md).
 """
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 import os
 import uuid
 from datetime import datetime
 from pathlib import Path
-import asyncio
-import threading
-import secrets
-import msal
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -43,7 +39,6 @@ from src.workflow.request_interpreter import (
     RequestInterpretationError,
     handle_request,
 )
-from src.tools.fabric_connector import configure_fabric_session
 
 # ============================================
 # Configuration
@@ -51,18 +46,12 @@ from src.tools.fabric_connector import configure_fabric_session
 
 app = FastAPI(
     title="Data Engineering Agent API",
-    description="IA Agentique pour Data Engineering + Fabric + Analytics",
+    description="Agent Data Engineering : contrat, qualité, Bronze/Silver/Gold, Fabric, Power BI",
     version="1.0.0"
 )
 
-# CORS pour l'interface web
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Pas de CORS : l'interface est servie par cette même application ; une
+# autre page web ouverte dans le navigateur ne peut pas lire l'API.
 
 # Dossiers de travail
 UPLOAD_DIR = Path("uploads")
@@ -70,46 +59,8 @@ ARCHIVE_DIR = Path("data/archive")
 UPLOAD_DIR.mkdir(exist_ok=True)
 ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
 
-# Stockage des sessions et authentification
-FABRIC_ENABLED = os.getenv("FABRIC_ENABLED", "false").lower() == "true"
-
+# Lots uploadés, en mémoire.
 sessions: Dict[str, Dict[str, Any]] = {}
-fabric_auth_state = {
-    "authenticated": False,
-    "onelake_authenticated": False,
-    "workspace_id": None,
-    "user_id": None,
-    "access_token": None,
-    "storage_access_token": None,
-}
-oauth_states: Dict[str, Dict[str, Any]] = {}
-FABRIC_SCOPES = [
-    "https://api.fabric.microsoft.com/Workspace.ReadWrite.All",
-    "https://api.fabric.microsoft.com/Lakehouse.ReadWrite.All",
-]
-ONELAKE_SCOPE = "https://storage.azure.com/user_impersonation"
-FABRIC_REDIRECT_URI = os.getenv(
-    "FABRIC_REDIRECT_URI",
-    "http://localhost:8000/api/fabric/callback",
-)
-
-
-def _fabric_msal_application():
-    """Construit le client MSAL adapté au type d'application Entra."""
-    client_id = os.getenv("FABRIC_CLIENT_ID")
-    tenant_id = os.getenv("FABRIC_TENANT_ID", "organizations")
-    client_secret = os.getenv("FABRIC_CLIENT_SECRET")
-    authority = f"https://login.microsoftonline.com/{tenant_id}"
-    if client_secret:
-        return msal.ConfidentialClientApplication(
-            client_id=client_id,
-            client_credential=client_secret,
-            authority=authority,
-        )
-    return msal.PublicClientApplication(
-        client_id=client_id,
-        authority=authority,
-    )
 
 # ============================================
 # Modèles Pydantic
@@ -172,147 +123,6 @@ def _archive_name(filename: str, contents: bytes, uploaded_at: datetime) -> str:
     timestamp = uploaded_at.strftime("%Y%m%d_%H%M%S")
     suffix = Path(filename).suffix.lower() or ".bin"
     return f"{readable_name}_{timestamp}{suffix}"
-
-
-# ============================================
-# Endpoints d'Authentification Fabric
-# ============================================
-
-
-@app.get("/api/fabric/auth-status")
-async def get_fabric_auth_status():
-    """Vérifie l'état d'authentification Fabric."""
-    return {
-        "authenticated": fabric_auth_state["authenticated"],
-        "onelake_authenticated": bool(fabric_auth_state.get("storage_access_token")),
-        "workspace_id": fabric_auth_state.get("workspace_id"),
-        "message": (
-            "Authentifié à Fabric et OneLake ✓"
-            if fabric_auth_state["authenticated"] and fabric_auth_state.get("storage_access_token")
-            else "Authentifié à Fabric, reconnexion nécessaire pour OneLake"
-            if fabric_auth_state["authenticated"]
-            else "Non authentifié - Veuillez vous connecter à Fabric"
-        )
-    }
-
-
-@app.get("/api/fabric/config")
-async def get_fabric_config():
-    """Expose uniquement les paramètres non sensibles du callback OAuth."""
-    return {
-        "redirect_uri": FABRIC_REDIRECT_URI,
-        "tenant_configured": bool(os.getenv("FABRIC_TENANT_ID")),
-        "client_configured": bool(os.getenv("FABRIC_CLIENT_ID")),
-        "workspace_configured": bool(os.getenv("FABRIC_WORKSPACE_ID")),
-        "lakehouse_configured": bool(os.getenv("FABRIC_LAKEHOUSE_ID")),
-    }
-
-
-@app.get("/api/fabric/login")
-async def fabric_login(file_id: Optional[str] = None, workspace_id: Optional[str] = None):
-    """Démarre la connexion Microsoft OAuth pour Fabric."""
-    client_id = os.getenv("FABRIC_CLIENT_ID")
-    tenant_id = os.getenv("FABRIC_TENANT_ID", "organizations")
-    if not client_id:
-        raise HTTPException(
-            status_code=503,
-            detail="FABRIC_CLIENT_ID doit être configuré pour la connexion Microsoft.",
-        )
-
-    state = secrets.token_urlsafe(32)
-    oauth_states[state] = {
-        "file_id": file_id,
-        "workspace_id": workspace_id,
-        "phase": "fabric",
-        "created_at": datetime.now().isoformat(),
-    }
-    application = _fabric_msal_application()
-    auth_code_flow = application.initiate_auth_code_flow(
-        scopes=FABRIC_SCOPES,
-        state=state,
-        redirect_uri=FABRIC_REDIRECT_URI,
-        prompt="select_account",
-    )
-    oauth_states[state]["auth_code_flow"] = auth_code_flow
-    return JSONResponse({"authorization_url": auth_code_flow["auth_uri"]})
-
-
-@app.get("/api/fabric/callback")
-async def fabric_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None, error: Optional[str] = None):
-    """Reçoit le retour Microsoft et active l’accès Fabric."""
-    callback_state = oauth_states.pop(state, None) if state else None
-    if error:
-        raise HTTPException(status_code=401, detail=f"Connexion Microsoft refusée : {error}")
-    if not callback_state or not code:
-        raise HTTPException(status_code=400, detail="Réponse OAuth invalide ou expirée.")
-
-    application = _fabric_msal_application()
-    token_result = application.acquire_token_by_auth_code_flow(
-        callback_state["auth_code_flow"],
-        dict(request.query_params),
-        scopes=FABRIC_SCOPES if callback_state.get("phase") == "fabric" else [ONELAKE_SCOPE],
-    )
-    if "access_token" not in token_result:
-        raise HTTPException(
-            status_code=401,
-            detail=token_result.get("error_description", "Jeton Microsoft non obtenu."),
-        )
-
-    if callback_state.get("phase") == "fabric":
-        accounts = application.get_accounts()
-        storage_result = None
-        if accounts:
-            storage_result = application.acquire_token_silent(
-                [ONELAKE_SCOPE],
-                account=accounts[0],
-            )
-        storage_access_token = storage_result.get("access_token") if storage_result else None
-
-        if not storage_access_token:
-            storage_state = secrets.token_urlsafe(32)
-            oauth_states[storage_state] = {
-                "file_id": callback_state.get("file_id"),
-                "workspace_id": callback_state.get("workspace_id"),
-                "phase": "storage",
-                "fabric_access_token": token_result["access_token"],
-                "created_at": datetime.now().isoformat(),
-            }
-            storage_flow = application.initiate_auth_code_flow(
-                scopes=[ONELAKE_SCOPE],
-                state=storage_state,
-                redirect_uri=FABRIC_REDIRECT_URI,
-                prompt="select_account",
-            )
-            oauth_states[storage_state]["auth_code_flow"] = storage_flow
-            return RedirectResponse(url=storage_flow["auth_uri"])
-
-        fabric_access_token = token_result["access_token"]
-    else:
-        fabric_access_token = callback_state.get("fabric_access_token")
-        storage_access_token = token_result["access_token"]
-        if not fabric_access_token:
-            raise HTTPException(status_code=401, detail="Jeton Fabric manquant, reconnectez-vous.")
-
-    fabric_auth_state.update({
-        "authenticated": True,
-        "workspace_id": callback_state.get("workspace_id"),
-        "user_id": token_result.get("id_token_claims", {}).get("oid"),
-        "access_token": fabric_access_token,
-        "storage_access_token": storage_access_token,
-    })
-    configure_fabric_session(
-        fabric_access_token,
-        callback_state.get("workspace_id"),
-        storage_access_token,
-    )
-    if callback_state.get("workspace_id"):
-        os.environ["FABRIC_WORKSPACE_ID"] = callback_state["workspace_id"]
-
-    resume_file_id = callback_state.get("file_id")
-    return_url = "/"
-    if resume_file_id:
-        return_url += f"?resume={resume_file_id}"
-    return RedirectResponse(url=return_url)
 
 
 # ============================================
@@ -418,19 +228,11 @@ async def serve_index():
     return FileResponse("public/index.html")
 
 
-@app.get("/fabric-auth")
-async def serve_fabric_auth():
-    """Serve la page de connexion Fabric à la demande."""
-    return FileResponse("public/fabric-auth.html")
-
-
 @app.get("/health")
 async def health_check():
     """Health check de l'API."""
     return {
         "status": "healthy",
-        "fabric_enabled": FABRIC_ENABLED,
-        "fabric_authenticated": fabric_auth_state["authenticated"],
         "timestamp": datetime.now().isoformat()
     }
 
@@ -662,19 +464,23 @@ async def get_api_info():
     return {
         "name": "Data Engineering Agent API",
         "version": "1.0.0",
-        "fabric_enabled": FABRIC_ENABLED,
         "features": [
-            "Upload de fichiers tabulaires",
+            "Upload de fichiers tabulaires ou d'une archive ZIP",
+            "Fichiers sans en-tête : noms de colonnes proposés puis validés",
             "Plan agent : contrat, qualité, pipeline, KPI, tableau de bord",
             "Validations explicites avant exécution",
             "Exécution Bronze/Silver/Gold vérifiée et auditée",
-            "Analyse Data Analyst"
+            "Relecture sémantique par LLM, suggestions vérifiées",
+            "Analyse des données avec synthèse LLM vérifiée",
+            "Export pour Fabric (tables Gold et audit)"
         ],
         "endpoints": {
             "upload": "POST /api/upload",
             "plan": "POST /api/workflow/plan",
             "ask": "POST /api/workflow/ask",
             "plan_view": "GET /api/workflow/{plan_id}",
+            "column_names": "POST /api/workflow/{plan_id}/column-names",
+            "semantic_review": "POST /api/workflow/{plan_id}/semantic-review",
             "approve_contract": "POST /api/workflow/{plan_id}/approve-contract",
             "approve_transformations": "POST /api/workflow/{plan_id}/approve-transformations",
             "dashboard": "POST /api/workflow/{plan_id}/dashboard",
@@ -695,7 +501,7 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "api:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         reload=True
     )
