@@ -1,0 +1,41 @@
+# Démo publique : l'agent derrière Caddy (HTTPS automatique).
+# Lancement, depuis ce dossier : docker compose up -d --build
+services:
+  agent:
+    build:
+      context: ..
+    # OPENAI_API_KEY (facultative) dans deploy/.env, jamais dans Git.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DEMO_MODE: "true"
+      DEMO_SECURE_COOKIE: "true"
+      DEMO_TTL_MINUTES: "120"
+      DEMO_MAX_VISITORS: "50"
+      DEMO_PLANS_PER_DAY: "30"
+      DEMO_EXECUTIONS_PER_DAY: "10"
+      DEMO_LLM_CALLS_PER_DAY: "20"
+      DEMO_LLM_CALLS_OVERALL_PER_DAY: "300"
+    # Pas de port publié : seul Caddy est joignable depuis Internet.
+    expose:
+      - "8000"
+    mem_limit: 1g
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - agent
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

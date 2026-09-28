@@ -304,6 +304,22 @@ de capteurs) : âge et salaire moyens par département, température et
 humidité moyennes par ville et par mois, aucune somme d'âge ni de
 température.
 
+## Démo publique
+
+Avec `DEMO_MODE=true`, l'agent peut être ouvert sur Internet :
+
+- chaque visiteur a un **espace isolé et temporaire** (cookie aléatoire),
+  effacé après 2 h d'inactivité ; il ne voit que ses plans et ses contrats ;
+- seuls les **fichiers d'exemple** sont proposés : pas d'upload, donc
+  aucune donnée de visiteur ;
+- des **quotas journaliers** (plans, exécutions, appels au LLM) par visiteur
+  et au total ; au-delà, l'API répond 429 et les fonctions LLM se
+  déclarent indisponibles ;
+- les espaces vides sont libérés en premier quand la démo est pleine.
+
+Déploiement sur un VPS avec Docker et Caddy (HTTPS automatique) :
+[deploy/README.md](deploy/README.md).
+
 ## Règles de décision
 
 | Situation | Décision | Règle |

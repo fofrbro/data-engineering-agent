@@ -1,0 +1,20 @@
+# Caddy obtient et renouvelle seul le certificat HTTPS du domaine.
+demo.fofanalyse.com {
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# La démo peut être intégrée au site fofanalyse.com, pas ailleurs.
+		Content-Security-Policy "frame-ancestors 'self' https://fofanalyse.com https://www.fofanalyse.com"
+		-Server
+	}
+
+	# La démo n'accepte pas d'upload : seules de petites requêtes JSON.
+	request_body {
+		max_size 1MB
+	}
+
+	reverse_proxy agent:8000
+}
