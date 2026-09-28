@@ -993,8 +993,38 @@
                 </div>`;
         }
 
+        function monthBars(months, key, format, incomplete = []) {
+            const max = Math.max(...months.map(m => m[key] || 0)) || 1;
+            const bars = months.map(m => `
+                <div title="${escapeHtml(m.month)} : ${formatValue(m[key], format)}" style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-width: 6px;">
+                    <div style="background: ${incomplete.includes(m.month) ? '#c7d2fe' : '#667eea'}; height: ${Math.max(2, Math.round((m[key] || 0) / max * 140))}px; border-radius: 2px 2px 0 0;"></div>
+                </div>`).join('');
+            return `<div style="display: flex; gap: 2px; align-items: flex-end; height: 150px; border-bottom: 1px solid #d0d5dd;">${bars}</div>
+                <div style="display: flex; justify-content: space-between; color: #475467; font-size: 0.8em;">
+                    <span>${escapeHtml(months[0].month)}</span><span>${escapeHtml(months[months.length - 1].month)}</span>
+                </div>`;
+        }
+
+        function averagesBlock(analysis) {
+            return (analysis.averages || []).map(a => {
+                const dimensions = a.by_dimension.map(d => {
+                    const max = Math.max(...d.values.map(v => v.mean)) || 1;
+                    return `<p style="margin-top: 6px; color: #475467;">Par ${escapeHtml(d.column)} :</p>`
+                        + d.values.map(v => barRow(v.value, v.mean / max, `${formatValue(v.mean)} · ${v.count.toLocaleString('fr-FR')} ligne(s)`)).join('');
+                }).join('');
+                const months = a.by_month.length >= 2
+                    ? `<p style="margin-top: 6px; color: #475467;">Moyenne par mois :</p>${monthBars(a.by_month, 'mean', null)}`
+                    : '';
+                return analysisSection(
+                    `Moyenne de ${escapeHtml(a.column)} : ${formatValue(a.mean)} <span style="font-weight: normal; color: #475467;">(de ${formatValue(a.min)} à ${formatValue(a.max)})</span>`,
+                    dimensions + months
+                );
+            }).join('');
+        }
+
         function analysisBlock(analysis) {
             const overview = analysis.overview;
+            const measureFormat = analysis.measure_format || 'currency';
             const cards = analysis.kpis.map(kpi => `
                 <div style="border: 1px solid #eaecf0; border-radius: 8px; padding: 10px;">
                     <div style="color: #475467; font-size: 0.85em;">${escapeHtml(kpi.name)}</div>
@@ -1016,19 +1046,11 @@
             const trend = analysis.trend;
             let trendHtml = '';
             if (trend) {
-                const max = Math.max(...trend.months.map(m => m.value || 0)) || 1;
-                const bars = trend.months.map(m => `
-                    <div title="${escapeHtml(m.month)} : ${formatValue(m.value, 'currency')}" style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-width: 6px;">
-                        <div style="background: ${trend.incomplete_months.includes(m.month) ? '#c7d2fe' : '#667eea'}; height: ${Math.max(2, Math.round((m.value || 0) / max * 140))}px; border-radius: 2px 2px 0 0;"></div>
-                    </div>`).join('');
                 const years = (trend.years || []).map(y =>
-                    `<td ${cell}>${y.year}${y.months < 12 ? ` (${y.months} mois)` : ''}<br><strong>${formatValue(y.value, 'currency')}</strong></td>`).join('');
+                    `<td ${cell}>${y.year}${y.months < 12 ? ` (${y.months} mois)` : ''}<br><strong>${formatValue(y.value, measureFormat)}</strong></td>`).join('');
                 trendHtml = analysisSection(
                     `Évolution mensuelle - ${escapeHtml(analysis.measure)} (${escapeHtml(trend.start)} → ${escapeHtml(trend.end)})`,
-                    `<div style="display: flex; gap: 2px; align-items: flex-end; height: 150px; border-bottom: 1px solid #d0d5dd;">${bars}</div>
-                     <div style="display: flex; justify-content: space-between; color: #475467; font-size: 0.8em;">
-                        <span>${escapeHtml(trend.months[0].month)}</span><span>${escapeHtml(trend.months[trend.months.length - 1].month)}</span>
-                     </div>
+                    `${monthBars(trend.months, 'value', measureFormat, trend.incomplete_months)}
                      <p style="color: #475467; font-size: 0.85em;">Survolez une barre pour sa valeur. Barres claires : mois incomplets.</p>
                      <table style="margin-top: 8px; border-collapse: collapse;"><tr>${years}</tr></table>`
                 );
@@ -1036,7 +1058,7 @@
 
             const breakdowns = analysis.breakdowns.map(b => analysisSection(
                 `Top ${b.top.length} par ${escapeHtml(b.column)} (${b.distinct.toLocaleString('fr-FR')} valeurs)`,
-                b.top.map(t => barRow(t.value, t.share / (b.top[0].share || 1), `${formatValue(t.total, 'currency')} · ${formatValue(t.share, 'percent')}`)).join('')
+                b.top.map(t => barRow(t.value, t.share / (b.top[0].share || 1), `${formatValue(t.total, measureFormat)} · ${formatValue(t.share, 'percent')}`)).join('')
                 + (b.values_for_80_percent ? `<p style="color:#475467; font-size: 0.85em;">${b.values_for_80_percent.toLocaleString('fr-FR')} valeur(s) font 80 % du total.</p>` : '')
             )).join('');
 
@@ -1063,6 +1085,7 @@
                     ${analysis.insights.length ? analysisSection('Constats', `<ul style="margin-left: 18px;">${analysis.insights.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`) : ''}
                     ${trendHtml}
                     ${breakdowns}
+                    ${averagesBlock(analysis)}
                     ${distributionHtml}
                     ${qualityHtml}
                 </div>`;

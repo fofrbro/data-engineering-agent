@@ -188,3 +188,53 @@ def test_commentary_with_a_fake_llm(analysis):
 
 def test_commentary_without_llm_is_unavailable(analysis):
     assert comment_analysis(None, analysis).status == "UNAVAILABLE"
+
+
+def sensors_frame():
+    """Deux villes aux températures nettement différentes, une troisième proche."""
+
+    times = pd.date_range("2025-01-01", periods=360, freq="12h")
+    city = ["Dakar", "Oslo", "Lyon"] * 120
+    base = {"Dakar": 30.0, "Oslo": 5.0, "Lyon": 15.0}
+    return pd.DataFrame(
+        {
+            "sensor_id": [f"S{i % 6}" for i in range(360)],
+            "city": city,
+            "measured_at": times,
+            "temperature": [base[c] + (i % 4) for i, c in enumerate(city)],
+            "humidity": [60.0 + (i % 5) for i in range(360)],
+        }
+    )
+
+
+def test_level_measures_are_averaged_and_rows_are_counted():
+    analysis = analyze(sensors_frame(), "capteurs")
+
+    assert (analysis["measure"], analysis["measure_format"]) == ("Nombre de lignes", "integer")
+    assert sum(m["value"] for m in analysis["trend"]["months"]) == 360
+    kpis = {k["name"]: k["value"] for k in analysis["kpis"]}
+    assert "Total temperature" not in kpis
+    assert kpis["Average temperature"] == pytest.approx(sensors_frame()["temperature"].mean())
+
+    temperature = next(a for a in analysis["averages"] if a["column"] == "temperature")
+    by_city = {v["value"]: v["mean"] for v in temperature["by_dimension"][0]["values"]}
+    assert by_city == pytest.approx({"Dakar": 31.5, "Lyon": 16.5, "Oslo": 6.5})
+    assert [m["month"] for m in temperature["by_month"]][:2] == ["2025-01", "2025-02"]
+
+
+def test_average_insights_rank_real_gaps_and_call_small_ones_close():
+    insights = " ".join(analyze(sensors_frame(), "capteurs")["insights"])
+
+    assert "Moyenne de temperature la plus élevée pour city = Dakar (31,50)" in insights
+    assert "Moyennes de humidity proches d'un city à l'autre" in insights
+    assert "Mois le plus chargé" in insights
+
+
+def test_small_groups_are_not_cited_as_extremes():
+    frame = sensors_frame().head(8)
+    frame["measured_at"] = pd.date_range("2025-01-01", periods=8, freq="MS")
+
+    insights = " ".join(analyze(frame, "capteurs")["insights"])
+
+    # Un seul relevé par mois : aucune moyenne mensuelle citée comme extrême.
+    assert "la plus élevée en" not in insights

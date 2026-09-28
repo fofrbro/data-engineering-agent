@@ -199,6 +199,10 @@ l'affiche sous le résultat (et dans `results/<dataset>_analysis.txt|json`) :
 - **distributions** des mesures (quartiles, valeurs hors 1,5 × l'écart
   interquartile ; au-delà de 10 %, décrites comme plusieurs gammes plutôt
   que comme des anomalies) ;
+- **moyennes** des mesures de niveau (âge, température, note…) et des mesures
+  sans rôle métier : globale, par mois et par dimension ; les extrêmes ne
+  sont cités que sur des groupes d'au moins 5 lignes, et des moyennes à
+  moins de 5 % d'écart sont dites « proches » ;
 - **qualité** : décision de chaque fichier, contrôles VERIFY, avertissements ;
 - **constats** rédigés par des règles, en français ;
 - **synthèse du LLM**, marquée « texte généré » : il ne reçoit que les
@@ -211,6 +215,29 @@ Vérifié le 2026-09-28 sur `data/samples/sales.csv` avec le LLM réel :
 chiffre d'affaires 20 928 022,43, totaux annuels identiques au fichier
 source, 2021 en hausse de 67,8 % sur 2020, synthèse dont tous les nombres
 ont été vérifiés.
+
+### Données hors vente
+
+Le métier est reconnu pour les ventes ; pour un autre fichier (RH, capteurs…),
+le plan le signale (« Métier non reconnu ») et reste générique, sans jamais
+inventer de chiffre d'affaires. Les mesures sont alors traitées selon leur
+nature :
+
+- une **mesure de niveau** (âge, température, humidité, pression, note,
+  score, niveau, vitesse, ou colonne déjà moyenne) est **moyennée** partout :
+  KPI, DAX, Gold, tableau de bord (en barres, jamais en anneau) et analyse ;
+- une mesure sans rôle métier garde une somme (hypothèse signalée), et sa
+  moyenne par groupe figure dans Gold et dans l'analyse (salaire moyen par
+  département) ;
+- l'évolution mensuelle et les tops portent sur le **nombre de lignes**.
+
+La relecture sémantique du LLM peut proposer le rôle « niveau » pour une
+colonne que les règles n'ont pas reconnue.
+
+Vérifié le 2026-09-28 sur deux fichiers générés (300 employés, 2 000 relevés
+de capteurs) : âge et salaire moyens par département, température et
+humidité moyennes par ville et par mois, aucune somme d'âge ni de
+température.
 
 ## Règles de décision
 
