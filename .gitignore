@@ -31,3 +31,6 @@ data/contracts/proposed/
 
 # Fichiers préparés pour Fabric (à déposer dans Files/)
 data/fabric_export/
+
+# Espaces temporaires des visiteurs de la démo publique
+demo_workspaces/
