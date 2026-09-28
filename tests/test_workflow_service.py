@@ -79,7 +79,7 @@ def test_analysis_failure_does_not_change_the_run_result(service, monkeypatch):
     def broken(*args, **kwargs):
         raise RuntimeError("analyse impossible")
 
-    monkeypatch.setattr(module, "analyze_gold_data", broken)
+    monkeypatch.setattr(module, "analyze_business_data", broken)
     plan_id = service.create_plan("data/sales.csv")["plan_id"]
     service.approve_contract(plan_id, "cheikhou")
 
@@ -183,3 +183,22 @@ def test_audit_export_failure_does_not_change_the_run_result(service, monkeypatc
     assert result["final_status"] == "SUCCESS"
     assert result["audit_export"] is None
     assert result["audit_export_error"] == "disque plein"
+
+
+def test_analysis_matches_gold_and_the_business_rule(service):
+    import pandas as pd
+
+    plan_id = service.create_plans(["data/samples/ventes_2025_2026.csv"])[0]["plan_id"]
+    service.approve_contract(plan_id, "cheikhou")
+
+    result = service.execute(plan_id)
+    analysis = result["analysis"]
+    summary = pd.read_parquet(f"{result['fabric_export']}/ventes_2025_2026_summary.parquet")
+    revenue = next(k["value"] for k in analysis["kpis"] if k["name"] == "Revenue")
+
+    # Mêmes chiffres que Gold (annulations exclues) : 811 954,17 sur 1 375 lignes.
+    assert revenue == pytest.approx(summary["total_sales"].iloc[0])
+    assert analysis["overview"]["analysed_rows"] == summary["number_of_lines"].iloc[0]
+    assert analysis["overview"]["exclusion"] == "status : CANCELLED"
+    assert analysis["commentary"]["status"] == "UNAVAILABLE"
+    assert all(check["passed"] for check in analysis["quality"]["checks"])

@@ -144,6 +144,7 @@
         input[type="text"],
         input[type="password"],
         input[type="file"],
+        textarea,
         select {
             width: 100%;
             padding: 12px;
@@ -156,6 +157,7 @@
         input[type="text"]:focus,
         input[type="password"]:focus,
         input[type="file"]:focus,
+        textarea:focus,
         select:focus {
             outline: none;
             border-color: #667eea;
@@ -968,6 +970,104 @@
             `;
         }
 
+        function formatValue(value, format) {
+            if (value === null || value === undefined) return '—';
+            if (format === 'percent') return `${(value * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+            if (format === 'integer') return Math.round(value).toLocaleString('fr-FR');
+            const digits = format === 'currency' || !Number.isInteger(value) ? 2 : 0;
+            return value.toLocaleString('fr-FR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+        }
+
+        function analysisSection(title, body) {
+            return `<h4 style="margin: 18px 0 8px;">${title}</h4>${body}`;
+        }
+
+        function barRow(label, ratio, detail) {
+            return `
+                <div style="display: grid; grid-template-columns: minmax(120px, 30%) 1fr auto; gap: 8px; align-items: center; margin: 3px 0;">
+                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(label)}">${escapeHtml(label)}</span>
+                    <span style="background: #eef2ff; border-radius: 3px; height: 14px;">
+                        <span style="display: block; height: 14px; border-radius: 3px; background: #667eea; width: ${Math.max(1, Math.round(ratio * 100))}%;"></span>
+                    </span>
+                    <span style="white-space: nowrap; color: #344054;">${detail}</span>
+                </div>`;
+        }
+
+        function analysisBlock(analysis) {
+            const overview = analysis.overview;
+            const cards = analysis.kpis.map(kpi => `
+                <div style="border: 1px solid #eaecf0; border-radius: 8px; padding: 10px;">
+                    <div style="color: #475467; font-size: 0.85em;">${escapeHtml(kpi.name)}</div>
+                    <div style="font-size: 1.25em; font-weight: 600;">${formatValue(kpi.value, kpi.format)}</div>
+                </div>`).join('');
+
+            const commentary = analysis.commentary || {};
+            const commentaryHtml = commentary.status === 'COMPLETED'
+                ? `<div style="background: #f9fafb; border-left: 3px solid #667eea; padding: 10px 12px;">
+                        <p>${escapeHtml(commentary.summary)}</p>
+                        <ul style="margin: 8px 0 0 18px;">${commentary.points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+                        <p style="color: #475467; font-size: 0.85em; margin-top: 8px;">Texte généré par le LLM à partir des chiffres calculés ci-dessous.
+                        ${commentary.unverified_numbers.length
+                            ? `<br><span style="color:#b42318;">⚠️ Chiffres non retrouvés dans l'analyse : ${escapeHtml(commentary.unverified_numbers.join(', '))}</span>`
+                            : ' Tous les chiffres cités ont été vérifiés.'}</p>
+                   </div>`
+                : `<p style="color: #475467;">Commentaire du LLM indisponible${commentary.error ? ` : ${escapeHtml(commentary.error)}` : ''}.</p>`;
+
+            const trend = analysis.trend;
+            let trendHtml = '';
+            if (trend) {
+                const max = Math.max(...trend.months.map(m => m.value || 0)) || 1;
+                const bars = trend.months.map(m => `
+                    <div title="${escapeHtml(m.month)} : ${formatValue(m.value, 'currency')}" style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-width: 6px;">
+                        <div style="background: ${trend.incomplete_months.includes(m.month) ? '#c7d2fe' : '#667eea'}; height: ${Math.max(2, Math.round((m.value || 0) / max * 140))}px; border-radius: 2px 2px 0 0;"></div>
+                    </div>`).join('');
+                const years = (trend.years || []).map(y =>
+                    `<td ${cell}>${y.year}${y.months < 12 ? ` (${y.months} mois)` : ''}<br><strong>${formatValue(y.value, 'currency')}</strong></td>`).join('');
+                trendHtml = analysisSection(
+                    `Évolution mensuelle - ${escapeHtml(analysis.measure)} (${escapeHtml(trend.start)} → ${escapeHtml(trend.end)})`,
+                    `<div style="display: flex; gap: 2px; align-items: flex-end; height: 150px; border-bottom: 1px solid #d0d5dd;">${bars}</div>
+                     <div style="display: flex; justify-content: space-between; color: #475467; font-size: 0.8em;">
+                        <span>${escapeHtml(trend.months[0].month)}</span><span>${escapeHtml(trend.months[trend.months.length - 1].month)}</span>
+                     </div>
+                     <p style="color: #475467; font-size: 0.85em;">Survolez une barre pour sa valeur. Barres claires : mois incomplets.</p>
+                     <table style="margin-top: 8px; border-collapse: collapse;"><tr>${years}</tr></table>`
+                );
+            }
+
+            const breakdowns = analysis.breakdowns.map(b => analysisSection(
+                `Top ${b.top.length} par ${escapeHtml(b.column)} (${b.distinct.toLocaleString('fr-FR')} valeurs)`,
+                b.top.map(t => barRow(t.value, t.share / (b.top[0].share || 1), `${formatValue(t.total, 'currency')} · ${formatValue(t.share, 'percent')}`)).join('')
+                + (b.values_for_80_percent ? `<p style="color:#475467; font-size: 0.85em;">${b.values_for_80_percent.toLocaleString('fr-FR')} valeur(s) font 80 % du total.</p>` : '')
+            )).join('');
+
+            const distributions = analysis.distributions.filter(d => !('constant' in d));
+            const distributionHtml = distributions.length ? analysisSection('Distributions des mesures', `
+                <table style="border-collapse: collapse; width: 100%;">
+                    <tr><th ${cell}>Mesure</th><th ${cell}>Min</th><th ${cell}>Q1</th><th ${cell}>Médiane</th><th ${cell}>Q3</th><th ${cell}>Max</th><th ${cell}>Moyenne</th><th ${cell}>Hors 1,5×IQR</th></tr>
+                    ${distributions.map(d => `<tr><td ${cell}>${escapeHtml(d.column)}</td>${['min', 'q1', 'median', 'q3', 'max', 'mean'].map(k => `<td ${cell}>${formatValue(d[k])}</td>`).join('')}<td ${cell}>${d.outliers.toLocaleString('fr-FR')} (${formatValue(d.outlier_share, 'percent')})</td></tr>`).join('')}
+                </table>`) : '';
+
+            const quality = analysis.quality || {};
+            const checks = quality.checks || [];
+            const qualityHtml = analysisSection('Qualité et traçabilité', `
+                <p>${(quality.files || []).map(f => `${escapeHtml(fileName(f.file))} : <strong>${escapeHtml(f.decision)}</strong> (${escapeHtml(f.final_status)})`).join(' · ')}</p>
+                <p>Contrôles VERIFY : ${checks.filter(c => c.passed).length}/${checks.length} réussis.
+                ${(quality.warnings || []).length ? `<br>Avertissements : ${escapeHtml(quality.warnings.join(' ; '))}` : ''}</p>`);
+
+            return `
+                <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #eaecf0;">
+                    <h3>📈 Analyse des données - ${escapeHtml(analysis.dataset)}</h3>
+                    <p style="color: #475467;">${overview.analysed_rows.toLocaleString('fr-FR')} lignes analysées sur ${overview.rows.toLocaleString('fr-FR')}${overview.excluded_rows ? ` (${overview.excluded_rows.toLocaleString('fr-FR')} exclues : ${escapeHtml(overview.exclusion)})` : ''}.</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 10px;">${cards}</div>
+                    ${analysisSection('Synthèse', commentaryHtml)}
+                    ${analysis.insights.length ? analysisSection('Constats', `<ul style="margin-left: 18px;">${analysis.insights.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`) : ''}
+                    ${trendHtml}
+                    ${breakdowns}
+                    ${distributionHtml}
+                    ${qualityHtml}
+                </div>`;
+        }
+
         function renderAgentExecution(planId, result) {
             const checks = result.verification.map(c => `
                 <li>${c.passed ? '✅' : '❌'} ${escapeHtml(c.check)} - ${escapeHtml(c.detail)}</li>`).join('');
@@ -990,7 +1090,8 @@
                     ${result.audit_export_error ? `<p style="color:#b42318;">Export de l'audit indisponible : ${escapeHtml(result.audit_export_error)}</p>` : ''}
                     <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>
                     <pre>${escapeHtml(result.explanation)}</pre>
-                    ${result.analysis_report ? `<details style="margin-top: 12px;"><summary>Analyse Data Analyst</summary><pre>${escapeHtml(result.analysis_report)}</pre></details>` : ''}
+                    ${result.analysis ? analysisBlock(result.analysis) : ''}
+                    ${result.analysis_report ? `<details style="margin-top: 12px;"><summary>Rapport d'analyse (texte)</summary><pre>${escapeHtml(result.analysis_report)}</pre></details>` : ''}
                     ${result.analysis_error ? `<p style="color:#b42318;">Analyse indisponible : ${escapeHtml(result.analysis_error)}</p>` : ''}
                 </div>
             `;

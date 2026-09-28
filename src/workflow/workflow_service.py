@@ -23,7 +23,8 @@ from src.workflow.file_preparation import (
     prepare_files,
 )
 from src.workflow.instructions import interpret_instructions
-from src.tools.data_analyst import DataAnalyst, analyze_gold_data
+from src.analysis.analysis_commentary import comment_analysis
+from src.analysis.business_analysis import analyze_business_data, render_analysis_text
 from src.recommendation.dashboard_review import (
     APPROVE,
     MODIFY,
@@ -41,6 +42,7 @@ from src.workflow.agent_workflow import (
     WorkflowError,
     decide_semantic_suggestions,
     plan_file,
+    quality_warnings,
     render_plan_preview,
     review_plan_column_names,
     review_plan_semantics,
@@ -286,17 +288,48 @@ class WorkflowService:
 
         return self.view(plan_id)
 
-    def _analyze(self, plan: AgentPlan, silver_path: str) -> dict:
+    def _analyze(self, plan: AgentPlan, result) -> dict:
         """
-        Rapport Data Analyst sur Silver. Un échec d'analyse ne change
-        pas le résultat du run, déjà vérifié et audité : il est signalé.
+        Analyse métier complète des données Silver ingérées (voir
+        src.analysis), puis commentaire du LLM, dont les nombres sont
+        vérifiés. Un échec d'analyse ne change pas le résultat du run,
+        déjà vérifié et audité : il est signalé.
         """
 
+        quality = {
+            "files": [
+                {
+                    "file": item["file"],
+                    "decision": item["decision"],
+                    "final_status": item["final_status"],
+                }
+                for item in result.file_results
+            ],
+            "checks": [
+                {"check": check["check"], "passed": check["passed"]}
+                for check in result.verification or []
+            ],
+            "warnings": [warning["message"] for warning in quality_warnings(plan)],
+        }
+
         try:
-            analysis = analyze_gold_data(silver_path, dataset_name=plan.dataset)
-            report = DataAnalyst().generate_analysis_report(analysis)
+            analysis = analyze_business_data(
+                pd.read_parquet(result.outputs["silver"]),
+                plan.kpis,
+                plan.semantics,
+                plan.dataset,
+                quality,
+            )
         except Exception as exc:
-            return {"analysis_report": None, "analysis_files": None, "analysis_error": str(exc)}
+            return {
+                "analysis": None,
+                "analysis_report": None,
+                "analysis_files": None,
+                "analysis_error": str(exc),
+            }
+
+        analysis["commentary"] = comment_analysis(self.llm_client, analysis).to_dict()
+        report = render_analysis_text(analysis)
 
         self.results_dir.mkdir(parents=True, exist_ok=True)
         text_path = self.results_dir / f"{plan.dataset}_analysis.txt"
@@ -308,6 +341,7 @@ class WorkflowService:
         )
 
         return {
+            "analysis": analysis,
             "analysis_report": report,
             "analysis_files": {"text": text_path.as_posix(), "json": json_path.as_posix()},
             "analysis_error": None,
@@ -352,9 +386,14 @@ class WorkflowService:
             else None
         )
         analysis = (
-            self._analyze(plan, result.outputs["silver"])
+            self._analyze(plan, result)
             if succeeded
-            else {"analysis_report": None, "analysis_files": None, "analysis_error": None}
+            else {
+                "analysis": None,
+                "analysis_report": None,
+                "analysis_files": None,
+                "analysis_error": None,
+            }
         )
 
         return {

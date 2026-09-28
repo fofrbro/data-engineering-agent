@@ -14,6 +14,7 @@ FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet, ou archive ZIP de ces fichiers)
   → POLICY ENGINE     INGEST / QUARANTINE / REJECT (règles déterministes)
   → BRONZE → SILVER → GOLD   transformations recommandées puis exécutées
   → VERIFY            fichiers, lignes, totaux Gold = totaux Silver
+  → ANALYSE           KPI, tendances, tops, distributions, constats + commentaire LLM vérifié
   → AUDIT             run et étapes horodatés, explicables
   → FABRIC            tables Delta (Lakehouse) : audits et tables Gold
   → POWER BI          rapport d'observabilité + un rapport par dataset métier
@@ -66,7 +67,8 @@ Puis ouvrir http://localhost:8000 :
    Avant de valider le contrat, **« Lancer la relecture »** (facultatif)
    demande au LLM de relire l'interprétation des colonnes (voir plus bas) ;
 4. **« Exécuter le plan validé »** : contrôles VERIFY, explication du run,
-   rapport Data Analyst et dossier préparé pour Fabric.
+   **analyse complète des données** affichée sur la page et dossier préparé
+   pour Fabric.
 
 Pour un nouveau fichier d'un dataset déjà validé, le contrat validé existant
 (`data/contracts/<dataset>.json`) est réutilisé automatiquement ; le nom du
@@ -180,6 +182,35 @@ Vérifié le 2026-09-28 avec le LLM réel : aucune suggestion sur
 avec une colonne `TotalDiscount`, le LLM a proposé de ne plus la traiter
 comme un montant, et après acceptation le chiffre d'affaires est redevenu
 `SUM(quantity * unit_price)`.
+
+### Analyse des données
+
+Après une exécution réussie, l'agent analyse les données Silver ingérées et
+l'affiche sous le résultat (et dans `results/<dataset>_analysis.txt|json`) :
+
+- **indicateurs** du plan, calculés avec les mêmes formules que Gold et
+  Power BI, et la même règle métier (annulations exclues) ;
+- **évolution mensuelle** de la mesure principale (histogramme), totaux par
+  année, meilleur et moins bon mois, évolution du dernier mois et d'une
+  année complète sur l'autre ; les mois incomplets sont signalés et écartés
+  des comparaisons ;
+- **top 5** par produit, client, catégorie, région ou statut, avec leur part
+  et la concentration (combien de valeurs font 80 % du total) ;
+- **distributions** des mesures (quartiles, valeurs hors 1,5 × l'écart
+  interquartile ; au-delà de 10 %, décrites comme plusieurs gammes plutôt
+  que comme des anomalies) ;
+- **qualité** : décision de chaque fichier, contrôles VERIFY, avertissements ;
+- **constats** rédigés par des règles, en français ;
+- **synthèse du LLM**, marquée « texte généré » : il ne reçoit que les
+  agrégats (clients remplacés par « Client 1 »…, jamais de lignes ni
+  d'e-mails) ; chaque nombre qu'il cite est **vérifié** contre les chiffres
+  calculés, et les nombres introuvables sont signalés. Sans clé, l'analyse
+  reste complète sans synthèse.
+
+Vérifié le 2026-09-28 sur `data/samples/sales.csv` avec le LLM réel :
+chiffre d'affaires 20 928 022,43, totaux annuels identiques au fichier
+source, 2021 en hausse de 67,8 % sur 2020, synthèse dont tous les nombres
+ont été vérifiés.
 
 ## Règles de décision
 
