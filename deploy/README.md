@@ -4,6 +4,12 @@ Objectif : `https://demo.fofanalyse.com` sert l'agent en **mode démo**
 (fichiers d'exemple seulement, un espace isolé et temporaire par visiteur,
 quotas journaliers), derrière **Caddy**, qui gère seul le certificat HTTPS.
 
+> Pour `fofanalyse.com`, le serveur utilise la pile commune du dépôt du
+> site (`fofanalyse-site/deploy`) : un seul Caddy pour le site, le
+> formulaire de contact et cette démo, deux Caddy ne pouvant pas partager
+> les ports 80 et 443. Les fichiers ci-dessous servent à déployer l'agent
+> seul.
+
 > Ces fichiers (`Dockerfile`, `docker-compose.yml`, `Caddyfile`) n'ont pas
 > encore été exécutés : Docker n'était pas disponible sur le poste de
 > développement. Le mode démo lui-même est testé (tests automatisés et essai
