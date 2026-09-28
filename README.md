@@ -104,7 +104,7 @@ dans un `.zip`) devient un seul dataset avec un seul contrat :
   fichier, texte des cellules inchangé ; les fichiers de même structure ont
   les mêmes noms et forment un seul plan, chacun gardant sa décision.
 
-Vérifié le 2026-09-28 avec l'export `orders.zip` (2019, 2020, 2021 sans
+Vérifié le 2026-09-28 avec l'export `data/samples/orders.zip` (2019, 2020, 2021 sans
 en-tête) : un seul plan `sales` réutilisant le contrat validé, 32 718 lignes,
 mêmes totaux que `data/samples/sales.csv` ; sans contrat, le LLM a proposé
 `SalesOrderNumber`, `OrderDate`, `CustomerEmail`, `UnitPrice`, `TaxAmount`…
