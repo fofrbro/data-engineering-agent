@@ -35,6 +35,7 @@ from src.semantic.vocabulary import (
     MEASURE,
     PRICE,
     QUANTITY,
+    TAX,
     STATUS,
     TEMPORAL,
 )
@@ -450,6 +451,9 @@ def _metrics(
     if amount:
         name = "total_sales" if amount == DERIVED_AMOUNT else f"total_{amount}"
         metrics.append(Metric(name, f"SUM({amount})", [amount]))
+
+    for tax in ctx.names(MEASURE, TAX):
+        metrics.append(Metric(f"total_{tax}", f"SUM({tax})", [tax]))
 
     for quantity in ctx.names(MEASURE, QUANTITY):
         name = "total_quantity" if quantity == "quantity" else f"total_{quantity}"

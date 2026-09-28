@@ -131,3 +131,11 @@ def test_generic_dataset_does_not_invent_sales_kpis():
 
 def test_recommendation_is_json_serializable():
     json.dumps(kpis_for(orders_frame()).to_dict())
+
+
+def test_tax_column_does_not_become_revenue():
+    frame = orders_frame().assign(tax_amount=[1.5, 2.0, 3.0] * 4)
+
+    revenue = kpis_for(frame).kpi("Revenue")
+
+    assert revenue.formula == "SUM(quantity * unit_price)"

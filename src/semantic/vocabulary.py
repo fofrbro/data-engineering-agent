@@ -22,6 +22,8 @@ AMOUNT = "AMOUNT"
 PRICE = "PRICE"
 QUANTITY = "QUANTITY"
 RATIO = "RATIO"
+TAX = "TAX"
+CONTACT = "CONTACT"
 STATUS = "STATUS"
 CATEGORY = "CATEGORY"
 GEOGRAPHY = "GEOGRAPHY"
@@ -39,7 +41,8 @@ TRANSACTION = "TRANSACTION"
 
 # L'ordre définit la priorité en cas de correspondances multiples :
 # "discount_rate" est un RATIO, "unit_price" un PRICE,
-# "total_quantity" une QUANTITY.
+# "total_quantity" une QUANTITY, "tax_amount" une TAX (une taxe
+# n'est pas le montant des ventes).
 MEASURE_KEYWORDS = {
     RATIO: (
         "ratio", "rate", "taux", "pct", "percent", "percentage",
@@ -52,10 +55,22 @@ MEASURE_KEYWORDS = {
         "quantity", "qty", "quantite", "qte", "units", "unites",
         "count", "nb", "nombre", "volume",
     ),
+    TAX: (
+        "tax", "taxe", "taxes", "tva", "vat",
+    ),
     AMOUNT: (
         "amount", "montant", "revenue", "revenu", "revenus", "sales",
         "ventes", "ca", "chiffre_affaires", "turnover", "cost", "cout",
         "spend", "depense", "payment", "paiement", "total",
+    ),
+}
+
+# Coordonnées personnelles : ni mesure ni axe d'analyse.
+# "email_address" est un contact, pas une adresse géographique.
+CONTACT_KEYWORDS = {
+    CONTACT: (
+        "email", "mail", "courriel", "phone", "telephone", "tel",
+        "mobile", "fax",
     ),
 }
 

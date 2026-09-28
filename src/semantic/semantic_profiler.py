@@ -34,6 +34,8 @@ from src.semantic.vocabulary import (
     ENTITY_KEYWORDS,
     FLAG,
     CATEGORY,
+    CONTACT,
+    CONTACT_KEYWORDS,
     GEOGRAPHY,
     IDENTIFIER,
     MEASURE,
@@ -395,6 +397,20 @@ def infer_column_semantics(profile: ColumnProfile) -> ColumnSemantics:
 
     if profile.is_temporal:
         return _infer_temporal(profile, entity)
+
+    contact = match_keyword(profile.name, CONTACT_KEYWORDS)
+
+    if contact:
+        # Donnée personnelle : conservée, mais jamais agrégée ni
+        # utilisée comme axe d'analyse.
+        return ColumnSemantics(
+            column=profile.name,
+            semantic_role=ATTRIBUTE,
+            business_role=CONTACT,
+            entity=entity,
+            confidence=CONFIDENCE_KEYWORD,
+            evidence=[f"nom contenant '{contact[1]}'"],
+        )
 
     dimension = match_keyword(profile.name, DIMENSION_KEYWORDS)
     strong_identifier_name = any(

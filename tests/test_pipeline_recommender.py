@@ -151,3 +151,16 @@ def test_recommendation_is_json_serializable():
     json.dumps(payload)
 
     assert payload["silver"]["transformations"][0]["requires_approval"] is False
+
+
+def test_tax_is_aggregated_next_to_derived_sales():
+    frame = orders_frame()
+    frame["tax_amount"] = [1.5] * len(frame)
+
+    recommendation = recommend(frame)
+    summary = next(t for t in recommendation.gold if t.name.endswith("_summary"))
+    metrics = {m.name: m.expression for m in summary.metrics}
+
+    assert "derive_line_amount" in by_id(recommendation)
+    assert metrics["total_sales"] == "SUM(line_amount)"
+    assert metrics["total_tax_amount"] == "SUM(tax_amount)"

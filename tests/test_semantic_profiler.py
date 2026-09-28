@@ -219,3 +219,28 @@ def test_unknown_domain_without_monetary_measure():
 
     assert domain.name == "UNKNOWN"
     assert domain.confidence == 0.0
+
+
+def test_tax_is_not_the_sales_amount():
+    assert match_keyword("TaxAmount", MEASURE_KEYWORDS)[0] == "TAX"
+    assert match_keyword("montant_tva", MEASURE_KEYWORDS)[0] == "TAX"
+    # Un taux de taxe reste un ratio.
+    assert match_keyword("tax_rate", MEASURE_KEYWORDS)[0] == "RATIO"
+
+
+def test_contact_columns_are_personal_attributes():
+    frame = pd.DataFrame(
+        {
+            "EmailAddress": [f"client{i % 4}@exemple.com" for i in range(12)],
+            "customer_phone": [f"06000000{i % 4}" for i in range(12)],
+            "shipping_address": ["1 rue A", "2 rue B"] * 6,
+        }
+    )
+
+    semantics = semantics_of(frame)
+
+    for name in ("EmailAddress", "customer_phone"):
+        column = semantics.column(name)
+        assert (column.semantic_role, column.business_role) == ("ATTRIBUTE", "CONTACT")
+    # Une adresse postale reste géographique.
+    assert semantics.column("shipping_address").business_role == "GEOGRAPHY"
