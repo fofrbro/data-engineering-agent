@@ -382,8 +382,6 @@ tests/                      tests unitaires et de bout en bout
 
 ## Limites connues
 
-- `docs/` (API_REFERENCE, QUICKSTART, FABRIC_CONFIG) décrit l'ancien parcours
-  et n'a pas été mis à jour.
 - La demande en langage naturel (`/api/workflow/ask`) traite un fichier à la
   fois ; l'interface et `/api/workflow/plan` acceptent un lot.
 - La détection des annulations s'appuie sur les valeurs d'exemple du profil
