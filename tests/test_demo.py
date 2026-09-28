@@ -120,11 +120,26 @@ def test_visitor_ids_that_could_escape_the_root_are_refused(registry):
 
 
 def test_simultaneous_visitors_are_capped(registry):
-    registry.get(new_visitor_id())
-    registry.get(new_visitor_id())
+    for _ in range(2):
+        registry.get(new_visitor_id()).sessions["lot"] = {}
 
     with pytest.raises(DemoFull):
         registry.get(new_visitor_id())
+
+
+def test_empty_workspaces_make_room_for_new_visitors(registry, clock):
+    # Deux requêtes sans cookie (robot) ne bloquent pas la démo.
+    busy = registry.get(new_visitor_id())
+    busy.sessions["lot"] = {}
+    clock.now = 1
+    idle = registry.get(new_visitor_id())
+    clock.now = 2
+
+    newcomer = registry.get(new_visitor_id())
+
+    assert registry.active == 2
+    assert not idle.upload_dir.exists()
+    assert busy.upload_dir.exists() and newcomer.upload_dir.exists()
 
 
 def test_startup_only_erases_visitor_folders(tmp_path):

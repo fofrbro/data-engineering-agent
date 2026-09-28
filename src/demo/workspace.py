@@ -38,6 +38,12 @@ class Workspace:
     quota: DailyQuota | None = None
     last_seen: float = field(default_factory=time.monotonic)
 
+    @property
+    def is_empty(self) -> bool:
+        """Ni fichier chargé ni plan : rien à perdre si l'espace est libéré."""
+
+        return not self.sessions and not self.service.plan_count
+
     def consume(self, action: str) -> None:
         """Compte une action coûteuse ; lève QuotaExceeded au-delà de la limite."""
 
@@ -93,6 +99,9 @@ class VisitorRegistry:
 
             if workspace is None:
                 if len(self._workspaces) >= self.max_visitors:
+                    self._evict_oldest_empty()
+
+                if len(self._workspaces) >= self.max_visitors:
                     raise DemoFull("La démo est très demandée : réessayez dans quelques minutes.")
 
                 workspace = self._create(visitor_id)
@@ -129,6 +138,19 @@ class VisitorRegistry:
             quota=self.quota,
             last_seen=self._clock(),
         )
+
+    def _evict_oldest_empty(self) -> None:
+        """
+        Libère l'espace vide le moins récemment utilisé : des requêtes sans
+        cookie (robots, curl) ne peuvent pas occuper toutes les places.
+        """
+
+        empty = [w for w in self._workspaces.values() if w.is_empty]
+
+        if empty:
+            oldest = min(empty, key=lambda w: w.last_seen)
+            del self._workspaces[oldest.visitor_id]
+            shutil.rmtree(self.root / oldest.visitor_id, ignore_errors=True)
 
     def _expire(self) -> None:
         now = self._clock()

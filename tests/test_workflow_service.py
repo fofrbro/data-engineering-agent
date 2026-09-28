@@ -202,3 +202,21 @@ def test_analysis_matches_gold_and_the_business_rule(service):
     assert analysis["overview"]["exclusion"] == "status : CANCELLED"
     assert analysis["commentary"]["status"] == "UNAVAILABLE"
     assert all(check["passed"] for check in analysis["quality"]["checks"])
+
+
+def test_gold_export_failure_does_not_change_the_run_result(service, monkeypatch):
+    import src.workflow.workflow_service as module
+
+    def broken(*args, **kwargs):
+        raise FileNotFoundError("chemin trop long")
+
+    monkeypatch.setattr(module, "export_gold_for_fabric", broken)
+    plan_id = service.create_plan("data/sales.csv")["plan_id"]
+    service.approve_contract(plan_id, "cheikhou")
+
+    result = service.execute(plan_id)
+
+    assert result["final_status"] == "SUCCESS"
+    assert result["fabric_export"] is None
+    assert result["fabric_export_error"] == "Export Fabric impossible : chemin trop long"
+    assert result["analysis"] is not None

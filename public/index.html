@@ -412,7 +412,10 @@
             <div class="card">
                 <h2>📤 Upload & Pipeline</h2>
 
-                <div class="section">
+                <!-- Démo publique : fichiers d'exemple à la place de l'upload. -->
+                <div class="section" id="demoPanel" style="display: none;"></div>
+
+                <div class="section" id="uploadSection">
                     <label>Fichiers de données</label>
                     <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('fileInput').click()">
                         <div class="upload-icon">📁</div>
@@ -423,7 +426,7 @@
                 </div>
 
                 <div class="section">
-                    <div class="form-group">
+                    <div class="form-group" id="contractPathGroup">
                         <label for="contractPath">Chemin du Contrat JSON (optionnel)</label>
                         <input type="text" id="contractPath" placeholder="data/contracts/<dataset>.json (optionnel)">
                     </div>
@@ -538,6 +541,7 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 Application démarrée');
+            await setupDemoMode();
             await loadUploadedFiles();
 
             try {
@@ -596,6 +600,56 @@
             }
 
             await uploadFiles(files);
+        }
+
+        // ============================================
+        // Démo publique
+        // ============================================
+
+        async function setupDemoMode() {
+            let config;
+            try {
+                config = await (await fetch('/api/config')).json();
+            } catch (error) {
+                return;
+            }
+            if (!config.demo) return;
+
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('contractPathGroup').style.display = 'none';
+            const remaining = config.remaining || {};
+            const samples = config.samples.map(sample => `
+                <div style="border: 1px solid #eaecf0; border-radius: 8px; padding: 10px; margin: 8px 0;">
+                    <strong>${escapeHtml(sample.title)}</strong>
+                    <p style="color: #475467; font-size: 0.9em; margin: 4px 0;">${escapeHtml(sample.description)}</p>
+                    <button class="btn-primary" style="width: auto; padding: 6px 12px;" onclick="loadDemoSample('${escapeHtml(sample.key)}', this)">Charger cet exemple</button>
+                </div>`).join('');
+            const panel = document.getElementById('demoPanel');
+            panel.style.display = 'block';
+            panel.innerHTML = `
+                <div style="background: #eef2ff; border-left: 3px solid #667eea; padding: 10px 12px; margin-bottom: 10px;">
+                    <strong>Démo publique.</strong> Choisissez un fichier d'exemple : vous travaillez dans un espace
+                    qui n'est visible que de vous et qui est effacé après ${config.ttl_minutes} minutes d'inactivité.
+                    Aujourd'hui, il vous reste ${remaining.plan ?? '—'} préparation(s) de plan, ${remaining.execution ?? '—'} exécution(s)
+                    et ${config.llm_available ? `${remaining.llm_call ?? '—'} appel(s) au LLM` : 'aucun appel au LLM (non configuré)'}.
+                </div>
+                <label>Fichiers d'exemple</label>
+                ${samples}`;
+        }
+
+        async function loadDemoSample(key, button) {
+            try {
+                button.disabled = true;
+                const data = await workflowRequest(`/api/demo/samples/${encodeURIComponent(key)}`);
+                currentFileId = data.file_id;
+                showMessage(`✓ Exemple chargé : ${data.files.map(f => f.file_name).join(', ')}`, 'success');
+                document.getElementById('agentBtn').disabled = false;
+                await loadUploadedFiles();
+            } catch (error) {
+                showMessage(`Erreur: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+            }
         }
 
         async function uploadFiles(files) {
@@ -1075,6 +1129,7 @@
                     </table>
                     ${checks ? `<p style="margin-top: 12px;"><strong>Vérifications :</strong></p><ul style="list-style: none;">${checks}</ul>` : ''}
                     ${result.fabric_export ? `<p style="margin-top: 12px;">Tables Gold prêtes pour Fabric : <code>${escapeHtml(result.fabric_export)}</code> (à déposer dans Files/gold/, puis notebook load_gold_tables).</p>` : ''}
+                    ${result.fabric_export_error ? `<p style="color:#b42318;">${escapeHtml(result.fabric_export_error)}</p>` : ''}
                     ${result.audit_export ? `<p style="margin-top: 12px;">Audit prêt pour Fabric : <code>${escapeHtml(result.audit_export.runs.replace(/\/[^/]+$/, ''))}</code> (2 fichiers à déposer dans Files/audit/, puis notebook incremental_load_audit_tables).</p>` : ''}
                     ${result.audit_export_error ? `<p style="color:#b42318;">Export de l'audit indisponible : ${escapeHtml(result.audit_export_error)}</p>` : ''}
                     <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>

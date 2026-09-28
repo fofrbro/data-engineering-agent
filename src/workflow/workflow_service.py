@@ -107,6 +107,10 @@ class WorkflowService:
         self.llm_client = llm_client
         self._plans: dict[str, AgentPlan] = {}
 
+    @property
+    def plan_count(self) -> int:
+        return len(self._plans)
+
     def get(self, plan_id: str) -> AgentPlan:
         if plan_id not in self._plans:
             raise KeyError(f"Plan introuvable : {plan_id}")
@@ -379,12 +383,16 @@ class WorkflowService:
         )
 
         # Seule une exécution vérifiée est préparée pour Fabric et analysée.
+        # Un échec d'export ne change pas le résultat du run, déjà vérifié
+        # et audité : il est signalé.
         succeeded = result.final_status == "SUCCESS"
-        fabric_export = (
-            export_gold_for_fabric(plan, result, self.fabric_export_root).as_posix()
-            if succeeded
-            else None
-        )
+        fabric_export, fabric_export_error = None, None
+
+        if succeeded:
+            try:
+                fabric_export = export_gold_for_fabric(plan, result, self.fabric_export_root).as_posix()
+            except OSError as exc:
+                fabric_export_error = f"Export Fabric impossible : {exc}"
         analysis = (
             self._analyze(plan, result)
             if succeeded
@@ -406,6 +414,7 @@ class WorkflowService:
             "explanation": result.explanation,
             "file_results": result.file_results,
             "fabric_export": fabric_export,
+            "fabric_export_error": fabric_export_error,
             # Tout run est audité, y compris refusé ou en échec : l'audit
             # est donc exporté après chaque exécution.
             **self._export_audit(),
