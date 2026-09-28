@@ -16,28 +16,10 @@
         },
         {
           "visual_type": "card",
-          "title": "Successful Runs",
+          "title": "Ingest Decision Runs",
           "fields": {
             "values": [
-              "[Successful Runs]"
-            ]
-          }
-        },
-        {
-          "visual_type": "card",
-          "title": "Assess Only Runs",
-          "fields": {
-            "values": [
-              "[Assess Only Runs]"
-            ]
-          }
-        },
-        {
-          "visual_type": "card",
-          "title": "Ingest Runs",
-          "fields": {
-            "values": [
-              "[Ingest Runs]"
+              "[Ingest Decision Runs]"
             ]
           }
         },
@@ -56,6 +38,24 @@
           "fields": {
             "values": [
               "[Reject Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Successful Runs",
+          "fields": {
+            "values": [
+              "[Successful Runs]"
+            ]
+          }
+        },
+        {
+          "visual_type": "card",
+          "title": "Failed Runs",
+          "fields": {
+            "values": [
+              "[Failed Runs]"
             ]
           }
         },
@@ -98,7 +98,7 @@
           }
         },
         {
-          "visual_type": "lineChart",
+          "visual_type": "clusteredColumnChart",
           "title": "Runs over time",
           "fields": {
             "axis": "pipeline_runs[started_at]",

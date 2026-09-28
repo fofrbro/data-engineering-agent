@@ -32,8 +32,8 @@ def test_observability_pages_follow_the_target_layout():
     page1 = pages["agent_observability"]
 
     assert [v["title"] for v in page1["visuals"] if v["visual_type"] == "card"] == [
-        "Total Runs", "Successful Runs", "Assess Only Runs", "Ingest Runs",
-        "Quarantine Runs", "Reject Runs", "Success Rate", "Average Duration (s)",
+        "Total Runs", "Ingest Decision Runs", "Quarantine Runs", "Reject Runs",
+        "Successful Runs", "Failed Runs", "Success Rate", "Average Duration (s)",
     ]
     assert {v["title"] for v in page1["visuals"]} >= {
         "Decisions", "Execution Mode", "Runs over time",

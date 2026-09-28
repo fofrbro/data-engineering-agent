@@ -12,10 +12,29 @@ Le même jour, après les runs INGEST, QUARANTINE et REJECT des fichiers
 INGEST, durée moyenne 0,08 s, 15 étapes (13 SUCCESS, 1 QUARANTINED,
 1 REJECTED). Toutes les valeurs correspondent aux audits.
 
-Note de lecture : « Ingest Runs » compte le **mode d'exécution** INGEST, pas
-la décision INGEST ; un fichier mis en quarantaine lors d'une exécution avec
-ingestion demandée compte donc dans « Ingest Runs » et dans « Quarantine
-Runs ».
+Note de lecture :
+
+- « Ingest Decision Runs », « Quarantine Runs » et « Reject Runs » comptent
+  la **décision** ; « Ingest Mode Runs » et « Assess Only Runs » comptent le
+  **mode d'exécution**. Un fichier rejeté lors d'une exécution avec ingestion
+  demandée compte dans « Ingest Mode Runs » et dans « Reject Runs ».
+- « Success Rate » est la part des runs ingérés avec succès : un rejet ou une
+  quarantaine corrects le font baisser sans être des erreurs. La santé de
+  l'agent se lit dans « Failed Runs » (runs en échec technique).
+
+### Mise à jour du rapport existant (2026-09-28)
+
+1. Dans le modèle sémantique, renommer la mesure « Ingest Runs » en
+   « Ingest Mode Runs » (les visuels suivent le renommage), puis créer
+   « Ingest Decision Runs » depuis `observability_measures.dax`.
+2. Remplacer la formule des mesures de comptage par leur version
+   `COALESCE(…, 0)` du fichier `.dax` : une carte affiche alors 0 au lieu
+   de « -- ».
+3. Page 1 : remplacer les cartes « Assess Only Runs » et « Ingest Runs » par
+   « Ingest Decision Runs » et « Failed Runs » ; ordre et visuels dans
+   `observability_report_guide.md`.
+4. « Runs over time » : sélectionner le visuel, puis choisir « Histogramme
+   groupé » dans le volet Visualisations (les champs sont conservés).
 
 ## Voir les modifications du modèle dans un rapport
 

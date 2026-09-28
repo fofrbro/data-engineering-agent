@@ -53,9 +53,11 @@ def to_dax(spec: MeasureSpec, measures: dict[str, MeasureSpec]) -> str:
         return f"COUNTROWS({spec.table})"
 
     if spec.kind == COUNT_WHERE:
+        # COALESCE : une carte affiche 0 plutôt que « -- » quand aucun
+        # run ne correspond (par exemple aucun échec).
         return (
-            f"CALCULATE(COUNTROWS({spec.table}), "
-            f'{_column(spec.table, spec.column)} = "{spec.value}")'
+            f"COALESCE(CALCULATE(COUNTROWS({spec.table}), "
+            f'{_column(spec.table, spec.column)} = "{spec.value}"), 0)'
         )
 
     if spec.kind == COUNT_NOT_WHERE:
@@ -122,7 +124,12 @@ OBSERVABILITY_MEASURES = [
     MeasureSpec("Successful Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="final_status", value="SUCCESS"),
     MeasureSpec("Failed Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="final_status", value="FAILED"),
     MeasureSpec("Assess Only Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="execution_mode", value="ASSESS_ONLY"),
-    MeasureSpec("Ingest Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="execution_mode", value="INGEST"),
+    # Mode d'exécution (ingestion demandée) et décision sont distincts :
+    # un fichier rejeté lors d'une exécution INGEST compte dans
+    # « Ingest Mode Runs » et dans « Reject Runs », pas dans
+    # « Ingest Decision Runs ».
+    MeasureSpec("Ingest Mode Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="execution_mode", value="INGEST"),
+    MeasureSpec("Ingest Decision Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="decision", value="INGEST"),
     MeasureSpec("Quarantine Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="decision", value="QUARANTINE"),
     MeasureSpec("Reject Runs", COUNT_WHERE, RUNS, RUN_FOLDER, column="decision", value="REJECT"),
     MeasureSpec("Success Rate", DIVIDE, RUNS, RUN_FOLDER, PERCENT, numerator="Successful Runs", denominator="Total Runs"),

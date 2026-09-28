@@ -5,22 +5,25 @@
 [Total Runs] = COUNTROWS(pipeline_runs)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Successful Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "SUCCESS")
+[Successful Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "SUCCESS"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Failed Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "FAILED")
+[Failed Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[final_status] = "FAILED"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Assess Only Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "ASSESS_ONLY")
+[Assess Only Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "ASSESS_ONLY"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Ingest Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "INGEST")
+[Ingest Mode Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[execution_mode] = "INGEST"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Quarantine Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "QUARANTINE")
+[Ingest Decision Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "INGEST"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0
-[Reject Runs] = CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "REJECT")
+[Quarantine Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "QUARANTINE"), 0)
+
+// Table : pipeline_runs | Dossier : Agent Observability | Format : 0
+[Reject Runs] = COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "REJECT"), 0)
 
 // Table : pipeline_runs | Dossier : Agent Observability | Format : 0.0%
 [Success Rate] = DIVIDE([Successful Runs], [Total Runs], 0)
@@ -38,7 +41,7 @@
 [Step Executions] = COUNTROWS(pipeline_steps)
 
 // Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0
-[Failed Steps] = CALCULATE(COUNTROWS(pipeline_steps), pipeline_steps[status] = "FAILED")
+[Failed Steps] = COALESCE(CALCULATE(COUNTROWS(pipeline_steps), pipeline_steps[status] = "FAILED"), 0)
 
 // Table : pipeline_steps | Dossier : Pipeline Steps | Format : 0
 [Succeeded Steps] = CALCULATE(COUNTROWS(pipeline_steps), pipeline_steps[status] <> "FAILED")

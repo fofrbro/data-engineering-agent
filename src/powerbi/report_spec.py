@@ -57,8 +57,11 @@ def observability_pages() -> list[dict]:
                 *[
                     _card(name)
                     for name in (
-                        "Total Runs", "Successful Runs", "Assess Only Runs",
-                        "Ingest Runs", "Quarantine Runs", "Reject Runs",
+                        # Décisions d'abord, puis santé de l'agent :
+                        # un rejet correct n'est pas un échec.
+                        "Total Runs", "Ingest Decision Runs",
+                        "Quarantine Runs", "Reject Runs",
+                        "Successful Runs", "Failed Runs",
                         "Success Rate", "Average Duration (s)",
                     )
                 ],
@@ -73,7 +76,8 @@ def observability_pages() -> list[dict]:
                     "fields": {"axis": f"{RUNS}[execution_mode]", "values": ["[Total Runs]"]},
                 },
                 {
-                    "visual_type": "lineChart",
+                    # Histogramme : lisible même avec peu de jours.
+                    "visual_type": "clusteredColumnChart",
                     "title": "Runs over time",
                     "fields": {
                         "axis": f"{RUNS}[started_at]",

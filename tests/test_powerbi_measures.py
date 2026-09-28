@@ -43,7 +43,7 @@ RUN_PARITY = {
     "Successful Runs": "successful_runs",
     "Failed Runs": "failed_runs",
     "Assess Only Runs": "assess_only_runs",
-    "Ingest Runs": "ingest_runs",
+    "Ingest Mode Runs": "ingest_runs",
     "Quarantine Runs": "quarantine_runs",
     "Reject Runs": "reject_runs",
     "Success Rate": "success_rate",
@@ -88,7 +88,7 @@ def test_dax_expressions():
 
     assert to_dax(measures["Total Runs"], measures) == "COUNTROWS(pipeline_runs)"
     assert to_dax(measures["Quarantine Runs"], measures) == (
-        'CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "QUARANTINE")'
+        'COALESCE(CALCULATE(COUNTROWS(pipeline_runs), pipeline_runs[decision] = "QUARANTINE"), 0)'
     )
     assert to_dax(measures["Success Rate"], measures) == (
         "DIVIDE([Successful Runs], [Total Runs], 0)"
@@ -113,3 +113,17 @@ def test_versioned_script_is_up_to_date():
     versioned = Path("powerbi/observability_measures.dax").read_text(encoding="utf-8")
 
     assert versioned == render_measures_script()
+
+
+def test_ingest_decision_and_ingest_mode_are_distinct():
+    # r1 : décision INGEST en mode ASSESS_ONLY ; r3, r5 : mode INGEST
+    # sans décision INGEST.
+    assert value("Ingest Decision Runs") == 2
+    assert value("Ingest Mode Runs") == 3
+
+
+def test_counts_show_zero_rather_than_blank():
+    measures = OBSERVABILITY_BY_NAME
+
+    assert to_dax(measures["Failed Runs"], measures).startswith("COALESCE(")
+    assert value("Failed Runs", {name: t.iloc[0:0] for name, t in TABLES.items()}) == 0

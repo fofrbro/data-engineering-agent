@@ -17,7 +17,8 @@ forme »). Dans Power BI Desktop : ruban « Outils de mesure ».
 - Successful Runs : Nombre entier
 - Failed Runs : Nombre entier
 - Assess Only Runs : Nombre entier
-- Ingest Runs : Nombre entier
+- Ingest Mode Runs : Nombre entier
+- Ingest Decision Runs : Nombre entier
 - Quarantine Runs : Nombre entier
 - Reject Runs : Nombre entier
 - Success Rate : Pourcentage, 1 décimale
@@ -38,16 +39,16 @@ Renommer la page : « AGENT OBSERVABILITY ».
 
 - **Total Runs** : Carte
   - Champs : mesure « Total Runs »
-- **Successful Runs** : Carte
-  - Champs : mesure « Successful Runs »
-- **Assess Only Runs** : Carte
-  - Champs : mesure « Assess Only Runs »
-- **Ingest Runs** : Carte
-  - Champs : mesure « Ingest Runs »
+- **Ingest Decision Runs** : Carte
+  - Champs : mesure « Ingest Decision Runs »
 - **Quarantine Runs** : Carte
   - Champs : mesure « Quarantine Runs »
 - **Reject Runs** : Carte
   - Champs : mesure « Reject Runs »
+- **Successful Runs** : Carte
+  - Champs : mesure « Successful Runs »
+- **Failed Runs** : Carte
+  - Champs : mesure « Failed Runs »
 - **Success Rate** : Carte
   - Champs : mesure « Success Rate »
 - **Average Duration (s)** : Carte
@@ -58,7 +59,7 @@ Renommer la page : « AGENT OBSERVABILITY ».
 - **Execution Mode** : Histogramme groupé
   - Axe X : « pipeline_runs > execution_mode »
   - Axe Y : mesure « Total Runs »
-- **Runs over time** : Graphique en courbes
+- **Runs over time** : Histogramme groupé
   - Créer d'abord, dans la table pipeline_runs, une colonne calculée (« Nouvelle colonne ») : `started_at_date = DATE(YEAR(pipeline_runs[started_at]), MONTH(pipeline_runs[started_at]), DAY(pipeline_runs[started_at]))`. Si « Nouvelle colonne » est indisponible (modèle Direct Lake), voir powerbi/README.md.
   - Axe X : « pipeline_runs > started_at_date »
   - Axe Y : mesure « Total Runs »
