@@ -160,9 +160,9 @@ def _apply(
     if step.type == "derive" and "target" in params:
         left, right = step.columns
         df = df.copy()
-        df[params["target"]] = (
-            pd.to_numeric(df[left]) * pd.to_numeric(df[right])
-        ).round(2)
+        # Sans arrondi par ligne : le total Gold reste égal à la mesure
+        # Power BI SUMX(quantité * prix), même avec des prix à 4 décimales.
+        df[params["target"]] = pd.to_numeric(df[left]) * pd.to_numeric(df[right])
         return df, empty
 
     if step.type == "derive" and "targets" in params:

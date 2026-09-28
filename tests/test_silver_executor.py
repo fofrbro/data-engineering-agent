@@ -124,3 +124,21 @@ def test_source_dataframe_is_not_modified():
     )
 
     pd.testing.assert_frame_equal(frame, before)
+
+
+def test_derived_amount_is_not_rounded_per_line():
+    # Prix à 4 décimales (Adventure Works) : un arrondi par ligne
+    # décalerait le total Gold de la mesure Power BI SUMX(quantité * prix).
+    frame = pd.DataFrame(
+        {
+            "Order ID": range(1, 13),
+            "quantity": [1, 3] * 6,
+            "unit_price": [1000.4375, 2.0049] * 6,
+        }
+    )
+    recommendation = recommendation_for(frame)
+
+    silver = apply_silver_transformations(frame, recommendation.transformations).data
+
+    assert silver["line_amount"].sum() == pytest.approx((frame.quantity * frame.unit_price).sum())
+    assert silver["line_amount"].tolist()[:2] == pytest.approx([1000.4375, 6.0147])
