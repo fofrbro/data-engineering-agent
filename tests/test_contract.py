@@ -149,3 +149,29 @@ def test_unknown_type_is_still_rejected(tmp_path):
     assert error_types(validate_contract(str(csv_file), contract)) == [
         "invalid_type",
     ]
+
+
+def test_integers_read_as_floats_are_integers(tmp_path):
+    from src.tools.contract_validation import is_type_compatible
+    import pandas as pd
+
+    # Entiers avec un vide, ou écrits « 10.0 » : lus en float par pandas.
+    assert is_type_compatible(pd.Series([1, None, 3]), "integer")
+    assert is_type_compatible(pd.Series([10.0, 40.0]), "integer")
+    assert not is_type_compatible(pd.Series([10.5, 40.0]), "integer")
+
+
+def test_proposed_contract_accepts_its_nullable_integer_source(tmp_path):
+    import pandas as pd
+    from src.contract.contract_generator import propose_contract_for_file
+    from src.contract.contract_lifecycle import save_contract
+
+    source = tmp_path / "stock.csv"
+    pd.DataFrame(
+        {"sku": [f"P{i}" for i in range(12)], "stock": [5, None, 7] * 4}
+    ).to_csv(source, index=False)
+    contract = save_contract(propose_contract_for_file(str(source)), tmp_path / "stock.json")
+
+    result = validate_contract(str(source), str(contract))
+
+    assert result["valid"] is True, result["errors"]

@@ -57,6 +57,12 @@ def is_type_compatible(series: pd.Series, expected_type: str) -> bool:
     """
 
     if expected_type == "integer":
+        if pd.api.types.is_float_dtype(series):
+            # Comme le profil de schéma : des entiers avec nulls, ou
+            # écrits « 10.0 », sont lus en float.
+            values = series.dropna()
+            return bool((values == values.round()).all())
+
         return pd.api.types.is_integer_dtype(series)
 
     if expected_type == "decimal":
