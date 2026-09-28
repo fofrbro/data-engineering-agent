@@ -99,6 +99,13 @@ Pour les deux derniers, saisir `ventes_2025_2026` dans « Nom du Dataset » afin
 de réutiliser le contrat validé. Les trois fichiers peuvent aussi être envoyés
 ensemble avec ce nom : un seul plan, trois décisions.
 
+`data/samples/sales.csv` est l'exemple de ventes **Adventure Works** de
+Microsoft (clients fictifs), 32 718 lignes, pour tester un volume plus
+important et un fichier sans colonne de montant : le chiffre d'affaires est
+dérivé de `Quantity × UnitPrice` (20 928 022,43) et `TaxAmount` est reconnu
+comme une taxe (1 674 241,85). Son contrat validé est
+`data/contracts/sales.json`.
+
 ### Relecture sémantique (LLM)
 
 L'interprétation des colonnes (mesure, montant, taxe, dimension, date…) est
