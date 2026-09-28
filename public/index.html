@@ -451,7 +451,7 @@
                         <p><strong>Cliquez ici ou glissez vos fichiers tabulaires</strong></p>
                         <p style="font-size: 0.9em; color: #666;">CSV, TSV, JSON, JSONL, Excel, Parquet ou TXT · Max 100 MB par fichier</p>
                     </div>
-                    <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.xlsx,.xls,.parquet,.txt" multiple onchange="handleFileSelect(event)">
+                    <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.xlsx,.xls,.parquet,.txt,.zip" multiple onchange="handleFileSelect(event)">
                 </div>
 
                 <div class="section">
@@ -867,6 +867,9 @@
                         <tr><th ${cell}>Fichier</th><th ${cell}>Lignes</th><th ${cell}>Décision prévue</th><th ${cell}>Règle</th></tr>
                         ${files}
                     </table>
+                    ${(view.file_preparations || []).length ? `<p style="margin-top: 12px;">📎 Fichiers sans en-tête préparés : ${
+                        view.file_preparations.map(p => `${escapeHtml(fileName(p.original))} (${escapeHtml(p.note)})`).join(', ')
+                    }</p>` : ''}
                     <p style="margin-top: 12px;">
                         Décision prévisionnelle : <strong>${escapeHtml(d.decision)}</strong>
                         (${escapeHtml(d.policy_rule)}) - ${escapeHtml(d.reason)}

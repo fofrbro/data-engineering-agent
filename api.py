@@ -27,6 +27,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from src.tabular_pipeline import SUPPORTED_EXTENSIONS
+from src.discovery.archive import ArchiveError, extract_data_files
 from src.contract.contract_lifecycle import (
     ContractStatusError,
     approve_contract_file,
@@ -326,10 +327,10 @@ async def upload_file(files: List[UploadFile] = File(...)):
         for file in files:
             original_name = Path(file.filename or "dataset").name
             suffix = Path(original_name).suffix.lower()
-            if suffix not in SUPPORTED_EXTENSIONS:
+            if suffix not in SUPPORTED_EXTENSIONS | {".zip"}:
                 raise HTTPException(
                     status_code=415,
-                    detail=f"Format non supporté: {suffix or 'inconnu'}. Formats: {', '.join(sorted(SUPPORTED_EXTENSIONS))}",
+                    detail=f"Format non supporté: {suffix or 'inconnu'}. Formats: {', '.join(sorted(SUPPORTED_EXTENSIONS | {'.zip'}))}",
                 )
             file_id = str(uuid.uuid4())
             contents = await file.read()
@@ -341,20 +342,34 @@ async def upload_file(files: List[UploadFile] = File(...)):
                 uploaded_at,
             )
             if archive_path.exists():
-                archive_path = ARCHIVE_DIR / f"{archive_path.stem}_{file_id[:8]}.csv"
+                archive_path = ARCHIVE_DIR / f"{archive_path.stem}_{file_id[:8]}{archive_path.suffix}"
 
-            file_path = UPLOAD_DIR / f"{file_id}_{original_name}"
-            with open(file_path, "wb") as output_file:
-                output_file.write(contents)
+            # Une archive ZIP est archivée telle quelle ; ses fichiers de
+            # données rejoignent le lot comme s'ils avaient été uploadés.
+            if suffix == ".zip":
+                try:
+                    members = extract_data_files(contents, SUPPORTED_EXTENSIONS)
+                except ArchiveError as exc:
+                    raise HTTPException(status_code=400, detail=f"{original_name} : {exc}")
+            else:
+                members = [(original_name, contents)]
+
             with open(archive_path, "wb") as archive_file:
                 archive_file.write(contents)
 
-            uploaded_files.append({
-                "file_id": file_id,
-                "file_name": original_name,
-                "file_path": str(file_path),
-                "archive_path": str(archive_path),
-            })
+            for member_name, member_contents in members:
+                member_id = file_id if suffix != ".zip" else str(uuid.uuid4())
+                file_path = UPLOAD_DIR / f"{member_id}_{member_name}"
+                with open(file_path, "wb") as output_file:
+                    output_file.write(member_contents)
+
+                uploaded_files.append({
+                    "file_id": member_id,
+                    "file_name": member_name,
+                    "file_path": str(file_path),
+                    "archive_path": str(archive_path),
+                    "source_archive": original_name if suffix == ".zip" else None,
+                })
 
         # Une session représente le lot analysé ensemble.
         sessions[batch_id] = {

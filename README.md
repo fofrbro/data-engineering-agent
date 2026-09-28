@@ -7,7 +7,7 @@ l'exécute, vérifie le résultat, trace tout dans un audit et prépare les tabl
 pour Microsoft Fabric et Power BI.
 
 ```
-FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet)
+FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet, ou archive ZIP de ces fichiers)
   → DÉCOUVERTE        format, schéma, types, nulls, doublons, cardinalités
   → SÉMANTIQUE        identifiants, mesures, dimensions, dates, métier (confiance)
   → DATA CONTRACT     proposé (PROPOSED) → validé par un relecteur (VALIDATED)
@@ -54,7 +54,7 @@ Lancer le serveur :
 
 Puis ouvrir http://localhost:8000 :
 
-1. uploader un ou plusieurs fichiers ;
+1. uploader un ou plusieurs fichiers, ou une archive `.zip` ;
 2. **« Préparer avec l'agent »** : un plan par dataset détecté, avec la
    décision prévisionnelle de chaque fichier, le contrat, le pipeline, les KPI
    et le tableau de bord ;
@@ -83,6 +83,35 @@ dataset vient du nom de fichier ou du champ « Nom du Dataset ».
   Les runs d'une même exécution partagent un `batch_id`.
 - Les recommandations suivent le contrat : une colonne hors contrat n'est ni
   transformée ni utilisée dans Gold, les KPI ou le tableau de bord.
+
+### Fichiers sans en-tête et archives ZIP
+
+Un export découpé (par exemple une année par fichier, sans ligne d'en-tête,
+dans un `.zip`) devient un seul dataset avec un seul contrat :
+
+- une archive `.zip` est conservée dans `data/archive/` et ses fichiers de
+  données rejoignent le lot (noms à plat, sans archive imbriquée, tailles
+  limitées) ;
+- un fichier délimité **sans en-tête** est détecté quand sa première ligne
+  contient des nombres ou des dates là où les autres lignes en contiennent
+  (un en-tête y porterait des libellés) ;
+- ses colonnes sont nommées d'après le **seul contrat validé de même
+  structure** (nombre et types de colonnes), qui est alors réutilisé ; sinon
+  par le **LLM** (noms vérifiés par le code, validés avec le contrat proposé ;
+  pour les textes comme les noms ou e-mails, seule leur forme est envoyée,
+  `Aaaaaaa Aaa`) ; sinon `column_1`, `column_2`… ;
+- une copie avec en-tête (`<fichier>_avec_entete.csv`) est écrite à côté du
+  fichier, texte des cellules inchangé ; les fichiers de même structure ont
+  les mêmes noms et forment un seul plan, chacun gardant sa décision.
+
+Vérifié le 2026-09-28 avec l'export `orders.zip` (2019, 2020, 2021 sans
+en-tête) : un seul plan `sales` réutilisant le contrat validé, 32 718 lignes,
+mêmes totaux que `data/samples/sales.csv` ; sans contrat, le LLM a proposé
+`SalesOrderNumber`, `OrderDate`, `CustomerEmail`, `UnitPrice`, `TaxAmount`…
+
+Limite : un fichier dont l'en-tête ne contient que des nombres (années en
+colonnes, par exemple) serait pris pour un fichier sans en-tête ; le plan
+l'indique (« Fichiers sans en-tête préparés »).
 
 ### Fichiers d'exemple
 
@@ -156,7 +185,7 @@ agrégats Gold ; la table de faits garde toutes les lignes.
 
 | Méthode | Route | Rôle |
 |---|---|---|
-| POST | `/api/upload` | uploader un ou plusieurs fichiers |
+| POST | `/api/upload` | uploader un ou plusieurs fichiers, ou une archive `.zip` |
 | POST | `/api/workflow/plan` | créer les plans d'un lot uploadé (`{"plans": [...]}`, un par dataset) |
 | POST | `/api/workflow/ask` | demande en langage naturel (LLM → plan ou explication), un fichier à la fois |
 | GET | `/api/workflow/{plan_id}` | consulter un plan |
