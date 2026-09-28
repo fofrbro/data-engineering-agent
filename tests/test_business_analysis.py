@@ -244,6 +244,8 @@ def test_months_without_rows_count_as_zero_and_years_stay_consecutive():
     # Embauches de 2022 à 2024, aucune en mars 2023 : l'année 2023 reste
     # complète et 2024 se compare à 2023, pas à 2022.
     days = [d for d in pd.date_range("2022-01-01", "2024-12-31", freq="7D") if d.strftime("%Y-%m") != "2023-03"]
+    # Le 31 décembre borne la période : décembre 2024 est complet.
+    days.append(pd.Timestamp("2024-12-31"))
     frame = pd.DataFrame(
         {
             "employee_id": [f"E{i}" for i in range(len(days))],
