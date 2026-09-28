@@ -1,10 +1,64 @@
 # Data Engineering Agent
 
+[![tests](https://github.com/VOTRE-COMPTE/data-engineering-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/VOTRE-COMPTE/data-engineering-agent/actions/workflows/tests.yml)
+![Python](https://img.shields.io/badge/python-3.14-blue)
+![Licence](https://img.shields.io/badge/licence-MIT-green)
+
 Agent de Data Engineering qui prend en charge un fichier de données de bout en
 bout : il l'analyse, propose un Data Contract, un pipeline Bronze / Silver /
 Gold, des KPI et un tableau de bord, puis, **après validation humaine**,
-l'exécute, vérifie le résultat, trace tout dans un audit et prépare les tables
-pour Microsoft Fabric et Power BI.
+l'exécute, vérifie le résultat, trace tout dans un audit, analyse les données
+et prépare les tables pour Microsoft Fabric et Power BI.
+
+**En bref**
+
+- **Chaîne complète et vérifiée dans le cloud** : tables Delta chargées dans
+  un Lakehouse Microsoft Fabric et rapports Power BI construits, avec des
+  valeurs contrôlées contre les fichiers sources (par exemple chiffre
+  d'affaires 20 928 022,43 sur 32 718 lignes Adventure Works).
+- **IA encadrée** : le LLM propose (rôles des colonnes, noms de colonnes d'un
+  fichier sans en-tête, synthèse de l'analyse) ; le code vérifie chaque
+  proposition, anonymise ce qui part au LLM et contrôle chaque nombre cité ;
+  un relecteur nommé décide.
+- **Gouvernance** : Data Contract versionné, décision INGEST / QUARANTINE /
+  REJECT par fichier, qualité graduée, règles métier (commandes annulées
+  exclues), audit horodaté et rapport d'observabilité.
+- **Rigueur** : 467 tests automatisés, lancés à chaque push par GitHub
+  Actions ; fonctionne sans clé OpenAI (fonctions LLM alors indisponibles).
+
+<details>
+<summary><strong>In English</strong></summary>
+
+An AI-assisted data engineering agent that takes a raw file (CSV, Excel, JSON,
+Parquet, or a ZIP of headerless yearly exports) through profiling, semantic
+interpretation, a versioned data contract, per-file INGEST / QUARANTINE /
+REJECT decisions, a Bronze / Silver / Gold medallion pipeline, verified
+outputs, a full data analysis and an audit trail, then prepares Delta tables
+for a Microsoft Fabric Lakehouse and Power BI reports. The LLM only proposes
+(column roles, column names, analysis summary); deterministic code checks
+every proposal, anonymizes what is sent and verifies every cited number, and a
+named reviewer approves. Validated end to end in Fabric and Power BI. The code
+and documentation are in French.
+
+</details>
+
+```mermaid
+flowchart LR
+    F[Fichier ou ZIP] --> P[Profil et sémantique]
+    P --> C{Data Contract<br/>validé ?}
+    L[LLM : suggestions] -. vérifiées .-> P
+    C --> D[Décision par fichier<br/>INGEST / QUARANTINE / REJECT]
+    D --> B[Bronze] --> S[Silver] --> G[Gold]
+    G --> V[VERIFY] --> A[Analyse + audit]
+    A --> X[Export Fabric] --> PBI[Power BI]
+```
+
+<!--
+Captures d'écran : déposez-les dans docs/images/ puis décommentez.
+![Plan de l'agent](docs/images/plan.png)
+![Analyse des données](docs/images/analyse.png)
+![Rapport Power BI](docs/images/powerbi.png)
+-->
 
 ```
 FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet, ou archive ZIP de ces fichiers)
@@ -36,7 +90,7 @@ FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet, ou archive ZIP de ces fichiers)
   cette exécution ».
 - **Tout est audité**, y compris les runs bloqués ou en échec.
 
-## Démarrage rapide (Windows)
+## Démarrage rapide
 
 Prérequis : Python 3.14. La clé OpenAI est **facultative** : à placer dans
 un fichier `.env` (voir `.env.example`), elle active la relecture sémantique,
@@ -55,7 +109,8 @@ Lancer le serveur :
 .venv/Scripts/python.exe -m uvicorn api:app --port 8000
 ```
 
-Puis ouvrir http://localhost:8000 :
+(sous Linux ou macOS : `.venv/bin/python` au lieu de `.venv/Scripts/python.exe`),
+puis ouvrir http://localhost:8000 :
 
 1. uploader un ou plusieurs fichiers, ou une archive `.zip` ; en option,
    donner des **instructions** à l'agent en langage naturel et/ou les **noms
@@ -138,8 +193,10 @@ instructions sont signalées comme non appliquées.
 
 ### Fichiers d'exemple
 
-`data/samples/` contient des données **fictives** pour tester les trois
-décisions sur le dataset `ventes_2025_2026` :
+`data/samples/` contient des fichiers d'exemple, générés pour ce projet ou
+issus des exemples Microsoft sous licence MIT (origine et licence dans
+[data/samples/README.md](data/samples/README.md)). Trois fichiers fictifs
+testent les trois décisions sur le dataset `ventes_2025_2026` :
 
 | Fichier | Décision attendue | Raison |
 |---|---|---|
@@ -354,6 +411,11 @@ données sources.
 .venv/Scripts/python.exe -m pytest -q
 ```
 
+Sous Linux ou macOS, remplacer `.venv/Scripts/python.exe` par
+`.venv/bin/python`. Les tests n'ont besoin ni de clé OpenAI (clients LLM
+simulés) ni de Fabric ; GitHub Actions les lance à chaque push
+(`.github/workflows/tests.yml`).
+
 La logique Fabric et Power BI est testée localement (Lakehouse simulé en
 Parquet, SQL des vues exécuté dans SQLite, mesures DAX évaluées avec pandas) ;
 ces tests ne remplacent pas une exécution dans Fabric ou Power BI, consignée
@@ -369,7 +431,8 @@ src/
   contract/                 génération et cycle de vie des Data Contracts
   tools/                    validations qualité et contrat, Policy Engine
   recommendation/           pipeline, KPI, tableau de bord, revue, règles métier
-  execution/                exécution Silver et Gold
+  execution/                exécution Silver et Gold, enrichissements déclaratifs
+  analysis/                 analyse des données après exécution, synthèse LLM vérifiée
   workflow/                 PLAN → VALIDATE → EXECUTE → VERIFY → AUDIT, service, LLM
   fabric/                   chargement incrémental, export Gold (logique testable)
   powerbi/                  mesures DAX, traduction des KPI, guides de rapport
@@ -377,7 +440,7 @@ src/
 fabric/                     notebooks PySpark et SQL des vues pour Fabric
 powerbi/                    mesures, guides et tableaux de bord approuvés
 data/contracts/             contrats validés (versionnés) ; proposed/ est ignoré
-data/samples/               fichiers d'exemple fictifs
+data/samples/               fichiers d'exemple (origine et licences dans son README)
 tests/                      tests unitaires et de bout en bout
 ```
 
