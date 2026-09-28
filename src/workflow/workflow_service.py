@@ -9,6 +9,7 @@ Chaque validation exige un relecteur explicite.
 import json
 from pathlib import Path
 
+from src.audit_parquet import export_structured_audit_to_parquet
 from src.audit_store import DEFAULT_AUDIT_PATH
 from src.contract.contract_generator import dataset_name_from_path
 from src.fabric.gold_export import export_gold_for_fabric
@@ -188,6 +189,29 @@ class WorkflowService:
             "analysis_error": None,
         }
 
+    def _export_audit(self) -> dict:
+        """
+        Exporte l'audit structuré pour Fabric (Files/audit/). Un échec
+        d'export ne change pas le résultat du run, déjà audité : il est
+        signalé.
+        """
+
+        folder = Path(self.fabric_export_root) / "audit"
+
+        try:
+            runs_path, steps_path = export_structured_audit_to_parquet(
+                self.audit_path,
+                folder / "pipeline_runs_structured.parquet",
+                folder / "pipeline_steps_structured.parquet",
+            )
+        except Exception as exc:
+            return {"audit_export": None, "audit_export_error": str(exc)}
+
+        return {
+            "audit_export": {"runs": runs_path.as_posix(), "steps": steps_path.as_posix()},
+            "audit_export_error": None,
+        }
+
     def execute(self, plan_id: str) -> dict:
         plan = self.get(plan_id)
         result = execute_plan(
@@ -219,5 +243,8 @@ class WorkflowService:
             "explanation": result.explanation,
             "file_results": result.file_results,
             "fabric_export": fabric_export,
+            # Tout run est audité, y compris refusé ou en échec : l'audit
+            # est donc exporté après chaque exécution.
+            **self._export_audit(),
             **analysis,
         }

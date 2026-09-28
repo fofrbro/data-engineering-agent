@@ -144,3 +144,42 @@ def test_execute_reports_each_file(service):
         ("INGEST", "SUCCESS"), ("REJECT", "REJECTED"),
     ]
     assert result["fabric_export"].endswith("fabric_export/gold/ventes_2025_2026")
+
+
+def test_execute_exports_every_audited_run_for_fabric(service):
+    import pandas as pd
+
+    first = service.create_plans(["data/samples/ventes_2025_2026.csv"])[0]["plan_id"]
+    service.approve_contract(first, "cheikhou")
+
+    view = service.create_plans(
+        ["data/samples/ventes_2025_2026.csv", "data/samples/ventes_rejet.csv"],
+        dataset="ventes_2025_2026",
+    )[0]
+    result = service.execute(view["plan_id"])
+
+    assert result["audit_export_error"] is None
+    assert result["audit_export"]["runs"].endswith("fabric_export/audit/pipeline_runs_structured.parquet")
+    runs = pd.read_parquet(result["audit_export"]["runs"])
+    steps = pd.read_parquet(result["audit_export"]["steps"])
+    # Le run refusé est exporté comme le run ingéré.
+    run_ids = {r["run_id"] for r in result["file_results"]}
+    assert run_ids <= set(runs["run_id"])
+    assert run_ids <= set(steps["run_id"])
+
+
+def test_audit_export_failure_does_not_change_the_run_result(service, monkeypatch):
+    import src.workflow.workflow_service as module
+
+    def broken(*args, **kwargs):
+        raise OSError("disque plein")
+
+    monkeypatch.setattr(module, "export_structured_audit_to_parquet", broken)
+    plan_id = service.create_plan("data/sales.csv")["plan_id"]
+    service.approve_contract(plan_id, "cheikhou")
+
+    result = service.execute(plan_id)
+
+    assert result["final_status"] == "SUCCESS"
+    assert result["audit_export"] is None
+    assert result["audit_export_error"] == "disque plein"

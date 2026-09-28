@@ -7,7 +7,7 @@ Ils ne sont pas lancés par les tests locaux : seule la logique
 ## Chaîne cible
 
 ```
-Agent -> Parquet (data/audit/*_structured.parquet)
+Agent -> Parquet (data/fabric_export/audit/*_structured.parquet, après chaque exécution)
       -> Fabric Files (Files/audit/)
       -> Lakehouse Delta (pipeline_runs, pipeline_steps)
       -> vue pipeline_observability

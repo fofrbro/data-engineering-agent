@@ -163,14 +163,18 @@ Voir [fabric/README.md](fabric/README.md) : notebooks de chargement incrémental
 des audits (`pipeline_runs`, `pipeline_steps`), vues d'observabilité, chargement
 des tables Gold par dataset (`load_gold_tables`), dépannage.
 
-Exporter les audits structurés avant de les déposer dans `Files/audit/` :
+Après chaque exécution, l'agent prépare automatiquement :
+
+- l'audit structuré de tous les runs (y compris refusés ou en échec) dans
+  `data/fabric_export/audit/`, à déposer dans `Files/audit/` ;
+- les tables Gold d'une exécution réussie dans
+  `data/fabric_export/gold/<dataset>/`, à déposer dans `Files/gold/<dataset>/`.
+
+L'export de l'audit peut aussi être relancé à la main :
 
 ```bash
-.venv/Scripts/python.exe -c "from src.audit_parquet import export_structured_audit_to_parquet; print(export_structured_audit_to_parquet())"
+.venv/Scripts/python.exe -c "from src.audit_parquet import export_structured_audit_to_parquet as e; print(e(None, 'data/fabric_export/audit/pipeline_runs_structured.parquet', 'data/fabric_export/audit/pipeline_steps_structured.parquet'))"
 ```
-
-Les tables Gold d'une exécution réussie sont préparées dans
-`data/fabric_export/gold/<dataset>/`, à déposer dans `Files/gold/<dataset>/`.
 
 Validé dans Fabric : chargements incrémentaux et idempotents, rattrapage après
 interruption, vues, tables Gold `ventes_2025_2026` conformes au fichier source.

@@ -854,6 +854,8 @@
                     </table>
                     ${checks ? `<p style="margin-top: 12px;"><strong>Vérifications :</strong></p><ul style="list-style: none;">${checks}</ul>` : ''}
                     ${result.fabric_export ? `<p style="margin-top: 12px;">Tables Gold prêtes pour Fabric : <code>${escapeHtml(result.fabric_export)}</code> (à déposer dans Files/gold/, puis notebook load_gold_tables).</p>` : ''}
+                    ${result.audit_export ? `<p style="margin-top: 12px;">Audit prêt pour Fabric : <code>${escapeHtml(result.audit_export.runs.replace(/\/[^/]+$/, ''))}</code> (2 fichiers à déposer dans Files/audit/, puis notebook incremental_load_audit_tables).</p>` : ''}
+                    ${result.audit_export_error ? `<p style="color:#b42318;">Export de l'audit indisponible : ${escapeHtml(result.audit_export_error)}</p>` : ''}
                     <p style="margin-top: 12px;"><strong>Explication du run :</strong></p>
                     <pre>${escapeHtml(result.explanation)}</pre>
                     ${result.analysis_report ? `<details style="margin-top: 12px;"><summary>Analyse Data Analyst</summary><pre>${escapeHtml(result.analysis_report)}</pre></details>` : ''}
