@@ -85,3 +85,14 @@ exclues », `ventes_2025_2026_summary` vaut dans Fabric : `total_sales`
 811 954,17, `total_quantity` 3 304, `avg_unit_price` 243,0021,
 `number_of_lines` 1 375, identique au calcul fait sur le fichier source hors
 `status = CANCELLED`. `gold_loads` trace 3 runs de 9 tables pour ce dataset.
+
+## Validations des tables Gold `sales` (Adventure Works)
+
+Le 2026-09-28, `data/samples/sales.csv` (32 718 lignes, sans colonne de
+montant) : `sales_summary` vaut dans Fabric `total_sales` 20 928 022,43
+(chiffre d'affaires dérivé `quantity × unit_price`, sans arrondi par ligne),
+`total_tax_amount` 1 674 241,85, `total_quantity` 32 718, `avg_unit_price`
+639,6486, `number_of_lines` 32 718, identique au calcul fait sur le fichier
+source. Piège rencontré : un dépôt dans `Files/gold/sales/` qui garde
+l'ancien `manifest.json` fait répondre au notebook « Run … déjà chargé » ;
+vider le dossier avant de déposer le nouvel export.

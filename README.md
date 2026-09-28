@@ -216,7 +216,8 @@ L'export de l'audit peut aussi être relancé à la main :
 ```
 
 Validé dans Fabric : chargements incrémentaux et idempotents, rattrapage après
-interruption, vues, tables Gold `ventes_2025_2026` conformes au fichier source.
+interruption, vues, tables Gold `ventes_2025_2026` et `sales` (Adventure Works)
+conformes au fichier source.
 
 ## Power BI
 
