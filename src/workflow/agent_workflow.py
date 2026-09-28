@@ -100,6 +100,9 @@ class AgentPlan:
     enrichments: list[dict] = field(default_factory=list)
     quality_preview: dict = field(default_factory=dict)
     destructive_approval: dict | None = None
+    # Fichiers sans en-tête préparés avant le plan (original, copie
+    # avec en-tête, origine des noms) ; vide si aucun.
+    file_preparations: list[dict] = field(default_factory=list)
     semantic_review: SemanticReview | None = None
     # Rôles acceptés par un relecteur, par colonne : ils remplacent
     # l'interprétation déterministe à chaque recalcul du profil.
@@ -734,6 +737,12 @@ def render_plan_preview(plan: AgentPlan) -> str:
             f"Fichier : {plan.file_path} ({plan.discovery.format.format}, "
             f"{schema.row_count} lignes, {schema.column_count} colonnes)",
         ]
+
+    for preparation in plan.file_preparations:
+        source.append(
+            f"  Sans en-tête : {preparation['original']} -> {preparation['path']} "
+            f"({preparation['note']})"
+        )
 
     lines = [
         "AGENT PLAN",

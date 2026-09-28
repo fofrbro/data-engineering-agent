@@ -14,6 +14,7 @@ from src.audit_store import DEFAULT_AUDIT_PATH
 from src.contract.contract_generator import dataset_name_from_path
 from src.fabric.gold_export import export_gold_for_fabric
 from src.workflow.batch import group_files
+from src.workflow.file_preparation import FROM_FILE, prepare_files
 from src.tools.data_analyst import DataAnalyst, analyze_gold_data
 from src.recommendation.dashboard_review import (
     APPROVE,
@@ -75,6 +76,7 @@ class WorkflowService:
             "file": plan.file_path,
             "files": plan.file_paths,
             "file_previews": plan.file_previews,
+            "file_preparations": plan.file_preparations,
             "contract_path": plan.contract_path,
             "contract_status": plan.contract_status,
             "contract_origin": plan.contract_origin,
@@ -118,18 +120,30 @@ class WorkflowService:
         display_names: dict[str, str] | None = None,
     ) -> list[dict]:
         """
-        Un plan par dataset du lot (voir group_files). Un groupe sans
-        nom fourni prend le nom d'origine de son premier fichier
-        (display_names), suffixé en cas de doublon.
+        Un plan par dataset du lot (voir group_files). Les fichiers sans
+        en-tête sont d'abord préparés (voir file_preparation) : ceux de
+        même structure reçoivent les mêmes noms et forment un seul plan.
+
+        Nom d'un groupe : celui fourni, sinon celui issu de la préparation
+        (contrat reconnu ou LLM), sinon le nom d'origine de son premier
+        fichier (display_names), suffixé en cas de doublon.
         """
 
         display_names = display_names or {}
+        preparations = {
+            prepared.path: prepared
+            for prepared in prepare_files(file_paths, self.contracts_dir, self.llm_client)
+        }
         views = []
         used = set()
 
-        for group in group_files(file_paths, dataset):
-            name = group.dataset or dataset_name_from_path(
-                display_names.get(group.files[0], group.files[0])
+        for group in group_files(list(preparations), dataset):
+            originals = [preparations[path].original for path in group.files]
+            suggested = {preparations[path].dataset for path in group.files}
+            name = (
+                group.dataset
+                or (suggested.pop() if len(suggested) == 1 and None not in suggested else None)
+                or dataset_name_from_path(display_names.get(originals[0], originals[0]))
             )
             unique, index = name, 2
 
@@ -137,9 +151,13 @@ class WorkflowService:
                 unique, index = f"{name}_{index}", index + 1
 
             used.add(unique)
-            views.append(
-                self.create_plan(group.files, contract_path, unique, enrichments)
-            )
+            view = self.create_plan(group.files, contract_path, unique, enrichments)
+            self._plans[view["plan_id"]].file_preparations = [
+                preparations[path].to_dict()
+                for path in group.files
+                if preparations[path].header_source != FROM_FILE
+            ]
+            views.append(self.view(view["plan_id"]))
 
         return views
 
