@@ -390,6 +390,21 @@ def _breakdown_dimensions(cols: _Columns) -> list[ColumnSemantics]:
     return sorted(candidates, key=priority)[:MAX_BREAKDOWNS]
 
 
+def _axis_title(dimension: ColumnSemantics, dimensions: list[ColumnSemantics]) -> str:
+    """
+    Titre d'un axe dans le nom d'un KPI. « Region » pour la seule
+    dimension géographique ; s'il y en a plusieurs (département et ville),
+    chacune garde son nom, pour que les KPI aient des noms distincts.
+    """
+
+    geographic = [d for d in dimensions if d.business_role == GEOGRAPHY]
+
+    if dimension.business_role == GEOGRAPHY and len(geographic) == 1:
+        return "Region"
+
+    return _name(dimension).replace("_", " ").title()
+
+
 def _breakdown_kpis(cols: _Columns, main: _Measure | None) -> list[KPI]:
     if main:
         label, expression = main.label, main.expression
@@ -417,9 +432,11 @@ def _breakdown_kpis(cols: _Columns, main: _Measure | None) -> list[KPI]:
             )
         )
 
-    for dimension in _breakdown_dimensions(cols):
+    dimensions = _breakdown_dimensions(cols)
+
+    for dimension in dimensions:
         name = _name(dimension)
-        title = "Region" if dimension.business_role == GEOGRAPHY else name.replace("_", " ").title()
+        title = _axis_title(dimension, dimensions)
 
         kpis.append(
             KPI(
@@ -451,18 +468,14 @@ def _level_breakdowns(cols: _Columns, temporal: ColumnSemantics | None) -> list[
     """
 
     kpis = []
-    dimensions = _breakdown_dimensions(cols)[:1]
+    all_dimensions = _breakdown_dimensions(cols)
+    dimensions = all_dimensions[:1]
 
     for level in cols.find(MEASURE, LEVEL)[:MAX_LEVEL_BREAKDOWNS]:
         name = _name(level)
         axes = [(temporal, TREND, f"MONTH({_name(temporal)})", "Month")] if temporal else []
         axes += [
-            (
-                dimension,
-                BREAKDOWN,
-                _name(dimension),
-                "Region" if dimension.business_role == GEOGRAPHY else _name(dimension).replace("_", " ").title(),
-            )
+            (dimension, BREAKDOWN, _name(dimension), _axis_title(dimension, all_dimensions))
             for dimension in dimensions
         ]
 

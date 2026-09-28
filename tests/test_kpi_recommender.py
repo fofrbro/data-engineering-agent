@@ -159,3 +159,19 @@ def test_tax_column_does_not_become_revenue():
     revenue = kpis_for(frame).kpi("Revenue")
 
     assert revenue.formula == "SUM(quantity * unit_price)"
+
+
+def test_kpi_names_stay_distinct_with_two_geographic_dimensions():
+    frame = pd.DataFrame(
+        {
+            "departement": ["Nord", "Sud", "Est"] * 4,
+            "ville": ["Lille", "Nice", "Metz"] * 4,
+            "age": [30, 41, 52] * 4,
+        }
+    )
+
+    names_ = names(kpis_for(frame, "rh"))
+
+    assert len(names_) == len(set(names_))
+    assert "Number of Lines by Departement" in names_
+    assert "Number of Lines by Ville" in names_
