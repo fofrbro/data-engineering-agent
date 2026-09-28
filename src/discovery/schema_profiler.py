@@ -43,6 +43,9 @@ DATE_PATTERN = re.compile(
 )
 IDENTIFIER_TOKENS = {"id", "uuid", "guid"}
 IDENTIFIER_SUFFIXES = {"key", "code", "ref", "number", "num", "no"}
+# En français, le mot indiquant un identifiant vient en tête :
+# « numero_de_commande », « code_client », « ref_produit ».
+IDENTIFIER_PREFIXES = {"numero", "num", "no", "code", "ref", "reference", "identifiant"}
 
 
 @dataclass
@@ -235,6 +238,7 @@ def _identifier_name_hint(name: str) -> bool:
     return (
         any(token in IDENTIFIER_TOKENS for token in tokens)
         or tokens[-1] in IDENTIFIER_SUFFIXES
+        or (len(tokens) > 1 and tokens[0] in IDENTIFIER_PREFIXES)
     )
 
 

@@ -147,3 +147,22 @@ def test_profile_is_json_serializable():
     json.dumps(payload)
 
     assert payload["identifier_candidates"] == ["order_id", "customer_id"]
+
+
+def test_french_identifier_names_start_with_the_hint():
+    frame = pd.DataFrame(
+        {
+            "numero_de_commande": ["SO1", "SO1", "SO2"] * 4,
+            "code_client": ["C1", "C2", "C1"] * 4,
+            "numero": [1, 2, 3] * 4,
+            "quantite": [1, 2, 3] * 4,
+        }
+    )
+
+    profile = profile_schema(frame)
+
+    # Valeurs répétées (plusieurs lignes par commande) : seul le nom compte.
+    assert column(profile, "numero_de_commande").identifier_reasons == ["name"]
+    assert column(profile, "code_client").identifier_reasons == ["name"]
+    assert column(profile, "numero").is_identifier_candidate is False
+    assert column(profile, "quantite").is_identifier_candidate is False
