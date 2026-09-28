@@ -135,3 +135,13 @@ def test_proposed_contract_detects_invalid_file(tmp_path):
 
 def test_contract_is_json_serializable():
     json.dumps(contract_for(orders_frame()))
+
+
+def test_tax_column_is_a_non_negative_decimal():
+    contract = contract_for(orders_frame().assign(tax_amount=[2, 4] * 6))
+
+    rule = contract["columns"]["tax_amount"]
+
+    assert rule["type"] == "decimal"
+    assert rule["min"] == 0
+    assert rule["semantics"]["business_role"] == "TAX"

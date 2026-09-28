@@ -36,6 +36,7 @@ from src.semantic.vocabulary import (
     PRICE,
     QUANTITY,
     RATIO,
+    TAX,
 )
 
 
@@ -45,7 +46,7 @@ CONTRACT_TYPES = {
     BOOLEAN: "boolean",
     DATETIME: "datetime",
 }
-DECIMAL_BUSINESS_ROLES = {AMOUNT, PRICE, RATIO}
+DECIMAL_BUSINESS_ROLES = {AMOUNT, PRICE, RATIO, TAX}
 DEFAULT_VERSION = "1.0"
 GENERATOR_NAME = "contract_generator"
 
@@ -70,7 +71,7 @@ def _bounds(
 
     role = semantics.business_role
 
-    if role in (AMOUNT, PRICE) and profile.min >= 0:
+    if role in (AMOUNT, PRICE, TAX) and profile.min >= 0:
         return {"min": 0}, [f"min=0 : un {role.lower()} n'est pas négatif"]
 
     if role == QUANTITY and profile.min >= 1:
