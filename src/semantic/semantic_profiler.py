@@ -38,6 +38,7 @@ from src.semantic.vocabulary import (
     CONTACT_KEYWORDS,
     GEOGRAPHY,
     IDENTIFIER,
+    LEVEL,
     MEASURE,
     MEASURE_KEYWORDS,
     RATIO,
@@ -258,6 +259,16 @@ def _infer_numeric(
     dimension: tuple[str, str] | None,
 ) -> ColumnSemantics:
     measure = match_keyword(profile.name, MEASURE_KEYWORDS)
+    between_0_and_1 = (
+        profile.inferred_type == DECIMAL
+        and profile.min is not None
+        and 0 <= profile.min
+        and profile.max <= 1
+    )
+
+    # Un « score » exprimé entre 0 et 1 est un ratio (affiché en %).
+    if measure and measure[0] == LEVEL and between_0_and_1:
+        measure = None
 
     if dimension and not measure:
         return ColumnSemantics(
@@ -285,12 +296,7 @@ def _infer_numeric(
             ],
         )
 
-    if (
-        profile.inferred_type == DECIMAL
-        and profile.min is not None
-        and 0 <= profile.min
-        and profile.max <= 1
-    ):
+    if between_0_and_1:
         return ColumnSemantics(
             column=profile.name,
             semantic_role=MEASURE,

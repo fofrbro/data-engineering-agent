@@ -30,6 +30,7 @@ from src.semantic.vocabulary import (
     DIMENSION,
     GEOGRAPHY,
     IDENTIFIER,
+    LEVEL,
     MEASURE,
     ORDER,
     PRICE,
@@ -334,6 +335,22 @@ def _scalar_kpis(
             )
         )
 
+    for level in cols.find(MEASURE, LEVEL):
+        kpis.append(
+            KPI(
+                name=f"Average {_name(level)}",
+                description=f"Moyenne de {_name(level)}.",
+                formula=f"AVG({_name(level)})",
+                source_columns=[_name(level)],
+                aggregation="AVG",
+                confidence=_confidence(level.confidence),
+                rationale=(
+                    "Mesure de niveau (âge, température, note…) : "
+                    "elle se moyenne, elle ne s'additionne pas."
+                ),
+            )
+        )
+
     for measure in cols.find(MEASURE, None):
         if measure.business_role is not None:
             continue
@@ -418,6 +435,51 @@ def _breakdown_kpis(cols: _Columns, main: _Measure | None) -> list[KPI]:
                 format=fmt,
             )
         )
+
+    kpis.extend(_level_breakdowns(cols, temporal))
+
+    return kpis
+
+
+MAX_LEVEL_BREAKDOWNS = 2
+
+
+def _level_breakdowns(cols: _Columns, temporal: ColumnSemantics | None) -> list[KPI]:
+    """
+    Moyennes des mesures de niveau par mois et par dimension (température
+    moyenne par ville) : une somme n'aurait pas de sens.
+    """
+
+    kpis = []
+    dimensions = _breakdown_dimensions(cols)[:1]
+
+    for level in cols.find(MEASURE, LEVEL)[:MAX_LEVEL_BREAKDOWNS]:
+        name = _name(level)
+        axes = [(temporal, TREND, f"MONTH({_name(temporal)})", "Month")] if temporal else []
+        axes += [
+            (
+                dimension,
+                BREAKDOWN,
+                _name(dimension),
+                "Region" if dimension.business_role == GEOGRAPHY else _name(dimension).replace("_", " ").title(),
+            )
+            for dimension in dimensions
+        ]
+
+        for axis, kpi_type, grouping, title in axes:
+            kpis.append(
+                KPI(
+                    name=f"Average {name} by {title}",
+                    description=f"Moyenne de {name} par {_name(axis)}.",
+                    formula=f"AVG({name}) GROUP BY {grouping}",
+                    source_columns=[name, _name(axis)],
+                    aggregation="AVG",
+                    confidence=_confidence(level.confidence * BREAKDOWN_FACTOR, axis.confidence),
+                    rationale="Une mesure de niveau se compare en moyenne.",
+                    kpi_type=kpi_type,
+                    dimension=_name(axis),
+                )
+            )
 
     return kpis
 

@@ -95,8 +95,12 @@ def test_generic_dataset_plan():
 
     assert plan.title == "Tableau de bord - Sensors"
     assert plan.audience == "Analystes métier"
-    # Catégorie à 2 valeurs : part du total en anneau.
-    assert [chart.type for chart in plan.charts] == ["donut"]
+    # Catégorie à 2 valeurs : part du total en anneau pour le comptage ;
+    # une température moyenne n'est pas une part : barres.
+    assert [(chart.type, chart.measure) for chart in plan.charts] == [
+        ("donut", "COUNT(*) GROUP BY sensor"),
+        ("bar", "AVG(temperature) GROUP BY sensor"),
+    ]
 
 
 def test_unknown_chart_type_is_refused():

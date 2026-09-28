@@ -114,7 +114,7 @@ def test_generic_dataset_does_not_invent_sales_kpis():
     frame = pd.DataFrame(
         {
             "sensor": ["A", "B"] * 6,
-            "temperature": [20.5, 21.0] * 6,
+            "reading": [20.5, 21.0] * 6,
         }
     )
 
@@ -123,10 +123,30 @@ def test_generic_dataset_does_not_invent_sales_kpis():
     assert recommendation.domain == "UNKNOWN"
     assert names(recommendation) == [
         "Number of Lines",
-        "Total temperature",
+        "Total reading",
         "Number of Lines by Sensor",
     ]
-    assert recommendation.kpi("Total temperature").confidence < 0.6
+    assert recommendation.kpi("Total reading").confidence < 0.6
+
+
+def test_level_measures_are_averaged_never_summed():
+    frame = pd.DataFrame(
+        {
+            "sensor": ["A", "B"] * 6,
+            "measured_at": [f"2025-0{m}-15" for m in (1, 2, 3)] * 4,
+            "temperature": [20.5, 21.0, 19.0] * 4,
+            "age": [30, 41, 52] * 4,
+        }
+    )
+
+    recommendation = kpis_for(frame, "sensors")
+    formulas = {kpi.name: kpi.formula for kpi in recommendation.kpis}
+
+    assert formulas["Average temperature"] == "AVG(temperature)"
+    assert formulas["Average age"] == "AVG(age)"
+    assert formulas["Average temperature by Month"] == "AVG(temperature) GROUP BY MONTH(measured_at)"
+    assert formulas["Average temperature by Sensor"] == "AVG(temperature) GROUP BY sensor"
+    assert not any("SUM(temperature" in f or "SUM(age" in f for f in formulas.values())
 
 
 def test_recommendation_is_json_serializable():

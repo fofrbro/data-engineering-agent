@@ -213,7 +213,10 @@ def _trend_charts(kpi: KPI, cols: _Columns) -> list[Chart]:
 
 
 def _breakdown_chart(kpi: KPI, cols: _Columns) -> Chart:
-    if cols.is_part_to_whole(kpi.dimension):
+    # Un anneau montre les parts d'un total : une moyenne n'en a pas.
+    additive = kpi.aggregation in ("SUM", "COUNT", "COUNT_DISTINCT")
+
+    if additive and cols.is_part_to_whole(kpi.dimension):
         return Chart(
             type="donut",
             title=kpi.name,

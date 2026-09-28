@@ -23,6 +23,9 @@ PRICE = "PRICE"
 QUANTITY = "QUANTITY"
 RATIO = "RATIO"
 TAX = "TAX"
+# Mesure de niveau : elle se moyenne, elle ne s'additionne pas
+# (âge, température, note…).
+LEVEL = "LEVEL"
 CONTACT = "CONTACT"
 STATUS = "STATUS"
 CATEGORY = "CATEGORY"
@@ -42,7 +45,7 @@ TRANSACTION = "TRANSACTION"
 # L'ordre définit la priorité en cas de correspondances multiples :
 # "discount_rate" est un RATIO, "unit_price" un PRICE,
 # "total_quantity" une QUANTITY, "tax_amount" une TAX (une taxe
-# n'est pas le montant des ventes).
+# n'est pas le montant des ventes), "average_score" un LEVEL.
 MEASURE_KEYWORDS = {
     RATIO: (
         "ratio", "rate", "taux", "pct", "percent", "percentage",
@@ -57,6 +60,12 @@ MEASURE_KEYWORDS = {
     ),
     TAX: (
         "tax", "taxe", "taxes", "tva", "vat",
+    ),
+    LEVEL: (
+        "age", "temperature", "temp", "humidity", "humidite", "pressure",
+        "pression", "score", "note", "rating", "grade", "level", "niveau",
+        "speed", "vitesse", "altitude", "satisfaction", "average", "avg",
+        "mean", "moyenne", "moy",
     ),
     AMOUNT: (
         "amount", "montant", "revenue", "revenu", "revenus", "sales",

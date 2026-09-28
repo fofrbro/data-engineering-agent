@@ -40,6 +40,7 @@ from src.semantic.vocabulary import (
     FLAG,
     GEOGRAPHY,
     IDENTIFIER,
+    LEVEL,
     MEASURE,
     PRICE,
     QUANTITY,
@@ -66,7 +67,7 @@ MAX_SAMPLE_VALUES = 5
 
 # Rôles métier admis pour chaque rôle sémantique.
 COMPATIBLE_ROLES = {
-    MEASURE: (AMOUNT, PRICE, QUANTITY, RATIO, TAX, None),
+    MEASURE: (AMOUNT, PRICE, QUANTITY, RATIO, TAX, LEVEL, None),
     DIMENSION: (STATUS, CATEGORY, GEOGRAPHY, DATE_PART, FLAG, None),
     TEMPORAL: (DATE, TIMESTAMP),
     IDENTIFIER: (None,),
@@ -109,7 +110,9 @@ par des règles à partir des noms de colonnes et des données.
 Rôles sémantiques et rôles métier admis :
 - MEASURE : valeur numérique agrégeable ; rôle métier AMOUNT (montant des
   ventes ou d'une transaction), PRICE (prix unitaire), QUANTITY, RATIO,
-  TAX (taxe : ce n'est pas un montant de ventes) ou null.
+  TAX (taxe : ce n'est pas un montant de ventes), LEVEL (mesure de niveau
+  qui se moyenne et ne s'additionne pas : âge, température, note, score)
+  ou null (mesure additive sans rôle précis).
 - DIMENSION : axe d'analyse ; STATUS, CATEGORY, GEOGRAPHY, DATE_PART,
   FLAG ou null.
 - TEMPORAL : DATE ou TIMESTAMP.
@@ -121,7 +124,8 @@ Règles :
 1. Ne propose une correction que si l'interprétation actuelle est
    manifestement fausse et qu'elle fausserait les indicateurs (par exemple
    une taxe prise pour le chiffre d'affaires, un e-mail pris pour une
-   adresse géographique). En cas de doute, ne propose rien.
+   adresse géographique, une température ou un âge qui serait additionné).
+   En cas de doute, ne propose rien.
 2. Utilise uniquement les noms de colonnes fournis.
 3. reason : une phrase en français, compréhensible par un analyste métier.
 4. Une liste vide est une réponse normale.

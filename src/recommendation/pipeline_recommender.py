@@ -32,6 +32,7 @@ from src.semantic.vocabulary import (
     DATE_PART,
     DIMENSION,
     IDENTIFIER,
+    LEVEL,
     MEASURE,
     PRICE,
     QUANTITY,
@@ -462,6 +463,13 @@ def _metrics(
     for price in ctx.names(MEASURE, PRICE):
         name = "avg_unit_price" if price == "price" else f"avg_{price}"
         metrics.append(Metric(name, f"AVG({price})", [price]))
+
+    # Mesures de niveau et mesures sans rôle métier : leur moyenne a un
+    # sens par groupe (âge moyen, salaire moyen par département).
+    # (names(MEASURE) renvoie toutes les mesures : le filtre est ici.)
+    for measure in ctx.names(MEASURE):
+        if ctx.roles[measure].business_role in (LEVEL, None):
+            metrics.append(Metric(f"avg_{measure}", f"AVG({measure})", [measure]))
 
     metrics.append(
         Metric("number_of_lines", f"COUNT({count_column})", [count_column])
