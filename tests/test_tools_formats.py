@@ -4,8 +4,6 @@ import pandas as pd
 import pytest
 
 from src.tools.contract_validation import validate_contract
-from src.tools.data_inspection import inspect_csv
-from src.tools.data_profiling import profile_csv
 from src.tools.data_validation import validate_csv
 
 
@@ -62,7 +60,5 @@ def contract(tmp_path):
 def test_assessment_tools_accept_supported_formats(tmp_path, contract, fmt):
     path = write(tmp_path, fmt)
 
-    assert inspect_csv(path)["rows"] == 3
-    assert profile_csv(path)["numeric_columns"] == ["customer_id", "quantity", "price"]
     assert validate_csv(path)["valid"] is True
     assert validate_contract(path, contract)["valid"] is True

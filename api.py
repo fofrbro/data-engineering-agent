@@ -26,7 +26,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.tabular_pipeline import SUPPORTED_EXTENSIONS
+from src.discovery.format_detector import SUPPORTED_EXTENSIONS
 from src.discovery.archive import ArchiveError, extract_data_files
 from src.semantic.column_naming import parse_column_names
 from src.contract.contract_lifecycle import (

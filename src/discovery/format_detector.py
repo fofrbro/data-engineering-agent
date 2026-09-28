@@ -27,6 +27,9 @@ EXTENSION_FORMATS = {
     ".parquet": PARQUET,
 }
 
+# Extensions acceptées à l'upload ; un .txt est analysé par son contenu.
+SUPPORTED_EXTENSIONS = set(EXTENSION_FORMATS) | {".txt"}
+
 # Signatures binaires : elles priment sur l'extension,
 # car elles sont concluantes.
 PARQUET_MAGIC = b"PAR1"

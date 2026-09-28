@@ -17,7 +17,7 @@ from dataclasses import asdict, dataclass
 import pandas as pd
 
 from src.recommendation.pipeline_recommender import Transformation
-from src.tabular_pipeline import enrich_dataframe
+from src.execution.enrichment import enrich_dataframe
 
 
 APPLIED = "APPLIED"

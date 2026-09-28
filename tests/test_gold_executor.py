@@ -11,8 +11,6 @@ from src.recommendation.pipeline_recommender import (
     Metric,
     recommend_pipeline_for_file,
 )
-from src.tools.gold_transformation import build_sales_gold
-from src.tools.silver_transformation import transform_to_silver
 
 
 def sales_silver_and_gold():
@@ -24,25 +22,6 @@ def sales_silver_and_gold():
         destructive_approved=True,
     ).data
     return silver, build_gold_tables(silver, recommendation.gold)
-
-
-def test_sales_gold_matches_existing_sales_pipeline(tmp_path):
-    _, gold = sales_silver_and_gold()
-
-    # Référence : parcours ventes existant (Bronze -> Silver -> Gold).
-    bronze = tmp_path / "bronze.parquet"
-    silver_path = tmp_path / "silver.parquet"
-    gold_path = tmp_path / "gold.parquet"
-    read_dataframe("data/sales.csv").to_parquet(bronze)
-    transform_to_silver(str(bronze), str(silver_path))
-    build_sales_gold(str(silver_path), str(gold_path))
-    expected = pd.read_parquet(gold_path).sort_values("product").reset_index(drop=True)
-
-    actual = gold["sales_by_product"].sort_values("product").reset_index(drop=True)
-
-    pd.testing.assert_frame_equal(
-        actual[expected.columns], expected, check_dtype=False,
-    )
 
 
 def test_all_recommended_sales_tables_are_built():

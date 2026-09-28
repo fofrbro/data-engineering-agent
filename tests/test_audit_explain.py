@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 
 from src.audit_explain import (
@@ -5,36 +7,49 @@ from src.audit_explain import (
     explain_run,
     format_run_explanation,
 )
+from src.audit import create_audit_record, finish_audit, record_output, record_step
 from src.audit_store import append_audit
-from src.pipeline_orchestrator import execute_pipeline
-from src.pipeline_plan import PipelinePlan
 from src.tools.ingestion_decision import determine_ingestion_decision
 
 
+def _step(audit, name, result=None, status="SUCCESS", error=None):
+    now = datetime.now(timezone.utc)
+    record_step(audit, name=name, status=status, result=result, started_at=now, finished_at=now, error=error)
+
+
 def run_pipeline(contract_status, ingest=False, failing_tool=None):
-    def tool(name, arguments):
-        if name == failing_tool:
-            raise ValueError("fichier illisible")
-        if name == "validate_contract":
-            return {"dataset": "sales", "valid": True, "errors_count": 0,
-                    "contract_status": contract_status}
-        if name == "validate_csv":
-            return {"valid": True, "issues_count": 0}
-        if name == "determine_ingestion_decision":
-            return determine_ingestion_decision(**arguments)
-        return {"status": "OK"}
+    """
+    Audit d'un run d'évaluation (ASSESS_ONLY) ou d'ingestion, construit
+    avec les fonctions d'audit : les audits historiques en mode
+    ASSESS_ONLY doivent toujours être expliqués.
+    """
 
-    plan = PipelinePlan(
-        file_path="data/sales.csv",
-        contract_path="data/contracts/sales.json",
-        validate_quality=True,
-        validate_contract=True,
-        decision=True,
-        ingest=ingest,
-        transform_to_silver=ingest,
+    audit = create_audit_record(
+        run_id="run-test", source_file="data/sales.csv", contract_path="data/contracts/sales.json",
     )
+    quality = {"valid": True, "issues_count": 0}
+    contract = {"dataset": "sales", "valid": True, "errors_count": 0, "contract_status": contract_status}
 
-    return execute_pipeline(plan, tool)["audit"]
+    for name, result in (("validate_csv", quality), ("validate_contract", contract)):
+        if name == failing_tool:
+            _step(audit, name, status="FAILED", error="fichier illisible")
+            return finish_audit(audit, status="FAILED", error="fichier illisible")
+
+        _step(audit, name, result)
+
+    decision = determine_ingestion_decision(contract, quality)
+    _step(audit, "determine_ingestion_decision", decision)
+    audit["policy_rule"] = decision["policy_rule"]
+    audit["decision_reason"] = decision["reason"]
+    mode = "INGEST" if ingest else "ASSESS_ONLY"
+
+    if ingest and decision["decision"] == "INGEST":
+        _step(audit, "ingest_csv")
+        _step(audit, "transform_to_silver")
+        record_output(audit, path="data/silver/sales.parquet", layer="silver")
+
+    status = "SUCCESS" if decision["decision"] == "INGEST" else "QUARANTINED"
+    return finish_audit(audit, status=status, decision=decision["decision"], execution_mode=mode)
 
 
 def test_ingest_decision_in_assess_only_mode_is_explained():
@@ -71,16 +86,8 @@ def test_quarantine_explains_why():
     assert "Signification : Le fichier n'a pas été ingéré" in text
 
 
-def test_failed_run_points_to_failing_step(monkeypatch):
-    import src.pipeline_orchestrator as orchestrator
-
-    persisted = []
-    monkeypatch.setattr(orchestrator, "append_audit", persisted.append)
-
-    with pytest.raises(ValueError):
-        run_pipeline("VALIDATED", failing_tool="validate_contract")
-
-    explanation = explain_audit(persisted[0])
+def test_failed_run_points_to_failing_step():
+    explanation = explain_audit(run_pipeline("VALIDATED", failing_tool="validate_contract"))
     text = format_run_explanation(explanation)
 
     assert explanation["final_status"] == "FAILED"

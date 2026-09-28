@@ -365,14 +365,13 @@ src/
   discovery/                détection de fichier et de format, lecteurs, profil de schéma
   semantic/                 profil sémantique, vocabulaire métier
   contract/                 génération et cycle de vie des Data Contracts
-  tools/                    validations qualité et contrat, Policy Engine, outils historiques
+  tools/                    validations qualité et contrat, Policy Engine
   recommendation/           pipeline, KPI, tableau de bord, revue, règles métier
   execution/                exécution Silver et Gold
   workflow/                 PLAN → VALIDATE → EXECUTE → VERIFY → AUDIT, service, LLM
   fabric/                   chargement incrémental, export Gold (logique testable)
   powerbi/                  mesures DAX, traduction des KPI, guides de rapport
   audit*.py                 audit, tables, KPI d'observabilité, export Parquet, explication
-  agent.py                  agent LLM historique (mode outils libre encadré par agent_guard)
 fabric/                     notebooks PySpark et SQL des vues pour Fabric
 powerbi/                    mesures, guides et tableaux de bord approuvés
 data/contracts/             contrats validés (versionnés) ; proposed/ est ignoré
@@ -386,5 +385,5 @@ tests/                      tests unitaires et de bout en bout
   fois ; l'interface et `/api/workflow/plan` acceptent un lot.
 - La détection des annulations s'appuie sur les valeurs d'exemple du profil
   (5 valeurs distinctes au plus par colonne).
-- Les routes de connexion Fabric (`/api/fabric/*`) et les modes historiques de
-  `src/agent.py` ne sont plus utilisés par l'interface.
+- Les routes de connexion Fabric (`/api/fabric/*`) ne sont plus utilisées
+  par l'interface.
