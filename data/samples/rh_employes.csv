@@ -1,0 +1,601 @@
+matricule,nom,email,departement,poste,ville,date_embauche,statut,age,salaire_annuel,note_evaluation,heures_formation,jours_absence
+RH00452,Cheikh Michel,cheikh.michel452@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2012-01-03,ACTIF,34,51374.18,4.5,0,1
+RH00534,Mariama Sow,mariama.sow534@entreprise-fictive.fr,Finance,Contrôleur de gestion,Abidjan,2012-01-04,ACTIF,49,70838.16,3.0,35,8
+RH00041,Mamadou Fall,mamadou.fall41@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2012-01-17,ACTIF,44,31259.36,3.8,0,0
+RH00213,Nicolas Sow,nicolas.sow213@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2012-01-25,ACTIF,48,31588.8,3.1,0,8
+RH00086,Claire Durand,claire.durand86@entreprise-fictive.fr,Commercial,Commercial,Paris,2012-02-02,DEPART,60,44912.9,3.3,7,15
+RH00463,Cheikh Dubois,cheikh.dubois463@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2012-02-25,ACTIF,57,35318.5,4.6,42,3
+RH00217,Thomas Martin,thomas.martin217@entreprise-fictive.fr,Logistique,Préparateur,Paris,2012-02-28,ACTIF,41,34083.86,4.9,42,2
+RH00335,Awa Bernard,awa.bernard335@entreprise-fictive.fr,Commercial,Commercial,Paris,2012-03-08,ACTIF,45,41575.69,2.9,0,5
+RH00302,Moussa Ba,moussa.ba302@entreprise-fictive.fr,Commercial,Commercial,Marseille,2012-03-09,ACTIF,39,41687.4,4.9,35,0
+RH00124,Aïssatou Leroy,aissatou.leroy124@entreprise-fictive.fr,Informatique,Architecte,Marseille,2012-03-14,ACTIF,28,85888.12,4.7,35,0
+RH00067,Sophie Petit,sophie.petit67@entreprise-fictive.fr,Informatique,Développeur,Lyon,2012-03-19,ACTIF,51,63202.99,2.3,0,2
+RH00238,Ibrahima Moreau,ibrahima.moreau238@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2012-03-26,ACTIF,23,59885.71,2.1,42,2
+RH00158,Julien Robert,julien.robert158@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2012-04-07,ACTIF,44,42844.97,4.1,7,3
+RH00270,Cheikh Fall,cheikh.fall270@entreprise-fictive.fr,Marketing,Chef de produit,Paris,2012-04-09,ACTIF,62,61755.03,2.0,14,0
+RH00491,Thomas Kane,thomas.kane491@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2012-04-29,ACTIF,29,31502.64,4.3,21,2
+RH00468,Thomas Kane,thomas.kane468@entreprise-fictive.fr,Commercial,Commercial,Lyon,2012-04-30,ACTIF,22,47145.35,2.3,42,1
+RH00504,Ousmane Sow,ousmane.sow504@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2012-04-30,DEPART,33,46702.91,2.8,21,1
+RH00050,Aïssatou Ba,aissatou.ba50@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2012-05-25,ACTIF,34,35935.29,2.2,35,0
+RH00071,Fatou Simon,fatou.simon71@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2012-05-29,ACTIF,23,61702.72,4.2,7,15
+RH00254,Moussa Ndiaye,moussa.ndiaye254@entreprise-fictive.fr,Informatique,Développeur,Dakar,2012-06-23,ACTIF,52,64804.65,3.3,0,0
+RH00411,Salimata Dubois,salimata.dubois411@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2012-06-25,ACTIF,62,34762.11,4.2,35,30
+RH00478,Léa Sow,lea.sow478@entreprise-fictive.fr,Commercial,Commercial,Marseille,2012-06-26,ACTIF,37,44801.49,3.0,42,3
+RH00420,Salimata Diop,salimata.diop420@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2012-07-23,ACTIF,61,51255.07,3.6,0,0
+RH00146,Ousmane Martin,ousmane.martin146@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2012-07-25,ACTIF,59,66918.54,3.6,21,2
+RH00572,Claire Bernard,claire.bernard572@entreprise-fictive.fr,Informatique,Développeur,Dakar,2012-08-22,ACTIF,40,58425.85,3.2,0,5
+RH00187,Fatou Fall,fatou.fall187@entreprise-fictive.fr,Commercial,Commercial,Dakar,2012-08-25,ACTIF,62,42930.34,2.1,21,3
+RH00179,Aminata Kane,aminata.kane179@entreprise-fictive.fr,Finance,Contrôleur de gestion,Paris,2012-08-26,ACTIF,56,70535.89,3.8,42,2
+RH00532,Lucas Ndiaye,lucas.ndiaye532@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2012-09-05,CONGE_LONG,47,39860.02,2.2,42,2
+RH00292,Sophie Moreau,sophie.moreau292@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2012-09-17,ACTIF,44,62819.18,3.3,35,0
+RH00497,Karim Dubois,karim.dubois497@entreprise-fictive.fr,Informatique,Développeur,Marseille,2012-09-23,ACTIF,46,57791.61,2.9,14,15
+RH00501,Lucas Leroy,lucas.leroy501@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2012-09-25,ACTIF,51,43752.04,4.5,0,1
+RH00370,Mamadou Cissé,mamadou.cisse370@entreprise-fictive.fr,Logistique,Préparateur,Paris,2012-09-28,ACTIF,59,36572.37,4.1,35,1
+RH00212,Julien Thomas,julien.thomas212@entreprise-fictive.fr,Ressources humaines,Chargé RH,Dakar,2012-09-29,ACTIF,54,47629.02,2.6,42,30
+RH00492,Ibrahima Leroy,ibrahima.leroy492@entreprise-fictive.fr,Commercial,Commercial,Dakar,2012-09-30,ACTIF,48,46760.76,3.0,0,0
+RH00060,Julien Sow,julien.sow60@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2012-10-09,ACTIF,38,68686.2,4.1,0,1
+RH00415,Nicolas Thomas,nicolas.thomas415@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2012-10-14,ACTIF,32,32093.67,2.4,0,30
+RH00153,Khady Durand,khady.durand153@entreprise-fictive.fr,Commercial,Commercial,Paris,2012-10-16,CONGE_LONG,59,47347.84,4.3,7,0
+RH00172,Fatou Sow,fatou.sow172@entreprise-fictive.fr,Commercial,Commercial,Marseille,2012-10-16,ACTIF,34,41727.86,3.5,21,0
+RH00517,Cheikh Diallo,cheikh.diallo517@entreprise-fictive.fr,Logistique,Responsable entrepôt,Marseille,2012-10-17,ACTIF,49,56059.35,2.5,7,1
+RH00092,Lucas Robert,lucas.robert92@entreprise-fictive.fr,Finance,Comptable,Lyon,2012-10-23,ACTIF,59,49501.62,5.0,35,8
+RH00036,Mamadou Petit,mamadou.petit36@entreprise-fictive.fr,Commercial,Commercial,Dakar,2012-11-03,ACTIF,61,41315.68,2.4,35,0
+RH00273,Aïssatou Durand,aissatou.durand273@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2012-11-03,ACTIF,61,65710.43,3.2,14,8
+RH00407,Léa Ba,lea.ba407@entreprise-fictive.fr,Informatique,Développeur,Paris,2012-11-11,ACTIF,42,59218.04,2.4,0,0
+RH00361,Ibrahima Diop,ibrahima.diop361@entreprise-fictive.fr,Commercial,Directeur commercial,Dakar,2012-12-15,DEPART,28,120260.67,4.0,42,5
+RH00421,Claire Petit,claire.petit421@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2012-12-16,ACTIF,43,60679.59,2.8,42,30
+RH00410,Lucas Diop,lucas.diop410@entreprise-fictive.fr,Informatique,Administrateur systèmes,Paris,2012-12-17,ACTIF,27,58786.81,4.6,42,3
+RH00013,Emma Cissé,emma.cisse13@entreprise-fictive.fr,Logistique,Préparateur,Paris,2012-12-31,ACTIF,55,36691.28,2.9,21,2
+RH00241,Aïssatou Kane,aissatou.kane241@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2013-01-15,CONGE_LONG,39,46336.79,4.2,14,1
+RH00393,Salimata Kane,salimata.kane393@entreprise-fictive.fr,Finance,Comptable,Lyon,2013-01-20,DEPART,33,47342.56,4.2,14,2
+RH00119,Thomas Ndiaye,thomas.ndiaye119@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2013-01-22,DEPART,25,45919.13,4.8,0,0
+RH00476,Aminata Laurent,aminata.laurent476@entreprise-fictive.fr,Informatique,Administrateur systèmes,Lyon,2013-01-25,ACTIF,26,61985.26,4.7,42,0
+RH00315,Sophie Cissé,sophie.cisse315@entreprise-fictive.fr,Finance,Contrôleur de gestion,Paris,2013-01-30,ACTIF,43,67064.6,3.7,35,1
+RH00484,Nicolas Martin,nicolas.martin484@entreprise-fictive.fr,Logistique,Préparateur,Paris,2013-02-25,CONGE_LONG,25,32125.87,4.7,21,0
+RH00231,Emma Michel,emma.michel231@entreprise-fictive.fr,Commercial,Commercial,Dakar,2013-03-04,DEPART,41,42289.83,3.7,7,0
+RH00486,Nicolas Thomas,nicolas.thomas486@entreprise-fictive.fr,Finance,Comptable,Marseille,2013-04-07,ACTIF,24,49246.71,2.7,0,3
+RH00336,Hugo Sy,hugo.sy336@entreprise-fictive.fr,Informatique,Développeur,Lyon,2013-04-19,ACTIF,25,64811.51,4.7,14,2
+RH00165,Julien Martin,julien.martin165@entreprise-fictive.fr,Commercial,Commercial,Lyon,2013-04-21,ACTIF,52,44364.12,3.7,0,5
+RH00183,Léa Thomas,lea.thomas183@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2013-04-29,DEPART,39,34068.4,2.5,14,2
+RH00386,Salimata Fall,salimata.fall386@entreprise-fictive.fr,Commercial,Commercial,Dakar,2013-06-06,ACTIF,32,43448.71,2.7,42,0
+RH00498,Thomas Sow,thomas.sow498@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2013-06-08,ACTIF,42,31887.68,2.9,14,1
+RH00417,Karim Sow,karim.sow417@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2013-06-10,ACTIF,61,44376.75,2.4,7,5
+RH00055,Emma Moreau,emma.moreau55@entreprise-fictive.fr,Commercial,Chef de secteur,Dakar,2013-06-12,ACTIF,62,66341.75,4.9,21,0
+RH00180,Ibrahima Traoré,ibrahima.traore180@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2013-06-12,ACTIF,21,30623.94,4.1,7,15
+RH00456,Aïssatou Ndiaye,aissatou.ndiaye456@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2013-06-12,ACTIF,23,33685.84,2.4,0,0
+RH00151,Inès Petit,inès.petit151@entreprise-fictive.fr,Informatique,Développeur,Paris,2013-06-22,ACTIF,33,66175.96,3.3,35,1
+RH00557,Nicolas Moreau,nicolas.moreau557@entreprise-fictive.fr,Commercial,Chef de secteur,Marseille,2013-06-26,ACTIF,35,69827.5,4.7,21,1
+RH00109,Fatou Traoré,fatou.traore109@entreprise-fictive.fr,Commercial,Commercial,Marseille,2013-07-01,DEPART,27,46215.33,2.1,14,15
+RH00494,Mamadou Thomas,mamadou.thomas494@entreprise-fictive.fr,Finance,Comptable,Dakar,2013-07-18,ACTIF,30,48256.69,4.4,42,0
+RH00544,Ousmane Ba,ousmane.ba544@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2013-07-20,ACTIF,26,33944.39,2.2,7,0
+RH00197,Sophie Robert,sophie.robert197@entreprise-fictive.fr,Commercial,Commercial,Marseille,2013-07-24,DEPART,46,47011.53,2.2,14,0
+RH00289,Awa Gueye,awa.gueye289@entreprise-fictive.fr,Commercial,Commercial,Marseille,2013-07-24,ACTIF,49,44355.04,4.6,42,0
+RH00464,Ousmane Traoré,ousmane.traore464@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2013-07-25,ACTIF,62,38713.51,4.9,42,8
+RH00042,Mamadou Cissé,mamadou.cisse42@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2013-08-22,ACTIF,45,44011.16,4.7,0,2
+RH00249,Moussa Sow,moussa.sow249@entreprise-fictive.fr,Commercial,Commercial,Lyon,2013-08-27,CONGE_LONG,21,43626.55,2.1,35,0
+RH00209,Ousmane Sow,ousmane.sow209@entreprise-fictive.fr,Finance,Comptable,Marseille,2013-09-02,ACTIF,24,53437.85,3.1,21,1
+RH00279,Sophie Michel,sophie.michel279@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2013-09-08,ACTIF,23,54131.22,2.3,0,8
+RH00286,Lucas Diop,lucas.diop286@entreprise-fictive.fr,Logistique,Préparateur,Paris,2013-09-08,ACTIF,36,30722.44,4.7,7,0
+RH00338,Julien Diallo,julien.diallo338@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2013-09-08,ACTIF,36,45424.85,4.8,42,15
+RH00341,Thomas Thomas,thomas.thomas341@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2013-09-09,ACTIF,62,58100.21,2.9,7,0
+RH00439,Ibrahima Durand,ibrahima.durand439@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2013-10-13,ACTIF,34,44594.26,3.3,21,2
+RH00364,Hugo Martin,hugo.martin364@entreprise-fictive.fr,Finance,Comptable,Paris,2013-10-20,ACTIF,33,46567.2,2.7,42,5
+RH00400,Moussa Diallo,moussa.diallo400@entreprise-fictive.fr,Finance,Comptable,Dakar,2013-10-24,ACTIF,30,47347.4,2.7,0,15
+RH00301,Ibrahima Leroy,ibrahima.leroy301@entreprise-fictive.fr,Informatique,Développeur,Dakar,2013-10-27,ACTIF,61,57601.09,2.0,7,0
+RH00325,Claire Sow,claire.sow325@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2013-11-03,ACTIF,32,40722.2,2.9,21,0
+RH00101,Sophie Diop,sophie.diop101@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2013-11-09,ACTIF,57,49766.47,4.6,7,0
+RH00385,Salimata Leroy,salimata.leroy385@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2013-11-13,ACTIF,54,32233.73,3.7,35,3
+RH00155,Claire Simon,claire.simon155@entreprise-fictive.fr,Ressources humaines,Responsable paie,Paris,2013-11-20,ACTIF,38,56546.98,4.4,0,0
+RH00225,Awa Camara,awa.camara225@entreprise-fictive.fr,Commercial,Commercial,Marseille,2013-12-05,ACTIF,49,42057.4,3.8,14,15
+RH00555,Sophie Petit,sophie.petit555@entreprise-fictive.fr,Informatique,Développeur,Paris,2013-12-08,ACTIF,21,64007.83,2.4,7,2
+RH00200,Nadia Traoré,nadia.traore200@entreprise-fictive.fr,Informatique,Développeur,Lyon,2013-12-16,DEPART,22,56566.62,4.8,0,3
+RH00493,Mariama Diop,mariama.diop493@entreprise-fictive.fr,Logistique,Préparateur,Paris,2013-12-20,ACTIF,24,31732.05,3.5,42,1
+RH00032,Khady Sy,khady.sy32@entreprise-fictive.fr,Informatique,Développeur,Dakar,2014-01-02,ACTIF,32,61825.97,3.9,42,3
+RH00173,Ibrahima Dubois,ibrahima.dubois173@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2014-01-04,DEPART,35,33312.45,4.2,14,0
+RH00290,Inès Durand,inès.durand290@entreprise-fictive.fr,Marketing,Chef de produit,Dakar,2014-01-06,ACTIF,38,69915.95,4.5,0,3
+RH00590,Inès Traoré,inès.traore590@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2014-01-08,ACTIF,36,61160.37,3.3,0,1
+RH00306,Ousmane Ba,ousmane.ba306@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2014-01-24,ACTIF,23,39238.99,4.7,42,1
+RH00114,Aminata Diop,aminata.diop114@entreprise-fictive.fr,Finance,Comptable,Dakar,2014-01-29,ACTIF,38,48882.7,3.6,0,5
+RH00320,Ibrahima Diop,ibrahima.diop320@entreprise-fictive.fr,Informatique,Développeur,Dakar,2014-02-01,ACTIF,53,58211.53,2.8,35,3
+RH00543,Ibrahima Ndiaye,ibrahima.ndiaye543@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2014-02-01,ACTIF,30,39600.78,2.5,0,1
+RH00453,Inès Durand,inès.durand453@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2014-02-02,ACTIF,25,47030.18,3.3,0,0
+RH00021,Fatou Kane,fatou.kane21@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2014-02-13,ACTIF,34,39778.85,3.6,42,5
+RH00394,Awa Gueye,awa.gueye394@entreprise-fictive.fr,Marketing,Chef de produit,Dakar,2014-02-21,ACTIF,51,70355.8,3.3,0,1
+RH00096,Mamadou Diallo,mamadou.diallo96@entreprise-fictive.fr,Commercial,Commercial,Paris,2014-03-17,ACTIF,47,40957.8,4.3,35,0
+RH00099,Thomas Cissé,thomas.cisse99@entreprise-fictive.fr,Finance,Comptable,Abidjan,2014-03-18,ACTIF,24,47408.85,3.6,14,0
+RH00549,Aïssatou Gueye,aissatou.gueye549@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2014-03-18,DEPART,27,41223.81,2.3,42,0
+RH00098,Thomas Sow,thomas.sow98@entreprise-fictive.fr,Commercial,Directeur commercial,Marseille,2014-03-26,ACTIF,56,120941.7,3.3,0,1
+RH00181,Ousmane Michel,ousmane.michel181@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2014-04-15,ACTIF,43,66137.54,3.9,0,5
+RH00440,Salimata Laurent,salimata.laurent440@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2014-04-18,CONGE_LONG,33,47301.7,2.6,7,0
+RH00222,Fatou Camara,fatou.camara222@entreprise-fictive.fr,Informatique,Architecte,Dakar,2014-04-19,CONGE_LONG,41,85088.3,3.5,14,3
+RH00118,Sophie Laurent,sophie.laurent118@entreprise-fictive.fr,Ressources humaines,Responsable paie,Paris,2014-04-26,ACTIF,34,53698.14,3.4,7,0
+RH00297,Cheikh Sow,cheikh.sow297@entreprise-fictive.fr,Finance,Comptable,Dakar,2014-05-06,DEPART,22,43576.36,3.7,0,1
+RH00097,Lucas Leroy,lucas.leroy97@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2014-05-14,ACTIF,33,35370.76,2.4,7,0
+RH00571,Mamadou Diallo,mamadou.diallo571@entreprise-fictive.fr,Logistique,Préparateur,Paris,2014-05-24,ACTIF,61,34314.48,2.2,0,1
+RH00511,Claire Moreau,claire.moreau511@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2014-05-28,ACTIF,34,31941.98,4.4,42,3
+RH00585,Inès Sow,inès.sow585@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2014-05-31,DEPART,32,53736.81,2.9,21,1
+RH00303,Lucas Simon,lucas.simon303@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2014-06-03,ACTIF,42,32780.52,4.0,21,1
+RH00387,Ousmane Cissé,ousmane.cisse387@entreprise-fictive.fr,Finance,Contrôleur de gestion,Marseille,2014-06-11,ACTIF,51,66260.76,2.3,0,15
+RH00323,Aminata Dubois,aminata.dubois323@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2014-06-12,ACTIF,30,47621.66,2.8,42,1
+RH00262,Emma Bernard,emma.bernard262@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2014-06-23,DEPART,25,44628.35,4.7,14,2
+RH00170,Mariama Kane,mariama.kane170@entreprise-fictive.fr,Informatique,Développeur,Paris,2014-07-14,ACTIF,48,63039.83,2.9,35,1
+RH00282,Léa Diallo,lea.diallo282@entreprise-fictive.fr,Finance,Contrôleur de gestion,Lyon,2014-07-15,ACTIF,47,65218.76,3.2,0,3
+RH00311,Inès Dubois,inès.dubois311@entreprise-fictive.fr,Commercial,Commercial,Paris,2014-07-20,ACTIF,60,39054.21,3.8,14,0
+RH00308,Karim Ba,karim.ba308@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2014-07-26,ACTIF,31,47791.36,3.6,0,0
+RH00525,Aïssatou Dubois,aissatou.dubois525@entreprise-fictive.fr,Finance,Comptable,Marseille,2014-07-28,ACTIF,61,45931.62,3.3,0,2
+RH00253,Khady Diop,khady.diop253@entreprise-fictive.fr,Ressources humaines,Responsable paie,Abidjan,2014-07-31,CONGE_LONG,30,59249.31,3.9,42,0
+RH00309,Aïssatou Durand,aissatou.durand309@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2014-08-06,ACTIF,37,44964.91,2.8,42,5
+RH00469,Inès Durand,inès.durand469@entreprise-fictive.fr,Logistique,Préparateur,Paris,2014-08-19,ACTIF,35,32075.8,3.6,21,0
+RH00046,Mariama Ba,mariama.ba46@entreprise-fictive.fr,Commercial,Commercial,Dakar,2014-08-23,ACTIF,41,40936.11,2.7,0,2
+RH00578,Julien Ndiaye,julien.ndiaye578@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2014-08-26,ACTIF,56,32541.4,4.8,21,2
+RH00027,Emma Ba,emma.ba27@entreprise-fictive.fr,Commercial,Commercial,Dakar,2014-09-05,ACTIF,44,45913.44,2.2,35,1
+RH00221,Cheikh Bernard,cheikh.bernard221@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2014-09-05,ACTIF,23,31437.17,2.3,35,3
+RH00575,Thomas Sow,thomas.sow575@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2014-09-11,ACTIF,46,34187.69,2.9,42,1
+RH00123,Ibrahima Ba,ibrahima.ba123@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2014-09-12,ACTIF,62,35104.62,2.7,0,0
+RH00147,Lucas Martin,lucas.martin147@entreprise-fictive.fr,Commercial,Commercial,Lyon,2014-09-27,ACTIF,41,39646.65,2.7,35,0
+RH00427,Sophie Diallo,sophie.diallo427@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2014-10-26,ACTIF,38,65277.18,2.1,0,0
+RH00589,Thomas Traoré,thomas.traore589@entreprise-fictive.fr,Commercial,Commercial,Lyon,2014-11-05,ACTIF,38,45100.32,2.8,21,2
+RH00174,Nicolas Petit,nicolas.petit174@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2014-11-06,ACTIF,61,43528.26,2.2,7,0
+RH00566,Moussa Dubois,moussa.dubois566@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2014-11-10,ACTIF,55,33337.34,4.2,7,2
+RH00562,Karim Fall,karim.fall562@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2014-11-15,ACTIF,59,32269.75,4.6,35,1
+RH00381,Hugo Laurent,hugo.laurent381@entreprise-fictive.fr,Finance,Contrôleur de gestion,Abidjan,2014-11-24,DEPART,57,71581.13,3.3,7,1
+RH00445,Ibrahima Martin,ibrahima.martin445@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2014-12-02,ACTIF,43,40565.34,2.3,0,1
+RH00156,Nadia Michel,nadia.michel156@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2014-12-27,ACTIF,34,68778.28,3.1,0,3
+RH00255,Aminata Laurent,aminata.laurent255@entreprise-fictive.fr,Logistique,Préparateur,Paris,2015-01-06,ACTIF,37,33077.49,2.4,35,30
+RH00014,Salimata Sow,salimata.sow14@entreprise-fictive.fr,Marketing,Chef de produit,Abidjan,2015-01-09,DEPART,55,60480.5,2.9,14,3
+RH00207,Claire Diallo,claire.diallo207@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2015-01-21,ACTIF,44,33820.61,3.9,14,1
+RH00186,Sophie Diop,sophie.diop186@entreprise-fictive.fr,Marketing,Chef de produit,Marseille,2015-02-02,CONGE_LONG,41,59893.94,2.2,21,5
+RH00138,Aïssatou Gueye,aissatou.gueye138@entreprise-fictive.fr,Finance,Contrôleur de gestion,Lyon,2015-02-06,ACTIF,47,64366.6,4.3,42,5
+RH00100,Mamadou Ba,mamadou.ba100@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2015-03-06,ACTIF,59,47248.47,4.4,35,0
+RH00450,Nicolas Diop,nicolas.diop450@entreprise-fictive.fr,Commercial,Commercial,Paris,2015-03-13,ACTIF,52,46327.77,2.5,0,0
+RH00348,Claire Simon,claire.simon348@entreprise-fictive.fr,Ressources humaines,Responsable paie,Dakar,2015-03-19,ACTIF,28,49985.21,4.9,42,2
+RH00507,Awa Kane,awa.kane507@entreprise-fictive.fr,Marketing,Chef de produit,Dakar,2015-04-09,ACTIF,52,63003.03,3.3,42,8
+RH00269,Ibrahima Diallo,ibrahima.diallo269@entreprise-fictive.fr,Informatique,Développeur,Marseille,2015-04-10,ACTIF,24,54774.28,3.0,0,0
+RH00193,Sophie Moreau,sophie.moreau193@entreprise-fictive.fr,Ressources humaines,Chargé RH,Dakar,2015-04-16,ACTIF,21,42177.68,4.5,0,5
+RH00367,Aminata Sow,aminata.sow367@entreprise-fictive.fr,Commercial,Commercial,Dakar,2015-05-06,ACTIF,38,44411.57,3.5,42,30
+RH00321,Inès Cissé,inès.cisse321@entreprise-fictive.fr,Finance,Comptable,Lyon,2015-05-10,ACTIF,32,50026.05,4.8,7,1
+RH00514,Sophie Bernard,sophie.bernard514@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2015-05-11,ACTIF,43,58157.98,4.8,7,2
+RH00169,Aminata Ndiaye,aminata.ndiaye169@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2015-06-09,ACTIF,38,43963.45,2.8,42,1
+RH00223,Lucas Laurent,lucas.laurent223@entreprise-fictive.fr,Ressources humaines,DRH,Paris,2015-06-16,DEPART,47,99286.89,3.6,21,3
+RH00513,Hugo Durand,hugo.durand513@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2015-06-20,ACTIF,44,37349.38,2.4,35,15
+RH00425,Thomas Petit,thomas.petit425@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2015-06-21,CONGE_LONG,28,55871.09,2.9,21,0
+RH00298,Khady Traoré,khady.traore298@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2015-06-26,ACTIF,59,30733.65,2.3,21,0
+RH00051,Mariama Fall,mariama.fall51@entreprise-fictive.fr,Logistique,Responsable entrepôt,Lyon,2015-06-30,ACTIF,42,63904.0,4.1,0,2
+RH00516,Cheikh Moreau,cheikh.moreau516@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2015-07-01,DEPART,41,31435.32,3.9,42,8
+RH00095,Ousmane Diallo,ousmane.diallo95@entreprise-fictive.fr,Commercial,Commercial,Paris,2015-07-12,ACTIF,48,42395.48,2.4,14,0
+RH00496,Nadia Leroy,nadia.leroy496@entreprise-fictive.fr,Finance,Directeur financier,Abidjan,2015-07-16,CONGE_LONG,36,115123.38,3.8,14,3
+RH00029,Moussa Sow,moussa.sow29@entreprise-fictive.fr,Finance,Directeur financier,Abidjan,2015-08-21,ACTIF,60,109217.57,3.9,35,1
+RH00584,Thomas Camara,thomas.camara584@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2015-09-03,ACTIF,36,57274.53,3.9,35,2
+RH00357,Mamadou Dubois,mamadou.dubois357@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2015-09-13,ACTIF,56,32688.32,4.7,35,5
+RH00203,Lucas Leroy,lucas.leroy203@entreprise-fictive.fr,Informatique,Développeur,Lyon,2015-09-16,ACTIF,38,58009.42,2.5,14,0
+RH00582,Awa Kane,awa.kane582@entreprise-fictive.fr,Commercial,Directeur commercial,Dakar,2015-09-18,ACTIF,33,112433.54,4.5,0,8
+RH00240,Moussa Leroy,moussa.leroy240@entreprise-fictive.fr,Finance,Comptable,Lyon,2015-09-30,ACTIF,27,47730.58,3.6,14,1
+RH00454,Léa Ba,lea.ba454@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2015-10-04,DEPART,61,30509.65,4.5,14,0
+RH00271,Léa Traoré,lea.traore271@entreprise-fictive.fr,Commercial,Chef de secteur,Dakar,2015-10-13,ACTIF,29,59530.39,3.7,42,0
+RH00402,Lucas Martin,lucas.martin402@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2015-10-27,ACTIF,36,29700.96,2.8,0,1
+RH00312,Cheikh Simon,cheikh.simon312@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2015-10-29,ACTIF,60,43464.42,3.3,0,0
+RH00344,Aminata Martin,aminata.martin344@entreprise-fictive.fr,Informatique,Architecte,Dakar,2015-10-29,ACTIF,52,80407.52,3.1,42,0
+RH00017,Aminata Durand,aminata.durand17@entreprise-fictive.fr,Commercial,Commercial,Marseille,2015-10-30,ACTIF,30,42831.37,3.8,35,3
+RH00251,Ousmane Thomas,ousmane.thomas251@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2015-11-11,ACTIF,23,42331.62,3.2,21,2
+RH00256,Léa Cissé,lea.cisse256@entreprise-fictive.fr,Ressources humaines,Responsable paie,Abidjan,2015-11-18,CONGE_LONG,23,51283.18,2.7,0,1
+RH00018,Moussa Kane,moussa.kane18@entreprise-fictive.fr,Commercial,Commercial,Lyon,2015-11-21,DEPART,23,43258.41,3.5,35,8
+RH00539,Karim Traoré,karim.traore539@entreprise-fictive.fr,Informatique,Administrateur systèmes,Paris,2015-11-26,ACTIF,37,53292.87,4.3,35,0
+RH00342,Karim Michel,karim.michel342@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2015-11-28,ACTIF,58,43895.59,2.8,7,8
+RH00157,Aïssatou Laurent,aissatou.laurent157@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2015-12-04,ACTIF,34,47528.41,3.5,42,2
+RH00085,Karim Laurent,karim.laurent85@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2015-12-08,ACTIF,50,46516.44,3.8,21,15
+RH00274,Nadia Cissé,nadia.cisse274@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2015-12-15,ACTIF,38,32758.67,4.0,35,1
+RH00579,Khady Kane,khady.kane579@entreprise-fictive.fr,Informatique,Développeur,Lyon,2015-12-30,ACTIF,43,54983.94,2.0,0,8
+RH00211,Sophie Sy,sophie.sy211@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2016-01-02,ACTIF,31,43022.63,2.1,42,0
+RH00369,Moussa Petit,moussa.petit369@entreprise-fictive.fr,Informatique,Développeur,Lyon,2016-01-05,ACTIF,44,57582.1,3.4,42,0
+RH00125,Mamadou Durand,mamadou.durand125@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2016-01-09,ACTIF,40,62128.02,3.3,0,1
+RH00506,Mamadou Gueye,mamadou.gueye506@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2016-01-12,ACTIF,31,40233.33,2.4,21,0
+RH00433,Khady Thomas,khady.thomas433@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2016-01-14,ACTIF,43,32591.19,4.9,0,3
+RH00024,Aïssatou Diop,aissatou.diop24@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2016-02-28,ACTIF,62,41653.83,2.9,7,0
+RH00061,Nicolas Leroy,nicolas.leroy61@entreprise-fictive.fr,Informatique,Développeur,Paris,2016-02-29,DEPART,30,58080.56,2.9,21,1
+RH00257,Claire Moreau,claire.moreau257@entreprise-fictive.fr,Ressources humaines,Responsable paie,Paris,2016-03-21,ACTIF,34,57870.21,4.9,0,2
+RH00358,Khady Diallo,khady.diallo358@entreprise-fictive.fr,Informatique,Développeur,Lyon,2016-03-23,DEPART,48,58126.15,3.8,35,0
+RH00078,Hugo Martin,hugo.martin78@entreprise-fictive.fr,Finance,Contrôleur de gestion,Lyon,2016-04-05,ACTIF,62,65790.71,4.0,7,0
+RH00360,Ousmane Traoré,ousmane.traore360@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2016-04-07,DEPART,50,40264.22,3.8,0,3
+RH00116,Ousmane Leroy,ousmane.leroy116@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2016-04-14,ACTIF,33,43890.79,2.4,7,5
+RH00458,Nicolas Simon,nicolas.simon458@entreprise-fictive.fr,Commercial,Chef de secteur,Dakar,2016-04-16,ACTIF,45,59755.83,2.7,14,15
+RH00246,Léa Camara,lea.camara246@entreprise-fictive.fr,Finance,Contrôleur de gestion,Paris,2016-04-25,ACTIF,59,65380.54,4.3,14,15
+RH00154,Claire Dubois,claire.dubois154@entreprise-fictive.fr,Finance,Comptable,Lyon,2016-05-11,ACTIF,61,50574.46,2.3,42,0
+RH00224,Julien Traoré,julien.traore224@entreprise-fictive.fr,Commercial,Commercial,Paris,2016-05-11,ACTIF,54,39413.91,4.9,14,1
+RH00091,Thomas Laurent,thomas.laurent91@entreprise-fictive.fr,Commercial,Commercial,Marseille,2016-05-19,ACTIF,40,38995.55,5.0,35,1
+RH00355,Nicolas Sow,nicolas.sow355@entreprise-fictive.fr,Commercial,Commercial,Paris,2016-05-20,DEPART,49,39694.76,2.4,0,5
+RH00076,Julien Sy,julien.sy76@entreprise-fictive.fr,Commercial,Commercial,Dakar,2016-05-29,ACTIF,24,39736.49,2.3,0,15
+RH00598,Claire Fall,claire.fall598@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2016-05-29,ACTIF,44,29416.78,4.4,21,3
+RH00466,Hugo Ba,hugo.ba466@entreprise-fictive.fr,Logistique,Responsable entrepôt,Paris,2016-06-02,ACTIF,46,53609.0,4.4,14,5
+RH00252,Awa Martin,awa.martin252@entreprise-fictive.fr,Informatique,Administrateur systèmes,Lyon,2016-06-12,CONGE_LONG,33,54513.2,2.2,35,0
+RH00388,Léa Diop,lea.diop388@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2016-06-18,ACTIF,36,65287.01,4.1,42,0
+RH00523,Mariama Ba,mariama.ba523@entreprise-fictive.fr,Finance,Comptable,Abidjan,2016-08-02,ACTIF,62,42480.96,3.9,35,0
+RH00570,Nicolas Laurent,nicolas.laurent570@entreprise-fictive.fr,Ressources humaines,Responsable paie,Paris,2016-08-23,ACTIF,37,53124.25,4.1,7,0
+RH00409,Karim Ndiaye,karim.ndiaye409@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2016-09-02,ACTIF,36,34603.09,4.3,0,1
+RH00205,Fatou Sy,fatou.sy205@entreprise-fictive.fr,Informatique,Développeur,Lyon,2016-09-30,DEPART,33,56631.72,4.8,0,2
+RH00419,Emma Fall,emma.fall419@entreprise-fictive.fr,Commercial,Commercial,Paris,2016-10-09,ACTIF,42,37738.16,4.6,35,15
+RH00563,Khady Sow,khady.sow563@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2016-10-22,ACTIF,57,30549.06,4.8,0,0
+RH00548,Thomas Bernard,thomas.bernard548@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2016-10-25,ACTIF,42,42882.43,3.5,35,8
+RH00444,Khady Martin,khady.martin444@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2016-11-10,ACTIF,41,33961.16,3.0,7,0
+RH00075,Julien Kane,julien.kane75@entreprise-fictive.fr,Commercial,Commercial,Paris,2016-11-11,ACTIF,58,37921.83,4.4,42,30
+RH00229,Mamadou Laurent,mamadou.laurent229@entreprise-fictive.fr,Commercial,Commercial,Marseille,2016-11-19,ACTIF,61,38814.24,4.9,14,3
+RH00600,Julien Leroy,julien.leroy600@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2016-11-23,ACTIF,39,62153.47,4.2,35,3
+RH00366,Ousmane Petit,ousmane.petit366@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2016-12-18,ACTIF,33,65294.62,4.6,14,0
+RH00560,Emma Cissé,emma.cisse560@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2017-01-07,ACTIF,31,41492.22,4.9,35,1
+RH00567,Inès Gueye,inès.gueye567@entreprise-fictive.fr,Informatique,Développeur,Lyon,2017-01-08,ACTIF,31,63608.94,2.3,21,0
+RH00144,Claire Sy,claire.sy144@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2017-01-10,ACTIF,47,30895.68,2.1,35,8
+RH00220,Sophie Diop,sophie.diop220@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2017-01-27,ACTIF,29,44156.58,4.9,14,2
+RH00317,Lucas Michel,lucas.michel317@entreprise-fictive.fr,Informatique,Développeur,Lyon,2017-01-28,ACTIF,43,59598.33,2.2,0,5
+RH00527,Nicolas Michel,nicolas.michel527@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2017-01-28,ACTIF,57,29857.34,4.4,0,0
+RH00365,Nadia Diallo,nadia.diallo365@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2017-01-30,ACTIF,29,54398.52,4.1,35,5
+RH00191,Aminata Traoré,aminata.traore191@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2017-02-08,ACTIF,27,34433.35,4.9,35,1
+RH00314,Salimata Sow,salimata.sow314@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2017-02-15,ACTIF,60,45846.18,2.3,0,1
+RH00475,Khady Thomas,khady.thomas475@entreprise-fictive.fr,Commercial,Commercial,Paris,2017-02-18,ACTIF,22,37869.86,2.9,14,2
+RH00436,Nadia Diop,nadia.diop436@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2017-03-03,ACTIF,41,38794.06,2.9,0,30
+RH00034,Léa Fall,lea.fall34@entreprise-fictive.fr,Marketing,Chef de produit,Marseille,2017-03-19,ACTIF,56,65655.64,3.9,21,5
+RH00340,Sophie Sy,sophie.sy340@entreprise-fictive.fr,Commercial,Commercial,Paris,2017-03-21,ACTIF,38,44697.79,2.5,0,2
+RH00597,Salimata Fall,salimata.fall597@entreprise-fictive.fr,Informatique,Développeur,Marseille,2017-04-08,DEPART,62,53569.27,2.9,14,8
+RH00428,Emma Cissé,emma.cisse428@entreprise-fictive.fr,Finance,Contrôleur de gestion,Lyon,2017-04-18,ACTIF,28,58001.55,2.7,35,2
+RH00219,Inès Leroy,inès.leroy219@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2017-04-21,ACTIF,50,39512.45,2.0,0,2
+RH00081,Aïssatou Diop,aissatou.diop81@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2017-04-24,ACTIF,31,31754.75,3.4,0,1
+RH00518,Emma Ba,emma.ba518@entreprise-fictive.fr,Informatique,Développeur,Marseille,2017-06-09,ACTIF,56,61118.51,4.5,0,8
+RH00033,Karim Laurent,karim.laurent33@entreprise-fictive.fr,Finance,Contrôleur de gestion,Lyon,2017-06-12,ACTIF,51,57213.71,4.8,42,1
+RH00272,Aminata Ndiaye,aminata.ndiaye272@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2017-07-01,ACTIF,62,39827.64,2.0,35,3
+RH00136,Moussa Martin,moussa.martin136@entreprise-fictive.fr,Finance,Comptable,Paris,2017-07-02,ACTIF,53,43403.11,3.9,0,15
+RH00389,Hugo Martin,hugo.martin389@entreprise-fictive.fr,Informatique,Administrateur systèmes,Marseille,2017-08-03,ACTIF,29,52287.45,4.4,0,1
+RH00351,Karim Ndiaye,karim.ndiaye351@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2017-08-20,ACTIF,36,47271.73,4.3,14,5
+RH00352,Fatou Diop,fatou.diop352@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2017-08-29,ACTIF,31,29858.86,4.1,35,2
+RH00510,Léa Durand,lea.durand510@entreprise-fictive.fr,Commercial,Commercial,Dakar,2017-08-31,ACTIF,28,40368.11,2.0,42,8
+RH00354,Ousmane Ba,ousmane.ba354@entreprise-fictive.fr,Informatique,Développeur,Marseille,2017-09-05,ACTIF,59,54486.69,2.6,42,5
+RH00334,Cheikh Sy,cheikh.sy334@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2017-09-06,ACTIF,34,29146.8,3.1,35,30
+RH00285,Cheikh Martin,cheikh.martin285@entreprise-fictive.fr,Finance,Comptable,Lyon,2017-09-07,DEPART,58,44836.92,2.6,0,3
+RH00326,Léa Dubois,lea.dubois326@entreprise-fictive.fr,Logistique,Préparateur,Paris,2017-09-16,ACTIF,48,32791.39,4.3,7,2
+RH00263,Léa Leroy,lea.leroy263@entreprise-fictive.fr,Informatique,Développeur,Lyon,2017-09-22,ACTIF,61,52675.49,2.8,0,2
+RH00025,Moussa Bernard,moussa.bernard25@entreprise-fictive.fr,Informatique,Développeur,Dakar,2017-10-06,ACTIF,47,62757.79,2.4,35,2
+RH00063,Julien Sy,julien.sy63@entreprise-fictive.fr,Logistique,Préparateur,Paris,2017-10-08,ACTIF,42,32716.15,3.3,14,0
+RH00329,Aïssatou Sy,aissatou.sy329@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2017-10-08,ACTIF,46,39314.74,4.7,0,1
+RH00457,Inès Thomas,inès.thomas457@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2017-10-13,ACTIF,61,45363.37,4.0,14,1
+RH00176,Fatou Ndiaye,fatou.ndiaye176@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2017-10-20,ACTIF,41,35667.83,4.9,7,1
+RH00422,Léa Robert,lea.robert422@entreprise-fictive.fr,Informatique,Développeur,Paris,2017-11-03,DEPART,37,58613.57,2.9,21,1
+RH00416,Thomas Diallo,thomas.diallo416@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2017-11-05,DEPART,50,38089.7,2.9,0,1
+RH00107,Cheikh Ba,cheikh.ba107@entreprise-fictive.fr,Finance,Comptable,Lyon,2017-11-13,ACTIF,45,43665.65,2.2,0,0
+RH00244,Julien Cissé,julien.cisse244@entreprise-fictive.fr,Logistique,Préparateur,Paris,2017-11-17,ACTIF,41,28819.99,3.9,0,5
+RH00265,Salimata Traoré,salimata.traore265@entreprise-fictive.fr,Commercial,Commercial,Paris,2017-11-24,ACTIF,51,41006.86,4.8,7,5
+RH00214,Mamadou Laurent,mamadou.laurent214@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2017-11-28,ACTIF,39,53762.63,4.9,21,1
+RH00446,Aïssatou Kane,aissatou.kane446@entreprise-fictive.fr,Informatique,Développeur,Dakar,2017-12-01,ACTIF,34,57589.17,3.0,14,15
+RH00577,Léa Diallo,lea.diallo577@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2017-12-06,ACTIF,22,33667.51,3.2,14,3
+RH00535,Ousmane Ndiaye,ousmane.ndiaye535@entreprise-fictive.fr,Commercial,Commercial,Dakar,2017-12-09,DEPART,56,42335.98,2.6,14,3
+RH00330,Mamadou Camara,mamadou.camara330@entreprise-fictive.fr,Commercial,Commercial,Marseille,2017-12-17,ACTIF,26,41529.23,3.1,0,1
+RH00512,Aminata Petit,aminata.petit512@entreprise-fictive.fr,Commercial,Commercial,Lyon,2017-12-25,DEPART,33,42285.52,3.6,0,1
+RH00593,Fatou Leroy,fatou.leroy593@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2017-12-29,ACTIF,55,58970.03,2.8,14,8
+RH00430,Aïssatou Durand,aissatou.durand430@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2017-12-30,ACTIF,40,39143.56,2.8,42,0
+RH00287,Léa Cissé,lea.cisse287@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2018-01-04,ACTIF,52,31197.09,4.3,7,8
+RH00009,Khady Simon,khady.simon9@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2018-01-12,CONGE_LONG,21,36837.51,4.8,7,8
+RH00461,Inès Robert,inès.robert461@entreprise-fictive.fr,Finance,Comptable,Abidjan,2018-01-20,ACTIF,39,45643.33,3.6,0,15
+RH00310,Cheikh Laurent,cheikh.laurent310@entreprise-fictive.fr,Ressources humaines,DRH,Lyon,2018-01-24,ACTIF,36,111263.36,2.5,14,0
+RH00278,Ousmane Bernard,ousmane.bernard278@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2018-01-28,ACTIF,38,63056.79,3.5,7,2
+RH00190,Fatou Thomas,fatou.thomas190@entreprise-fictive.fr,Finance,Comptable,Dakar,2018-02-03,ACTIF,25,45447.93,2.1,42,1
+RH00327,Lucas Robert,lucas.robert327@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2018-02-05,ACTIF,49,31509.31,2.6,35,0
+RH00592,Cheikh Fall,cheikh.fall592@entreprise-fictive.fr,Commercial,Commercial,Lyon,2018-02-14,DEPART,51,37834.68,3.1,14,15
+RH00189,Nadia Fall,nadia.fall189@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2018-02-21,ACTIF,50,56591.86,3.6,14,3
+RH00490,Karim Michel,karim.michel490@entreprise-fictive.fr,Informatique,Développeur,Dakar,2018-03-08,ACTIF,22,54414.11,4.1,0,1
+RH00198,Claire Diallo,claire.diallo198@entreprise-fictive.fr,Logistique,Préparateur,Paris,2018-03-31,ACTIF,23,32838.61,3.3,42,0
+RH00437,Claire Gueye,claire.gueye437@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2018-04-01,ACTIF,53,30380.23,3.1,0,0
+RH00472,Claire Durand,claire.durand472@entreprise-fictive.fr,Informatique,Architecte,Lyon,2018-04-24,ACTIF,30,89998.47,2.1,35,0
+RH00546,Aminata Martin,aminata.martin546@entreprise-fictive.fr,Finance,Comptable,Lyon,2018-04-27,ACTIF,51,46842.34,2.5,35,0
+RH00299,Emma Sy,emma.sy299@entreprise-fictive.fr,Finance,Comptable,Marseille,2018-05-06,ACTIF,39,43171.13,4.8,0,15
+RH00432,Inès Petit,inès.petit432@entreprise-fictive.fr,Finance,Comptable,Marseille,2018-05-16,ACTIF,62,45773.0,3.9,21,0
+RH00178,Awa Bernard,awa.bernard178@entreprise-fictive.fr,Commercial,Commercial,Lyon,2018-05-17,ACTIF,55,37284.85,2.2,42,1
+RH00258,Ibrahima Ba,ibrahima.ba258@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2018-05-17,ACTIF,40,28771.88,3.0,14,3
+RH00161,Mariama Diallo,mariama.diallo161@entreprise-fictive.fr,Logistique,Préparateur,Paris,2018-05-20,ACTIF,57,30182.61,3.0,7,3
+RH00110,Lucas Laurent,lucas.laurent110@entreprise-fictive.fr,Commercial,Commercial,Marseille,2018-06-09,ACTIF,47,43602.76,2.6,0,1
+RH00112,Thomas Fall,thomas.fall112@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2018-06-12,ACTIF,27,41348.86,3.6,0,0
+RH00028,Thomas Diop,thomas.diop28@entreprise-fictive.fr,Finance,Comptable,Paris,2018-06-30,ACTIF,28,43171.44,3.6,7,0
+RH00471,Julien Diallo,julien.diallo471@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2018-06-30,ACTIF,56,48233.89,3.3,42,5
+RH00171,Nicolas Laurent,nicolas.laurent171@entreprise-fictive.fr,Marketing,Chef de produit,Lyon,2018-07-02,ACTIF,40,59652.17,3.9,42,0
+RH00565,Karim Durand,karim.durand565@entreprise-fictive.fr,Commercial,Commercial,Marseille,2018-07-02,ACTIF,52,40215.04,2.9,35,0
+RH00182,Moussa Cissé,moussa.cisse182@entreprise-fictive.fr,Finance,Comptable,Lyon,2018-07-09,ACTIF,57,48087.57,4.8,42,0
+RH00441,Fatou Ndiaye,fatou.ndiaye441@entreprise-fictive.fr,Finance,Comptable,Dakar,2018-07-12,ACTIF,21,43754.51,3.7,21,0
+RH00196,Inès Laurent,inès.laurent196@entreprise-fictive.fr,Finance,Comptable,Marseille,2018-07-16,ACTIF,62,45185.14,3.5,21,2
+RH00515,Inès Ndiaye,inès.ndiaye515@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2018-07-20,DEPART,59,39822.05,3.8,35,1
+RH00382,Julien Laurent,julien.laurent382@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2018-08-05,ACTIF,50,45429.67,4.1,0,0
+RH00089,Cheikh Laurent,cheikh.laurent89@entreprise-fictive.fr,Finance,Comptable,Paris,2018-08-09,ACTIF,46,42455.55,2.7,0,2
+RH00113,Aminata Kane,aminata.kane113@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2018-08-14,ACTIF,22,57157.88,3.2,0,8
+RH00204,Salimata Durand,salimata.durand204@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2018-08-19,ACTIF,35,41429.3,2.5,42,0
+RH00088,Nicolas Durand,nicolas.durand88@entreprise-fictive.fr,Commercial,Chef de secteur,Dakar,2018-09-02,ACTIF,37,58356.16,4.5,0,2
+RH00347,Inès Bernard,inès.bernard347@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2018-09-27,DEPART,51,33324.42,3.9,35,3
+RH00264,Salimata Robert,salimata.robert264@entreprise-fictive.fr,Informatique,Administrateur systèmes,Paris,2018-10-08,DEPART,35,54423.45,4.6,0,2
+RH00414,Cheikh Diop,cheikh.diop414@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2018-10-17,ACTIF,28,44090.27,2.8,21,15
+RH00230,Lucas Ndiaye,lucas.ndiaye230@entreprise-fictive.fr,Informatique,Architecte,Abidjan,2018-11-05,ACTIF,37,82923.21,4.5,0,0
+RH00328,Mamadou Robert,mamadou.robert328@entreprise-fictive.fr,Commercial,Commercial,Lyon,2018-12-15,ACTIF,27,43333.53,4.8,0,1
+RH00035,Thomas Sow,thomas.sow35@entreprise-fictive.fr,Logistique,Préparateur,Paris,2019-01-01,ACTIF,33,28451.38,4.9,42,15
+RH00133,Awa Leroy,awa.leroy133@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2019-01-12,ACTIF,61,40235.74,3.8,0,1
+RH00003,Ousmane Petit,ousmane.petit3@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2019-01-18,ACTIF,34,29855.79,3.9,35,1
+RH00322,Sophie Robert,sophie.robert322@entreprise-fictive.fr,Commercial,Directeur commercial,Lyon,2019-01-20,ACTIF,37,99679.64,2.3,0,0
+RH00026,Khady Gueye,khady.gueye26@entreprise-fictive.fr,Marketing,Chef de produit,Marseille,2019-01-24,ACTIF,50,61007.3,2.9,0,2
+RH00485,Ousmane Simon,ousmane.simon485@entreprise-fictive.fr,Informatique,Développeur,Marseille,2019-02-03,ACTIF,44,54870.46,4.7,0,1
+RH00574,Claire Ba,claire.ba574@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2019-02-08,ACTIF,61,37501.63,4.8,0,5
+RH00479,Hugo Petit,hugo.petit479@entreprise-fictive.fr,Commercial,Directeur commercial,Dakar,2019-02-19,ACTIF,40,115534.64,3.7,7,5
+RH00120,Aïssatou Durand,aissatou.durand120@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2019-02-21,ACTIF,27,53441.18,4.2,0,0
+RH00276,Ousmane Laurent,ousmane.laurent276@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2019-03-02,ACTIF,52,41776.42,2.1,42,2
+RH00384,Nadia Moreau,nadia.moreau384@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2019-03-04,ACTIF,27,30056.17,4.1,14,1
+RH00443,Cheikh Durand,cheikh.durand443@entreprise-fictive.fr,Informatique,Développeur,Lyon,2019-03-23,ACTIF,41,53447.11,2.7,7,2
+RH00536,Inès Robert,inès.robert536@entreprise-fictive.fr,Commercial,Commercial,Dakar,2019-04-02,ACTIF,54,39752.57,3.0,35,0
+RH00537,Aminata Robert,aminata.robert537@entreprise-fictive.fr,Commercial,Commercial,Dakar,2019-04-05,ACTIF,49,41507.04,4.3,35,2
+RH00260,Léa Petit,lea.petit260@entreprise-fictive.fr,Ressources humaines,DRH,Paris,2019-04-10,ACTIF,33,93716.96,4.6,0,5
+RH00596,Salimata Ndiaye,salimata.ndiaye596@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2019-04-12,ACTIF,50,30258.69,3.6,0,8
+RH00488,Aminata Michel,aminata.michel488@entreprise-fictive.fr,Commercial,Commercial,Marseille,2019-04-16,ACTIF,27,40593.43,4.5,0,0
+RH00056,Léa Petit,lea.petit56@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2019-04-17,ACTIF,52,38259.8,4.6,0,5
+RH00505,Aïssatou Fall,aissatou.fall505@entreprise-fictive.fr,Logistique,Préparateur,Paris,2019-05-17,ACTIF,30,28431.04,3.0,0,2
+RH00559,Fatou Bernard,fatou.bernard559@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2019-05-18,ACTIF,52,41928.64,3.5,35,2
+RH00449,Inès Ba,inès.ba449@entreprise-fictive.fr,Finance,Comptable,Lyon,2019-05-24,ACTIF,38,40243.66,4.6,0,8
+RH00284,Aminata Robert,aminata.robert284@entreprise-fictive.fr,Commercial,Commercial,Marseille,2019-06-01,ACTIF,55,41453.0,3.0,42,1
+RH00127,Aminata Michel,aminata.michel127@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2019-06-02,ACTIF,56,35326.92,3.4,0,3
+RH00044,Inès Laurent,inès.laurent44@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2019-06-10,DEPART,41,45246.29,2.9,0,5
+RH00470,Sophie Moreau,sophie.moreau470@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2019-06-16,ACTIF,38,32447.42,2.0,0,0
+RH00376,Ousmane Leroy,ousmane.leroy376@entreprise-fictive.fr,Informatique,Développeur,Paris,2019-06-20,DEPART,62,51469.37,2.8,35,2
+RH00185,Nicolas Sy,nicolas.sy185@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2019-06-23,ACTIF,58,41073.03,3.1,21,8
+RH00372,Moussa Ndiaye,moussa.ndiaye372@entreprise-fictive.fr,Finance,Comptable,Abidjan,2019-07-01,ACTIF,57,46735.14,2.9,7,1
+RH00129,Aïssatou Sy,aissatou.sy129@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2019-07-16,ACTIF,25,40304.32,3.3,0,3
+RH00346,Thomas Robert,thomas.robert346@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2019-07-19,ACTIF,40,39009.91,4.8,0,8
+RH00104,Khady Bernard,khady.bernard104@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2019-07-28,ACTIF,41,44887.14,3.9,21,1
+RH00529,Aminata Thomas,aminata.thomas529@entreprise-fictive.fr,Commercial,Commercial,Dakar,2019-08-07,ACTIF,26,40200.91,4.9,21,0
+RH00280,Nicolas Martin,nicolas.martin280@entreprise-fictive.fr,Commercial,Commercial,Marseille,2019-08-18,ACTIF,48,40439.08,4.6,7,5
+RH00587,Inès Thomas,inès.thomas587@entreprise-fictive.fr,Informatique,Développeur,Marseille,2019-08-23,ACTIF,43,60300.49,2.2,21,2
+RH00438,Karim Martin,karim.martin438@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2019-08-24,ACTIF,43,52794.24,4.4,21,2
+RH00473,Emma Cissé,emma.cisse473@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2019-08-25,ACTIF,58,56205.14,3.0,42,0
+RH00053,Nicolas Leroy,nicolas.leroy53@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2019-08-27,ACTIF,42,41620.6,4.5,0,2
+RH00406,Awa Leroy,awa.leroy406@entreprise-fictive.fr,Informatique,Développeur,Marseille,2019-09-18,ACTIF,29,51520.87,4.7,21,2
+RH00239,Mamadou Fall,mamadou.fall239@entreprise-fictive.fr,Commercial,Directeur commercial,Marseille,2019-10-01,ACTIF,43,113781.68,5.0,42,0
+RH00331,Nadia Bernard,nadia.bernard331@entreprise-fictive.fr,Finance,Comptable,Dakar,2019-10-19,ACTIF,36,40562.5,3.7,0,15
+RH00595,Cheikh Kane,cheikh.kane595@entreprise-fictive.fr,Commercial,Commercial,Lyon,2019-10-22,ACTIF,39,38212.45,4.1,0,2
+RH00045,Salimata Camara,salimata.camara45@entreprise-fictive.fr,Informatique,Développeur,Marseille,2019-10-26,ACTIF,43,54516.07,4.2,35,3
+RH00588,Cheikh Bernard,cheikh.bernard588@entreprise-fictive.fr,Informatique,Développeur,Dakar,2019-10-29,ACTIF,38,59612.83,2.6,7,5
+RH00339,Aïssatou Petit,aissatou.petit339@entreprise-fictive.fr,Informatique,Développeur,Marseille,2019-11-11,CONGE_LONG,41,55417.14,3.2,35,1
+RH00349,Lucas Sow,lucas.sow349@entreprise-fictive.fr,Commercial,Commercial,Lyon,2019-11-15,ACTIF,26,35606.51,4.8,42,2
+RH00558,Emma Dubois,emma.dubois558@entreprise-fictive.fr,Finance,Comptable,Dakar,2019-11-17,ACTIF,28,40442.35,3.7,0,0
+RH00022,Emma Traoré,emma.traore22@entreprise-fictive.fr,Logistique,Responsable entrepôt,Lyon,2019-11-23,ACTIF,31,52690.96,2.3,35,0
+RH00080,Mariama Ndiaye,mariama.ndiaye80@entreprise-fictive.fr,Commercial,Commercial,Paris,2019-11-23,ACTIF,35,39541.39,3.2,21,0
+RH00405,Cheikh Camara,cheikh.camara405@entreprise-fictive.fr,Marketing,Chef de produit,Abidjan,2019-11-24,ACTIF,27,54824.94,2.8,7,5
+RH00016,Hugo Diop,hugo.diop16@entreprise-fictive.fr,Finance,Contrôleur de gestion,Marseille,2019-12-05,ACTIF,22,54425.37,3.0,0,1
+RH00343,Emma Dubois,emma.dubois343@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2019-12-07,ACTIF,52,31924.74,2.4,0,3
+RH00362,Emma Durand,emma.durand362@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2019-12-29,ACTIF,23,37740.26,3.4,7,0
+RH00503,Khady Cissé,khady.cisse503@entreprise-fictive.fr,Commercial,Commercial,Dakar,2020-01-27,ACTIF,23,42582.37,4.6,0,2
+RH00215,Inès Simon,inès.simon215@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2020-02-02,DEPART,60,43701.13,4.7,21,0
+RH00177,Léa Michel,lea.michel177@entreprise-fictive.fr,Logistique,Préparateur,Paris,2020-02-03,ACTIF,61,30111.09,2.1,35,0
+RH00533,Nicolas Sy,nicolas.sy533@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2020-02-03,ACTIF,27,27248.67,3.6,7,0
+RH00462,Nadia Petit,nadia.petit462@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2020-02-08,ACTIF,32,57448.8,3.1,7,0
+RH00094,Nadia Petit,nadia.petit94@entreprise-fictive.fr,Commercial,Commercial,Paris,2020-03-02,DEPART,36,39522.13,2.3,0,0
+RH00148,Aminata Cissé,aminata.cisse148@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2020-03-04,ACTIF,48,31216.74,4.7,14,3
+RH00054,Mariama Fall,mariama.fall54@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2020-03-18,ACTIF,37,58749.22,4.5,14,1
+RH00277,Léa Sow,lea.sow277@entreprise-fictive.fr,Finance,Comptable,Marseille,2020-04-10,ACTIF,38,44223.87,5.0,0,1
+RH00380,Mamadou Fall,mamadou.fall380@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2020-04-10,ACTIF,43,40704.32,3.0,42,2
+RH00319,Julien Simon,julien.simon319@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2020-04-12,ACTIF,27,27882.94,3.9,21,0
+RH00526,Nadia Kane,nadia.kane526@entreprise-fictive.fr,Finance,Contrôleur de gestion,Dakar,2020-04-15,DEPART,44,56426.97,2.1,21,0
+RH00547,Léa Fall,lea.fall547@entreprise-fictive.fr,Informatique,Développeur,Marseille,2020-04-15,DEPART,47,51344.37,2.3,14,3
+RH00520,Karim Sy,karim.sy520@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2020-04-21,ACTIF,46,38819.93,2.0,0,2
+RH00105,Mariama Traoré,mariama.traore105@entreprise-fictive.fr,Ressources humaines,Chargé RH,Marseille,2020-05-10,ACTIF,48,43294.77,3.1,42,1
+RH00442,Salimata Michel,salimata.michel442@entreprise-fictive.fr,Informatique,Administrateur systèmes,Marseille,2020-05-13,ACTIF,21,47967.31,4.4,35,15
+RH00408,Aminata Petit,aminata.petit408@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2020-06-02,CONGE_LONG,21,29419.4,2.3,0,2
+RH00084,Nicolas Laurent,nicolas.laurent84@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2020-06-17,ACTIF,36,32304.35,2.5,35,2
+RH00500,Nadia Thomas,nadia.thomas500@entreprise-fictive.fr,Informatique,Développeur,Dakar,2020-06-27,ACTIF,57,53638.7,4.3,42,15
+RH00554,Fatou Dubois,fatou.dubois554@entreprise-fictive.fr,Commercial,Commercial,Lyon,2020-07-05,DEPART,45,39093.41,2.2,7,2
+RH00397,Thomas Leroy,thomas.leroy397@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2020-07-18,ACTIF,33,38465.59,3.9,7,0
+RH00459,Hugo Gueye,hugo.gueye459@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2020-08-12,CONGE_LONG,33,36935.15,2.1,21,0
+RH00208,Nicolas Diop,nicolas.diop208@entreprise-fictive.fr,Finance,Contrôleur de gestion,Dakar,2020-09-11,ACTIF,32,57956.18,4.7,35,2
+RH00293,Julien Diop,julien.diop293@entreprise-fictive.fr,Informatique,Administrateur systèmes,Marseille,2020-09-15,ACTIF,27,50334.4,4.2,7,3
+RH00039,Khady Diallo,khady.diallo39@entreprise-fictive.fr,Informatique,Développeur,Marseille,2020-09-18,ACTIF,33,59718.47,4.8,7,5
+RH00267,Moussa Thomas,moussa.thomas267@entreprise-fictive.fr,Commercial,Chef de secteur,Marseille,2020-09-20,ACTIF,41,52914.96,3.6,0,0
+RH00038,Mamadou Martin,mamadou.martin38@entreprise-fictive.fr,Commercial,Commercial,Lyon,2020-09-23,ACTIF,42,39039.41,2.5,7,0
+RH00235,Mariama Fall,mariama.fall235@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2020-09-26,ACTIF,32,29241.96,3.2,14,2
+RH00296,Aïssatou Moreau,aissatou.moreau296@entreprise-fictive.fr,Informatique,Développeur,Lyon,2020-10-02,ACTIF,54,50533.05,2.1,14,3
+RH00132,Nadia Moreau,nadia.moreau132@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2020-10-06,ACTIF,26,55835.14,2.0,0,8
+RH00307,Hugo Fall,hugo.fall307@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2020-10-07,ACTIF,26,41441.47,2.3,0,1
+RH00429,Mariama Laurent,mariama.laurent429@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2020-10-18,ACTIF,40,49162.12,2.6,0,2
+RH00508,Aïssatou Camara,aissatou.camara508@entreprise-fictive.fr,Finance,Comptable,Lyon,2020-11-12,ACTIF,31,41011.79,4.4,35,8
+RH00391,Sophie Diallo,sophie.diallo391@entreprise-fictive.fr,Finance,Comptable,Dakar,2020-11-16,ACTIF,22,39532.74,3.5,7,1
+RH00031,Karim Diallo,karim.diallo31@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2020-11-25,ACTIF,37,44320.06,3.4,7,15
+RH00424,Ousmane Kane,ousmane.kane424@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2020-11-27,ACTIF,60,41530.46,3.4,35,0
+RH00403,Thomas Kane,thomas.kane403@entreprise-fictive.fr,Commercial,Commercial,Lyon,2020-11-28,ACTIF,27,38085.42,4.4,35,1
+RH00353,Emma Leroy,emma.leroy353@entreprise-fictive.fr,Marketing,Chef de produit,Marseille,2020-11-29,ACTIF,35,59862.74,2.4,35,3
+RH00467,Inès Durand,inès.durand467@entreprise-fictive.fr,Logistique,Préparateur,Paris,2020-12-01,ACTIF,36,31440.07,2.3,21,8
+RH00556,Ibrahima Diallo,ibrahima.diallo556@entreprise-fictive.fr,Commercial,Commercial,Marseille,2020-12-17,ACTIF,56,41657.72,3.1,0,0
+RH00304,Cheikh Durand,cheikh.durand304@entreprise-fictive.fr,Informatique,Développeur,Dakar,2020-12-19,CONGE_LONG,51,50241.27,4.9,35,1
+RH00404,Fatou Diop,fatou.diop404@entreprise-fictive.fr,Finance,Comptable,Marseille,2020-12-23,ACTIF,38,45026.67,4.6,35,3
+RH00540,Khady Martin,khady.martin540@entreprise-fictive.fr,Commercial,Commercial,Dakar,2020-12-24,ACTIF,44,39958.4,3.8,7,0
+RH00551,Moussa Diop,moussa.diop551@entreprise-fictive.fr,Commercial,Commercial,Paris,2020-12-30,ACTIF,58,39728.04,4.1,42,0
+RH00195,Mariama Moreau,mariama.moreau195@entreprise-fictive.fr,Informatique,Développeur,Dakar,2021-01-11,DEPART,28,54204.13,2.9,7,1
+RH00337,Khady Camara,khady.camara337@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2021-01-25,ACTIF,56,57690.78,4.3,42,0
+RH00150,Léa Fall,lea.fall150@entreprise-fictive.fr,Informatique,Développeur,Lyon,2021-01-27,ACTIF,58,53125.4,3.5,42,1
+RH00128,Moussa Ba,moussa.ba128@entreprise-fictive.fr,Informatique,Développeur,Dakar,2021-02-10,DEPART,50,57863.93,4.1,35,0
+RH00373,Ibrahima Durand,ibrahima.durand373@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2021-02-10,ACTIF,60,31045.34,4.2,0,5
+RH00062,Claire Gueye,claire.gueye62@entreprise-fictive.fr,Commercial,Commercial,Marseille,2021-02-14,ACTIF,30,41418.99,2.0,0,1
+RH00216,Cheikh Moreau,cheikh.moreau216@entreprise-fictive.fr,Finance,Contrôleur de gestion,Paris,2021-02-14,ACTIF,26,60261.47,4.0,14,1
+RH00531,Awa Robert,awa.robert531@entreprise-fictive.fr,Commercial,Commercial,Marseille,2021-03-21,ACTIF,45,37683.38,3.8,14,2
+RH00012,Awa Ndiaye,awa.ndiaye12@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2021-03-23,ACTIF,30,37955.14,3.6,42,0
+RH00281,Léa Michel,lea.michel281@entreprise-fictive.fr,Informatique,Administrateur systèmes,Marseille,2021-03-29,CONGE_LONG,53,55247.04,2.4,0,0
+RH00480,Nadia Laurent,nadia.laurent480@entreprise-fictive.fr,Informatique,Développeur,Paris,2021-04-05,ACTIF,60,50195.01,3.6,35,1
+RH00395,Léa Fall,lea.fall395@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2021-04-06,ACTIF,46,53745.87,3.3,0,2
+RH00030,Thomas Laurent,thomas.laurent30@entreprise-fictive.fr,Commercial,Commercial,Lyon,2021-04-25,ACTIF,45,37351.17,2.6,0,3
+RH00164,Awa Leroy,awa.leroy164@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2021-06-09,ACTIF,45,32006.2,3.8,14,1
+RH00363,Karim Leroy,karim.leroy363@entreprise-fictive.fr,Finance,Contrôleur de gestion,Abidjan,2021-06-15,ACTIF,36,60897.11,2.8,0,2
+RH00142,Karim Diop,karim.diop142@entreprise-fictive.fr,Commercial,Commercial,Marseille,2021-06-27,ACTIF,46,41654.95,3.2,42,2
+RH00168,Nicolas Sy,nicolas.sy168@entreprise-fictive.fr,Finance,Comptable,Lyon,2021-07-08,ACTIF,60,39650.07,5.0,21,0
+RH00345,Fatou Diop,fatou.diop345@entreprise-fictive.fr,Logistique,Chef d'équipe,Lyon,2021-07-18,ACTIF,47,37739.16,4.2,42,1
+RH00283,Khady Camara,khady.camara283@entreprise-fictive.fr,Finance,Comptable,Abidjan,2021-07-24,ACTIF,57,43950.42,3.2,21,0
+RH00007,Karim Bernard,karim.bernard7@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2021-08-18,ACTIF,51,34345.51,4.0,35,8
+RH00305,Awa Thomas,awa.thomas305@entreprise-fictive.fr,Commercial,Chef de secteur,Marseille,2021-08-18,ACTIF,58,58602.88,2.8,21,2
+RH00159,Fatou Cissé,fatou.cisse159@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2021-08-27,ACTIF,38,53645.82,4.4,42,2
+RH00332,Karim Fall,karim.fall332@entreprise-fictive.fr,Logistique,Préparateur,Paris,2021-08-27,ACTIF,22,27197.48,4.9,7,0
+RH00227,Mamadou Sow,mamadou.sow227@entreprise-fictive.fr,Commercial,Commercial,Dakar,2021-09-08,ACTIF,24,35697.75,5.0,21,1
+RH00066,Thomas Diallo,thomas.diallo66@entreprise-fictive.fr,Informatique,Développeur,Lyon,2021-09-21,ACTIF,33,57833.85,3.9,35,5
+RH00412,Mamadou Martin,mamadou.martin412@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2021-09-24,ACTIF,50,55096.07,3.2,21,8
+RH00374,Inès Moreau,inès.moreau374@entreprise-fictive.fr,Commercial,Commercial,Lyon,2021-09-28,DEPART,40,38379.13,3.6,35,8
+RH00228,Mariama Diop,mariama.diop228@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2021-10-10,ACTIF,56,27586.31,2.8,7,30
+RH00245,Sophie Fall,sophie.fall245@entreprise-fictive.fr,Finance,Contrôleur de gestion,Abidjan,2021-10-31,ACTIF,48,61562.51,2.3,14,0
+RH00455,Moussa Robert,moussa.robert455@entreprise-fictive.fr,Commercial,Chef de secteur,Marseille,2021-10-31,ACTIF,22,58831.87,2.9,7,2
+RH00234,Claire Michel,claire.michel234@entreprise-fictive.fr,Logistique,Préparateur,Paris,2021-11-11,ACTIF,40,30412.09,2.2,0,0
+RH00483,Thomas Dubois,thomas.dubois483@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2021-11-22,ACTIF,34,34957.2,4.7,35,0
+RH00166,Karim Michel,karim.michel166@entreprise-fictive.fr,Finance,Comptable,Abidjan,2021-11-25,DEPART,47,42932.54,3.5,0,0
+RH00568,Moussa Diop,moussa.diop568@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2021-12-05,ACTIF,48,33625.22,3.1,0,1
+RH00522,Emma Petit,emma.petit522@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2021-12-06,ACTIF,21,28221.09,3.6,14,0
+RH00137,Hugo Bernard,hugo.bernard137@entreprise-fictive.fr,Informatique,Développeur,Dakar,2021-12-08,ACTIF,26,57360.14,2.5,21,0
+RH00545,Lucas Dubois,lucas.dubois545@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2021-12-09,ACTIF,53,45175.34,2.2,21,1
+RH00087,Karim Diop,karim.diop87@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2021-12-16,ACTIF,58,37079.13,4.5,7,1
+RH00160,Sophie Michel,sophie.michel160@entreprise-fictive.fr,Commercial,Commercial,Lyon,2021-12-21,ACTIF,46,37083.69,3.8,14,3
+RH00201,Sophie Diop,sophie.diop201@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2022-01-01,ACTIF,26,44794.77,2.6,42,0
+RH00192,Lucas Bernard,lucas.bernard192@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2022-01-05,DEPART,43,28230.22,4.9,7,3
+RH00243,Lucas Sy,lucas.sy243@entreprise-fictive.fr,Commercial,Commercial,Dakar,2022-01-07,ACTIF,62,34281.54,3.0,7,2
+RH00599,Mariama Simon,mariama.simon599@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2022-01-25,DEPART,26,29500.29,4.6,21,2
+RH00226,Aïssatou Thomas,aissatou.thomas226@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2022-01-26,ACTIF,59,52801.91,3.7,42,8
+RH00519,Awa Cissé,awa.cisse519@entreprise-fictive.fr,Commercial,Commercial,Paris,2022-01-31,ACTIF,31,36867.31,4.4,35,2
+RH00576,Léa Kane,lea.kane576@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2022-02-23,ACTIF,59,28072.09,2.2,0,1
+RH00295,Moussa Durand,moussa.durand295@entreprise-fictive.fr,Commercial,Commercial,Marseille,2022-03-21,ACTIF,55,40317.16,2.7,7,2
+RH00043,Fatou Ndiaye,fatou.ndiaye43@entreprise-fictive.fr,Informatique,Développeur,Dakar,2022-03-24,ACTIF,58,51525.74,2.8,35,0
+RH00294,Karim Michel,karim.michel294@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2022-03-25,CONGE_LONG,25,34417.21,4.4,14,5
+RH00199,Aïssatou Martin,aissatou.martin199@entreprise-fictive.fr,Finance,Contrôleur de gestion,Marseille,2022-03-27,ACTIF,42,52269.49,3.4,42,1
+RH00004,Cheikh Gueye,cheikh.gueye4@entreprise-fictive.fr,Commercial,Commercial,Paris,2022-04-05,ACTIF,30,40394.6,4.5,7,1
+RH00047,Awa Moreau,awa.moreau47@entreprise-fictive.fr,Informatique,Développeur,Marseille,2022-04-10,ACTIF,61,52065.85,3.0,35,5
+RH00275,Mamadou Thomas,mamadou.thomas275@entreprise-fictive.fr,Commercial,Commercial,Paris,2022-04-19,DEPART,57,35929.29,4.2,14,5
+RH00268,Ousmane Sow,ousmane.sow268@entreprise-fictive.fr,Informatique,Développeur,Marseille,2022-04-27,ACTIF,45,50820.3,4.5,0,1
+RH00368,Mamadou Sow,mamadou.sow368@entreprise-fictive.fr,Logistique,Responsable entrepôt,Dakar,2022-05-27,ACTIF,54,55956.9,4.3,14,2
+RH00020,Thomas Robert,thomas.robert20@entreprise-fictive.fr,Informatique,Développeur,Dakar,2022-05-28,ACTIF,52,58150.09,3.6,14,0
+RH00482,Fatou Thomas,fatou.thomas482@entreprise-fictive.fr,Finance,Contrôleur de gestion,Abidjan,2022-06-03,ACTIF,33,60771.97,4.2,35,3
+RH00528,Salimata Cissé,salimata.cisse528@entreprise-fictive.fr,Finance,Comptable,Lyon,2022-06-06,ACTIF,33,43802.94,3.3,21,1
+RH00465,Karim Dubois,karim.dubois465@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2022-06-12,ACTIF,49,27309.35,2.7,14,5
+RH00194,Mariama Moreau,mariama.moreau194@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2022-06-13,ACTIF,60,38551.76,3.1,21,1
+RH00072,Aïssatou Diop,aissatou.diop72@entreprise-fictive.fr,Informatique,Administrateur systèmes,Marseille,2022-07-06,ACTIF,36,48585.59,2.7,0,1
+RH00079,Cheikh Michel,cheikh.michel79@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2022-07-28,ACTIF,37,48363.4,3.9,21,2
+RH00378,Emma Traoré,emma.traore378@entreprise-fictive.fr,Informatique,Architecte,Lyon,2022-08-01,DEPART,50,79603.94,2.4,42,3
+RH00418,Inès Simon,inès.simon418@entreprise-fictive.fr,Finance,Contrôleur de gestion,Dakar,2022-08-02,ACTIF,54,54196.47,4.5,14,1
+RH00218,Léa Thomas,lea.thomas218@entreprise-fictive.fr,Informatique,Administrateur systèmes,Abidjan,2022-08-13,ACTIF,46,45718.19,4.4,35,0
+RH00152,Ibrahima Dubois,ibrahima.dubois152@entreprise-fictive.fr,Finance,Contrôleur de gestion,Dakar,2022-08-23,ACTIF,25,62269.34,2.7,35,1
+RH00206,Mamadou Ndiaye,mamadou.ndiaye206@entreprise-fictive.fr,Logistique,Responsable entrepôt,Dakar,2022-08-23,ACTIF,39,55399.26,4.8,14,1
+RH00390,Lucas Diop,lucas.diop390@entreprise-fictive.fr,Finance,Comptable,Lyon,2022-08-26,ACTIF,32,41864.61,2.6,14,0
+RH00477,Emma Moreau,emma.moreau477@entreprise-fictive.fr,Logistique,Préparateur,Paris,2022-08-26,ACTIF,50,26977.75,3.4,42,1
+RH00398,Khady Dubois,khady.dubois398@entreprise-fictive.fr,Informatique,Développeur,Marseille,2022-08-30,ACTIF,30,47997.46,4.2,0,8
+RH00581,Inès Simon,inès.simon581@entreprise-fictive.fr,Logistique,Préparateur,Paris,2022-09-01,ACTIF,44,30516.25,4.9,14,0
+RH00447,Moussa Gueye,moussa.gueye447@entreprise-fictive.fr,Logistique,Préparateur,Paris,2022-09-25,ACTIF,35,29462.58,3.3,0,1
+RH00569,Fatou Petit,fatou.petit569@entreprise-fictive.fr,Ressources humaines,Responsable paie,Dakar,2022-09-25,ACTIF,61,48201.45,2.9,7,8
+RH00313,Léa Diop,lea.diop313@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2022-09-28,ACTIF,23,27763.76,2.3,21,3
+RH00006,Awa Traoré,awa.traore6@entreprise-fictive.fr,Informatique,Développeur,Lyon,2022-09-30,ACTIF,53,52815.78,4.5,35,2
+RH00106,Mariama Martin,mariama.martin106@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2022-10-05,ACTIF,21,35182.2,3.6,21,5
+RH00233,Julien Leroy,julien.leroy233@entreprise-fictive.fr,Commercial,Commercial,Dakar,2022-10-07,ACTIF,43,34269.04,3.0,7,3
+RH00232,Cheikh Robert,cheikh.robert232@entreprise-fictive.fr,Finance,Comptable,Lyon,2022-10-17,ACTIF,22,41360.5,5.0,35,3
+RH00359,Léa Robert,lea.robert359@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2022-10-25,ACTIF,56,30904.71,2.2,7,0
+RH00474,Mariama Sow,mariama.sow474@entreprise-fictive.fr,Marketing,Chef de produit,Paris,2022-10-25,ACTIF,26,55805.88,2.0,7,0
+RH00236,Sophie Moreau,sophie.moreau236@entreprise-fictive.fr,Finance,Comptable,Paris,2022-11-04,ACTIF,33,38087.93,3.7,35,0
+RH00530,Moussa Michel,moussa.michel530@entreprise-fictive.fr,Finance,Comptable,Lyon,2022-11-06,ACTIF,32,45231.55,4.8,0,30
+RH00261,Léa Ba,lea.ba261@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2022-11-28,ACTIF,29,28710.24,4.7,14,0
+RH00371,Awa Cissé,awa.cisse371@entreprise-fictive.fr,Finance,Comptable,Paris,2022-11-28,ACTIF,39,38038.7,2.4,35,0
+RH00541,Lucas Petit,lucas.petit541@entreprise-fictive.fr,Ressources humaines,Chargé RH,Lyon,2022-11-29,ACTIF,52,41119.59,3.7,21,2
+RH00502,Moussa Sow,moussa.sow502@entreprise-fictive.fr,Commercial,Commercial,Marseille,2022-12-08,ACTIF,61,39842.82,4.1,0,5
+RH00377,Cheikh Petit,cheikh.petit377@entreprise-fictive.fr,Informatique,Administrateur systèmes,Paris,2022-12-16,ACTIF,49,52743.59,3.7,35,1
+RH00002,Awa Simon,awa.simon2@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2023-01-04,ACTIF,58,35590.42,4.5,14,0
+RH00248,Inès Kane,inès.kane248@entreprise-fictive.fr,Ressources humaines,Chargé RH,Dakar,2023-01-05,DEPART,61,42986.3,3.4,21,2
+RH00140,Hugo Laurent,hugo.laurent140@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2023-01-07,DEPART,24,30253.74,3.3,7,2
+RH00573,Karim Diop,karim.diop573@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2023-01-07,ACTIF,39,31010.58,4.6,35,1
+RH00121,Moussa Cissé,moussa.cisse121@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2023-01-15,ACTIF,52,29408.68,2.6,7,2
+RH00064,Lucas Durand,lucas.durand64@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2023-02-03,ACTIF,34,27616.07,4.6,35,0
+RH00435,Julien Bernard,julien.bernard435@entreprise-fictive.fr,Informatique,Développeur,Marseille,2023-02-05,ACTIF,22,56353.95,3.9,35,0
+RH00399,Ousmane Petit,ousmane.petit399@entreprise-fictive.fr,Informatique,Développeur,Lyon,2023-02-10,ACTIF,24,50297.27,3.5,0,0
+RH00561,Mariama Diop,mariama.diop561@entreprise-fictive.fr,Logistique,Préparateur,Paris,2023-02-10,ACTIF,36,26317.37,4.6,35,2
+RH00460,Ousmane Traoré,ousmane.traore460@entreprise-fictive.fr,Informatique,Développeur,Dakar,2023-02-19,ACTIF,56,48116.2,4.2,21,15
+RH00392,Hugo Kane,hugo.kane392@entreprise-fictive.fr,Commercial,Commercial,Dakar,2023-02-25,ACTIF,24,37993.53,3.4,35,5
+RH00083,Salimata Diop,salimata.diop83@entreprise-fictive.fr,Finance,Comptable,Dakar,2023-03-03,ACTIF,61,40679.13,2.2,35,2
+RH00383,Claire Petit,claire.petit383@entreprise-fictive.fr,Commercial,Commercial,Lyon,2023-03-09,ACTIF,22,33838.46,4.5,21,0
+RH00139,Salimata Gueye,salimata.gueye139@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2023-03-10,ACTIF,59,56742.94,3.8,21,0
+RH00250,Karim Leroy,karim.leroy250@entreprise-fictive.fr,Commercial,Chef de secteur,Lyon,2023-03-14,ACTIF,52,49901.71,4.6,21,3
+RH00167,Awa Dubois,awa.dubois167@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2023-03-18,ACTIF,47,29199.6,2.5,0,8
+RH00538,Nadia Ndiaye,nadia.ndiaye538@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2023-03-22,ACTIF,52,39640.22,4.8,14,0
+RH00509,Mariama Martin,mariama.martin509@entreprise-fictive.fr,Finance,Comptable,Marseille,2023-03-23,ACTIF,52,42560.41,3.7,0,5
+RH00553,Karim Laurent,karim.laurent553@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2023-03-26,ACTIF,42,57934.47,2.7,35,3
+RH00495,Khady Simon,khady.simon495@entreprise-fictive.fr,Ressources humaines,Chargé RH,Abidjan,2023-04-03,ACTIF,22,42396.53,2.2,42,1
+RH00401,Ibrahima Bernard,ibrahima.bernard401@entreprise-fictive.fr,Informatique,Développeur,Lyon,2023-04-06,CONGE_LONG,45,50036.27,4.9,0,5
+RH00247,Léa Dubois,lea.dubois247@entreprise-fictive.fr,Finance,Comptable,Abidjan,2023-05-12,ACTIF,28,37603.85,3.4,0,0
+RH00524,Salimata Fall,salimata.fall524@entreprise-fictive.fr,Informatique,Développeur,Paris,2023-05-23,ACTIF,57,49921.94,3.5,35,0
+RH00300,Sophie Petit,sophie.petit300@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2023-06-06,ACTIF,35,35977.88,2.8,0,15
+RH00426,Léa Moreau,lea.moreau426@entreprise-fictive.fr,Finance,Comptable,Lyon,2023-06-11,ACTIF,46,42000.73,3.5,7,1
+RH00093,Nicolas Sy,nicolas.sy93@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2023-06-17,ACTIF,39,37811.69,4.3,21,0
+RH00210,Khady Martin,khady.martin210@entreprise-fictive.fr,Finance,Comptable,Dakar,2023-06-17,ACTIF,35,37494.13,4.5,7,8
+RH00010,Lucas Laurent,lucas.laurent10@entreprise-fictive.fr,Informatique,Développeur,Dakar,2023-06-20,DEPART,52,55060.53,2.9,42,0
+RH00001,Ibrahima Thomas,ibrahima.thomas1@entreprise-fictive.fr,Finance,Comptable,Abidjan,2023-06-24,DEPART,62,43999.97,3.7,42,2
+RH00288,Cheikh Dubois,cheikh.dubois288@entreprise-fictive.fr,Commercial,Commercial,Marseille,2023-07-05,ACTIF,60,34561.67,3.9,0,0
+RH00058,Sophie Gueye,sophie.gueye58@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2023-07-10,ACTIF,34,38843.67,4.0,42,1
+RH00550,Sophie Cissé,sophie.cisse550@entreprise-fictive.fr,Commercial,Chef de secteur,Abidjan,2023-07-11,ACTIF,51,56305.88,2.3,35,0
+RH00202,Nadia Leroy,nadia.leroy202@entreprise-fictive.fr,Ressources humaines,Chargé RH,Dakar,2023-07-15,ACTIF,49,36522.45,3.4,7,15
+RH00011,Julien Durand,julien.durand11@entreprise-fictive.fr,Logistique,Chef d'équipe,Marseille,2023-07-22,ACTIF,37,35310.52,4.8,35,0
+RH00413,Moussa Petit,moussa.petit413@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2023-08-02,ACTIF,51,28729.34,3.3,14,0
+RH00019,Julien Camara,julien.camara19@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2023-08-05,ACTIF,29,48352.28,3.2,0,1
+RH00396,Thomas Gueye,thomas.gueye396@entreprise-fictive.fr,Finance,Comptable,Abidjan,2023-08-08,ACTIF,25,40531.41,4.6,21,3
+RH00431,Khady Sy,khady.sy431@entreprise-fictive.fr,Logistique,Préparateur,Paris,2023-08-14,CONGE_LONG,39,26494.29,3.1,42,2
+RH00074,Thomas Michel,thomas.michel74@entreprise-fictive.fr,Informatique,Développeur,Dakar,2023-09-10,ACTIF,41,49346.15,3.8,21,0
+RH00130,Léa Traoré,lea.traore130@entreprise-fictive.fr,Informatique,Administrateur systèmes,Lyon,2023-09-12,DEPART,29,46065.59,2.8,35,0
+RH00594,Léa Michel,lea.michel594@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2023-10-03,ACTIF,37,52994.74,2.5,21,1
+RH00069,Sophie Robert,sophie.robert69@entreprise-fictive.fr,Ressources humaines,Responsable paie,Abidjan,2023-10-14,ACTIF,54,51454.25,2.1,21,8
+RH00564,Fatou Diop,fatou.diop564@entreprise-fictive.fr,Informatique,Développeur,Dakar,2023-10-30,ACTIF,48,55345.15,2.1,0,0
+RH00102,Lucas Simon,lucas.simon102@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2023-10-31,ACTIF,47,26580.44,2.9,35,8
+RH00145,Mamadou Sow,mamadou.sow145@entreprise-fictive.fr,Logistique,Préparateur,Paris,2023-10-31,ACTIF,29,29051.23,4.2,0,1
+RH00057,Khady Bernard,khady.bernard57@entreprise-fictive.fr,Marketing,Chef de produit,Lyon,2023-11-04,DEPART,54,58736.16,2.1,0,0
+RH00135,Cheikh Camara,cheikh.camara135@entreprise-fictive.fr,Commercial,Commercial,Paris,2023-11-13,DEPART,27,39340.26,2.9,0,1
+RH00324,Inès Michel,inès.michel324@entreprise-fictive.fr,Informatique,Développeur,Lyon,2023-11-27,ACTIF,30,48532.79,3.5,7,5
+RH00111,Cheikh Martin,cheikh.martin111@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2024-01-10,ACTIF,31,52451.92,3.2,14,1
+RH00122,Awa Durand,awa.durand122@entreprise-fictive.fr,Commercial,Chef de secteur,Paris,2024-01-19,ACTIF,26,54925.27,3.9,0,1
+RH00040,Awa Dubois,awa.dubois40@entreprise-fictive.fr,Marketing,Chef de produit,Lyon,2024-01-20,ACTIF,31,56935.62,2.5,0,2
+RH00059,Lucas Gueye,lucas.gueye59@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2024-02-03,CONGE_LONG,33,36855.35,2.4,42,5
+RH00108,Nicolas Moreau,nicolas.moreau108@entreprise-fictive.fr,Logistique,Chef d'équipe,Abidjan,2024-02-08,ACTIF,50,32524.47,2.2,0,0
+RH00379,Aïssatou Robert,aissatou.robert379@entreprise-fictive.fr,Commercial,Commercial,Lyon,2024-02-11,ACTIF,35,35254.09,4.8,21,1
+RH00188,Emma Fall,emma.fall188@entreprise-fictive.fr,Informatique,Développeur,Marseille,2024-02-16,ACTIF,28,52752.46,3.8,0,8
+RH00126,Cheikh Leroy,cheikh.leroy126@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2024-03-11,ACTIF,59,35713.03,4.9,0,3
+RH00350,Léa Robert,lea.robert350@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2024-03-11,ACTIF,60,45562.25,3.2,7,0
+RH00542,Ibrahima Thomas,ibrahima.thomas542@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2024-03-14,ACTIF,25,42261.26,2.8,0,3
+RH00434,Aïssatou Diop,aissatou.diop434@entreprise-fictive.fr,Finance,Comptable,Paris,2024-03-23,ACTIF,36,38931.86,3.5,7,5
+RH00356,Léa Fall,lea.fall356@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2024-03-26,ACTIF,42,36474.01,4.0,21,1
+RH00048,Ousmane Cissé,ousmane.cisse48@entreprise-fictive.fr,Commercial,Commercial,Marseille,2024-04-03,ACTIF,54,34172.42,4.2,0,0
+RH00487,Inès Martin,inès.martin487@entreprise-fictive.fr,Logistique,Préparateur,Paris,2024-04-05,ACTIF,50,26364.17,3.6,7,8
+RH00090,Lucas Camara,lucas.camara90@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2024-04-25,ACTIF,40,29911.56,4.6,14,0
+RH00259,Léa Kane,lea.kane259@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2024-04-27,ACTIF,36,55049.91,4.3,21,8
+RH00316,Aminata Ba,aminata.ba316@entreprise-fictive.fr,Informatique,Développeur,Lyon,2024-05-02,ACTIF,43,46106.17,2.1,0,8
+RH00448,Mamadou Laurent,mamadou.laurent448@entreprise-fictive.fr,Ressources humaines,Chargé RH,Paris,2024-05-16,ACTIF,24,34973.46,5.0,42,3
+RH00489,Awa Kane,awa.kane489@entreprise-fictive.fr,Commercial,Commercial,Lyon,2024-06-08,ACTIF,22,35840.19,2.1,14,5
+RH00117,Karim Michel,karim.michel117@entreprise-fictive.fr,Logistique,Préparateur,Paris,2024-06-15,ACTIF,43,29482.59,4.8,0,0
+RH00115,Claire Dubois,claire.dubois115@entreprise-fictive.fr,Finance,Comptable,Abidjan,2024-07-09,ACTIF,43,42553.9,2.8,0,1
+RH00065,Aminata Michel,aminata.michel65@entreprise-fictive.fr,Informatique,Administrateur systèmes,Paris,2024-07-15,ACTIF,59,47526.89,3.1,35,2
+RH00052,Sophie Durand,sophie.durand52@entreprise-fictive.fr,Logistique,Préparateur,Abidjan,2024-07-16,ACTIF,29,25439.05,4.2,0,30
+RH00008,Mamadou Moreau,mamadou.moreau8@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2024-07-21,ACTIF,46,40510.12,4.1,42,8
+RH00077,Lucas Laurent,lucas.laurent77@entreprise-fictive.fr,Finance,Contrôleur de gestion,Marseille,2024-08-11,ACTIF,28,59348.32,4.5,21,2
+RH00131,Sophie Kane,sophie.kane131@entreprise-fictive.fr,Logistique,Chef d'équipe,Paris,2024-09-08,CONGE_LONG,38,36765.39,4.3,0,0
+RH00184,Ibrahima Durand,ibrahima.durand184@entreprise-fictive.fr,Informatique,Développeur,Dakar,2024-09-12,ACTIF,49,51377.08,2.4,14,1
+RH00082,Hugo Gueye,hugo.gueye82@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2024-09-17,ACTIF,54,28967.65,2.5,21,0
+RH00175,Ibrahima Leroy,ibrahima.leroy175@entreprise-fictive.fr,Ressources humaines,Chargé RH,Lyon,2024-10-05,ACTIF,53,35678.91,2.9,0,1
+RH00451,Nicolas Traoré,nicolas.traore451@entreprise-fictive.fr,Finance,Comptable,Paris,2024-10-09,ACTIF,49,41635.06,3.1,0,1
+RH00023,Emma Moreau,emma.moreau23@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2024-10-12,ACTIF,39,35242.7,2.3,14,0
+RH00070,Lucas Diallo,lucas.diallo70@entreprise-fictive.fr,Commercial,Commercial,Dakar,2024-11-23,ACTIF,50,36584.38,2.4,0,1
+RH00242,Salimata Bernard,salimata.bernard242@entreprise-fictive.fr,Informatique,Administrateur systèmes,Lyon,2024-11-23,ACTIF,52,49162.24,4.9,35,0
+RH00333,Ibrahima Moreau,ibrahima.moreau333@entreprise-fictive.fr,Logistique,Chef d'équipe,Dakar,2024-12-10,ACTIF,59,35891.49,3.3,0,0
+RH00049,Hugo Leroy,hugo.leroy49@entreprise-fictive.fr,Logistique,Préparateur,Paris,2024-12-25,ACTIF,62,27920.05,4.3,35,0
+RH00481,Karim Dubois,karim.dubois481@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2024-12-28,ACTIF,35,50887.66,2.2,42,0
+RH00291,Nicolas Diop,nicolas.diop291@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2025-01-11,ACTIF,57,28230.27,3.0,7,5
+RH00375,Mamadou Leroy,mamadou.leroy375@entreprise-fictive.fr,Logistique,Responsable entrepôt,Lyon,2025-01-13,ACTIF,43,53292.19,4.8,14,1
+RH00143,Lucas Michel,lucas.michel143@entreprise-fictive.fr,Marketing,Chef de produit,Dakar,2025-01-17,ACTIF,50,50335.68,2.4,35,30
+RH00037,Nadia Camara,nadia.camara37@entreprise-fictive.fr,Marketing,Chargé marketing,Abidjan,2025-01-22,ACTIF,40,39375.74,4.4,35,0
+RH00005,Ibrahima Durand,ibrahima.durand5@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2025-02-19,ACTIF,56,35611.1,4.6,14,8
+RH00015,Nadia Sow,nadia.sow15@entreprise-fictive.fr,Marketing,Chef de produit,Lyon,2025-02-21,ACTIF,40,53507.82,3.1,0,1
+RH00318,Hugo Martin,hugo.martin318@entreprise-fictive.fr,Commercial,Chef de secteur,Marseille,2025-02-21,ACTIF,32,51616.48,3.4,35,5
+RH00149,Julien Bernard,julien.bernard149@entreprise-fictive.fr,Logistique,Préparateur,Dakar,2025-03-11,ACTIF,46,27897.87,3.2,14,0
+RH00586,Ousmane Durand,ousmane.durand586@entreprise-fictive.fr,Commercial,Commercial,Paris,2025-03-12,ACTIF,40,33058.33,2.1,0,0
+RH00423,Aminata Diallo,aminata.diallo423@entreprise-fictive.fr,Marketing,Chargé marketing,Lyon,2025-03-25,ACTIF,34,35314.02,4.0,0,8
+RH00073,Awa Leroy,awa.leroy73@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2025-03-30,DEPART,45,27092.15,4.2,21,1
+RH00103,Aïssatou Robert,aissatou.robert103@entreprise-fictive.fr,Informatique,Administrateur systèmes,Dakar,2025-03-30,DEPART,49,43939.53,2.3,21,0
+RH00266,Awa Petit,awa.petit266@entreprise-fictive.fr,Logistique,Préparateur,Lyon,2025-04-01,ACTIF,25,29719.96,3.0,35,0
+RH00068,Emma Moreau,emma.moreau68@entreprise-fictive.fr,Marketing,Chargé marketing,Dakar,2025-04-20,ACTIF,24,41904.5,4.9,0,1
+RH00134,Karim Martin,karim.martin134@entreprise-fictive.fr,Finance,Contrôleur de gestion,Paris,2025-05-01,ACTIF,30,54197.19,2.6,7,2
+RH00141,Mamadou Leroy,mamadou.leroy141@entreprise-fictive.fr,Finance,Contrôleur de gestion,Marseille,2025-05-01,DEPART,59,50083.5,3.4,7,1
+RH00580,Salimata Gueye,salimata.gueye580@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2025-05-17,ACTIF,52,38250.75,3.2,14,2
+RH00237,Hugo Traoré,hugo.traore237@entreprise-fictive.fr,Marketing,Chargé marketing,Marseille,2025-05-23,ACTIF,34,40919.04,2.9,14,8
+RH00499,Aminata Leroy,aminata.leroy499@entreprise-fictive.fr,Marketing,Chargé marketing,Paris,2025-05-27,ACTIF,40,36142.61,3.1,21,8
+RH00163,Moussa Thomas,moussa.thomas163@entreprise-fictive.fr,Informatique,Développeur,Paris,2025-05-29,ACTIF,40,53032.22,2.9,21,0
+RH00583,Thomas Diallo,thomas.diallo583@entreprise-fictive.fr,Logistique,Préparateur,Marseille,2025-06-01,ACTIF,24,27890.45,3.0,0,5
+RH00591,Cheikh Leroy,cheikh.leroy591@entreprise-fictive.fr,Commercial,Commercial,Abidjan,2025-06-07,ACTIF,21,37439.4,2.8,42,0
+RH00521,Léa Bernard,lea.bernard521@entreprise-fictive.fr,Commercial,Commercial,Marseille,2025-06-17,ACTIF,28,34200.54,2.9,14,1
+RH00552,Khady Leroy,khady.leroy552@entreprise-fictive.fr,Commercial,Commercial,Paris,2025-06-28,CONGE_LONG,36,34898.37,4.1,42,0
+RH00162,Hugo Kane,hugo.kane162@entreprise-fictive.fr,Informatique,Développeur,Abidjan,2025-06-29,ACTIF,31,48851.31,4.3,21,1

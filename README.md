@@ -234,6 +234,12 @@ nature :
 La relecture sémantique du LLM peut proposer le rôle « niveau » pour une
 colonne que les règles n'ont pas reconnue.
 
+`data/samples/rh_employes.csv` (600 employés fictifs : service, poste,
+ville, statut, date d'embauche, âge, salaire, note d'évaluation, formation,
+absences) permet de le tester. Les règles y prennent `departement` pour une
+donnée géographique (départements français) : c'est un cas pour la
+relecture sémantique du LLM.
+
 Vérifié le 2026-09-28 sur deux fichiers générés (300 employés, 2 000 relevés
 de capteurs) : âge et salaire moyens par département, température et
 humidité moyennes par ville et par mois, aucune somme d'âge ni de
