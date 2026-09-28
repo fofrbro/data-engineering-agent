@@ -16,6 +16,7 @@ catégorielles sans « @ ».
 
 import json
 import re
+import unicodedata
 from dataclasses import dataclass
 
 from src.discovery.schema_profiler import DATETIME, SchemaProfile
@@ -101,6 +102,47 @@ def naming_input(schema: SchemaProfile) -> str:
     )
 
 
+def normalize_column_name(name: str) -> str:
+    """ "Numéro de commande" -> "Numero_de_commande", "e-mail" -> "e_mail". """
+
+    ascii_text = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+
+    return re.sub(r"[^A-Za-z0-9]+", "_", ascii_text).strip("_")
+
+
+def normalize_column_names(names: list[str]) -> list[str]:
+    return [normalize_column_name(name) for name in names]
+
+
+def normalize_dataset_name(name: str) -> str:
+    return normalize_column_name(name).lower()
+
+
+def parse_column_names(text: str | None) -> list[str]:
+    """ "a, b; c" ou une colonne par ligne -> ["a", "b", "c"], normalisés. """
+
+    return normalize_column_names(
+        [name.strip() for name in re.split(r"[,;\n]", text or "") if name.strip()]
+    )
+
+
+def invalid_names_reason(names: list[str]) -> str | None:
+    """Raison de refuser une liste de noms, ou None si elle est valide."""
+
+    invalid = [name for name in names if not NAME_PATTERN.match(name)]
+
+    if invalid:
+        return (
+            f"noms invalides : {', '.join(invalid)} (lettres, chiffres et _, "
+            "sans espace ni accent, commençant par une lettre)"
+        )
+
+    if len({name.lower() for name in names}) != len(names):
+        return "noms en double"
+
+    return None
+
+
 def check_naming(payload: dict, column_count: int) -> str | None:
     """Raison de refuser la proposition, ou None si elle est recevable."""
 
@@ -109,13 +151,10 @@ def check_naming(payload: dict, column_count: int) -> str | None:
     if len(names) != column_count:
         return f"{len(names)} noms proposés pour {column_count} colonnes"
 
-    invalid = [name for name in names if not NAME_PATTERN.match(name)]
+    reason = invalid_names_reason(names)
 
-    if invalid:
-        return f"noms invalides : {', '.join(invalid)}"
-
-    if len({name.lower() for name in names}) != len(names):
-        return "noms en double"
+    if reason:
+        return reason
 
     dataset = payload.get("dataset")
 
@@ -155,6 +194,11 @@ def propose_column_names(
             return None, "clé API refusée (absente, invalide ou expirée)"
 
         return None, f"LLM indisponible : {type(exc).__name__}"
+
+    payload["names"] = normalize_column_names(payload.get("names") or [])
+
+    if payload.get("dataset"):
+        payload["dataset"] = normalize_dataset_name(payload["dataset"])
 
     reason = check_naming(payload, len(schema.columns))
 

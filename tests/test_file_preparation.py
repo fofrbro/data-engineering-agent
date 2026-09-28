@@ -130,7 +130,11 @@ def test_different_structures_are_named_separately(orders, tmp_path):
         ({"dataset": None, "names": ["a", "b"]}, None),
         ({"dataset": None, "names": ["a"]}, "1 noms proposés pour 2 colonnes"),
         ({"dataset": None, "names": ["a", "A"]}, "noms en double"),
-        ({"dataset": None, "names": ["a", "prix unitaire"]}, "noms invalides : prix unitaire"),
+        (
+            {"dataset": None, "names": ["a", "prix unitaire"]},
+            "noms invalides : prix unitaire (lettres, chiffres et _, sans espace "
+            "ni accent, commençant par une lettre)",
+        ),
         ({"dataset": "Ventes 2019", "names": ["a", "b"]}, "nom de dataset invalide : Ventes 2019"),
     ],
 )

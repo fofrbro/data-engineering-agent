@@ -28,6 +28,7 @@ load_dotenv()
 
 from src.tabular_pipeline import SUPPORTED_EXTENSIONS
 from src.discovery.archive import ArchiveError, extract_data_files
+from src.semantic.column_naming import parse_column_names
 from src.contract.contract_lifecycle import (
     ContractStatusError,
     approve_contract_file,
@@ -128,6 +129,10 @@ class WorkflowPlanRequest(BaseModel):
     contract_path: Optional[str] = None
     dataset_name: Optional[str] = None
     enrichments: List[Dict[str, Any]] = Field(default_factory=list)
+    # Noms des colonnes des fichiers sans en-tête, séparés par des virgules.
+    column_names: Optional[str] = None
+    # Instructions en langage naturel, traduites par le LLM.
+    instructions: Optional[str] = None
 
 
 class WorkflowAskRequest(BaseModel):
@@ -146,6 +151,12 @@ class DashboardReviewRequest(WorkflowReviewRequest):
     """Revue du tableau de bord : APPROVE, MODIFY ou REJECT."""
     action: str
     changes: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ColumnNamesRequest(WorkflowReviewRequest):
+    """Validation des noms de colonnes, éventuellement modifiés."""
+    names: Optional[List[str]] = None
+    dataset: Optional[str] = None
 
 
 class SemanticDecisionRequest(WorkflowReviewRequest):
@@ -461,6 +472,8 @@ async def create_workflow_plan(request: WorkflowPlanRequest):
             request.dataset_name,
             request.enrichments,
             {item["file_path"]: item["file_name"] for item in files},
+            parse_column_names(request.column_names) or None,
+            request.instructions,
         )
     )
 
@@ -511,6 +524,16 @@ async def get_workflow_plan(plan_id: str):
 async def approve_workflow_contract(plan_id: str, review: WorkflowReviewRequest):
     return _workflow_call(
         lambda: workflow_service.approve_contract(plan_id, review.reviewer, review.comment)
+    )
+
+
+@app.post("/api/workflow/{plan_id}/column-names")
+async def review_workflow_column_names(plan_id: str, review: ColumnNamesRequest):
+    """Valide les noms de colonnes des fichiers sans en-tête, ou les remplace."""
+    return _workflow_call(
+        lambda: workflow_service.review_column_names(
+            plan_id, review.reviewer, review.names, review.dataset, review.comment,
+        )
     )
 
 

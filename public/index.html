@@ -466,6 +466,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="agentInstructions">Instructions pour l'agent (facultatif)</label>
+                        <textarea id="agentInstructions" rows="3" placeholder="Ex. : les colonnes sont numéro de commande, ligne, date, client, e-mail, produit, quantité, prix unitaire, taxe ; appelle le dataset ventes_ae"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="columnNames">Noms de colonnes des fichiers sans en-tête (facultatif)</label>
+                        <input type="text" id="columnNames" placeholder="Séparés par des virgules, dans l'ordre des colonnes">
+                    </div>
+
+                    <div class="form-group">
                         <label for="enrichments">Enrichissements JSON (optionnel)</label>
                         <textarea id="enrichments" rows="5" placeholder='[{"type":"arithmetic","target":"total","left":"quantity","right":"price","operator":"multiply"}]'></textarea>
                     </div>
@@ -704,6 +714,8 @@
                     file_id: currentFileId,
                     contract_path: document.getElementById('contractPath').value.trim() || null,
                     dataset_name: document.getElementById('datasetName').value.trim() || null,
+                    column_names: document.getElementById('columnNames').value.trim() || null,
+                    instructions: document.getElementById('agentInstructions').value.trim() || null,
                     enrichments
                 });
                 agentPlanIds = data.plans.map(view => view.plan_id);
@@ -749,6 +761,67 @@
                 if (!comment) return;
             }
             agentAction(planId, 'dashboard', { action, reviewer, comment });
+        }
+
+        function reviewAgentColumnNames(planId) {
+            const reviewer = reviewerName();
+            if (!reviewer) return;
+            const names = [...document.querySelectorAll(`input[name="colname-${planId}"]`)].map(input => input.value.trim());
+            const datasetInput = document.getElementById(`dataset-${planId}`);
+            const dataset = datasetInput ? datasetInput.value.trim() : null;
+            agentAction(planId, 'column-names', { reviewer, names, dataset: dataset || null });
+        }
+
+        function columnNamingBlock(view) {
+            const naming = view.column_naming;
+            if (!naming) return '';
+            const id = view.plan_id;
+            const sources = {
+                USER: 'fournis par vous', CONTRACT: 'repris du contrat validé',
+                LLM: 'proposés par le LLM', GENERIC: 'génériques'
+            };
+            const editable = naming.editable && (naming.status !== 'VALIDATED' || naming.source === 'CONTRACT');
+            const rows = naming.names.map((name, index) => `
+                <tr>
+                    <td ${cell}>${index + 1}</td>
+                    <td ${cell}>${editable
+                        ? `<input type="text" name="colname-${id}" value="${escapeHtml(name)}" style="width: 100%; padding: 4px;">`
+                        : `<strong>${escapeHtml(name)}</strong>`}</td>
+                    <td ${cell} style="color:#475467;">${(naming.samples || []).map(row => escapeHtml(row[index])).join(' · ')}</td>
+                </tr>`).join('');
+            const validated = naming.status === 'VALIDATED';
+            const status = validated
+                ? `✅ Noms de colonnes ${sources[naming.source] || ''} (validés : ${escapeHtml(naming.validated_by || '')})`
+                : `⏳ Noms de colonnes ${sources[naming.source] || ''} : à vérifier et valider avant le contrat`;
+            const contractNote = naming.source === 'CONTRACT' && editable
+                ? `<p style="color:#475467;">Modifier ces noms exige un autre nom de dataset (ils ne correspondraient plus au contrat validé).</p>`
+                : '';
+            const actions = editable ? `
+                ${contractNote}
+                <label>Dataset : <input type="text" id="dataset-${id}" value="${escapeHtml(view.dataset)}" style="padding: 4px;"></label>
+                <button ${smallButton} onclick="reviewAgentColumnNames('${id}')">${validated ? 'Appliquer les modifications' : 'Valider les noms'}</button>` : '';
+            return `
+                <div style="margin-top: 12px; padding: 10px; border: 1px solid #eee; border-radius: 6px;">
+                    <p>${status}</p>
+                    <p style="color:#475467; font-size: 0.9em;">${escapeHtml(naming.note || '')}</p>
+                    <table style="margin-top: 8px; border-collapse: collapse; width: 100%;">
+                        <tr><th ${cell}>#</th><th ${cell}>Nom</th><th ${cell}>Exemples de valeurs</th></tr>
+                        ${rows}
+                    </table>
+                    <div style="margin-top: 8px;">${actions}</div>
+                </div>`;
+        }
+
+        function instructionsBlock(view) {
+            const instructions = view.instructions;
+            if (!instructions) return '';
+            const details = [
+                instructions.message ? `→ ${escapeHtml(instructions.message)}` : '',
+                instructions.unsupported ? `Non pris en charge : ${escapeHtml(instructions.unsupported)}` : '',
+                instructions.discarded.length ? `Écarté par les contrôles : ${escapeHtml(instructions.discarded.join(' ; '))}` : '',
+                instructions.error ? `⚠️ ${escapeHtml(instructions.error)}` : '',
+            ].filter(Boolean).join('<br>');
+            return `<p style="margin-top: 12px;">🗣️ Instructions : « ${escapeHtml(instructions.text)} »<br><span style="color:#475467;">${details}</span></p>`;
         }
 
         async function reviewAgentSemantics(planId) {
@@ -867,6 +940,8 @@
                         <tr><th ${cell}>Fichier</th><th ${cell}>Lignes</th><th ${cell}>Décision prévue</th><th ${cell}>Règle</th></tr>
                         ${files}
                     </table>
+                    ${instructionsBlock(view)}
+                    ${columnNamingBlock(view)}
                     ${(view.file_preparations || []).length ? `<p style="margin-top: 12px;">📎 Fichiers sans en-tête préparés : ${
                         view.file_preparations.map(p => `${escapeHtml(fileName(p.original))} (${escapeHtml(p.note)})`).join(', ')
                     }</p>` : ''}

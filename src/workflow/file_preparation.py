@@ -8,6 +8,8 @@ Les fichiers sans en-tête de même structure reçoivent les mêmes noms :
 ils forment donc un seul dataset, avec un seul contrat.
 
 Origine des noms, par ordre de priorité :
+0. USER : noms fournis par l'utilisateur (champ ou instructions), s'ils
+   sont en même nombre que les colonnes ;
 1. CONTRACT : un seul contrat VALIDATED a la même structure (nombre de
    colonnes et types compatibles, dans l'ordre) ; ses noms et son dataset
    sont repris, le contrat sera réutilisé ;
@@ -36,11 +38,16 @@ from src.discovery.schema_profiler import (
     SchemaProfile,
     profile_schema,
 )
-from src.semantic.column_naming import propose_column_names
+from src.semantic.column_naming import (
+    invalid_names_reason,
+    normalize_column_names,
+    propose_column_names,
+)
 
 
 # Origine des noms de colonnes.
 FROM_FILE = "FILE"
+FROM_USER = "USER"
 FROM_CONTRACT = "CONTRACT"
 FROM_LLM = "LLM"
 GENERIC = "GENERIC"
@@ -62,6 +69,10 @@ _COARSE = {
     "string": "string",
     "boolean": "boolean",
 }
+
+
+class PreparationError(ValueError):
+    """Noms de colonnes fournis inutilisables."""
 
 
 @dataclass
@@ -147,8 +158,20 @@ def prepare_files(
     file_paths: list[str],
     contracts_dir: str | Path,
     llm_client=None,
+    column_names: list[str] | None = None,
 ) -> list[PreparedFile]:
-    """Un PreparedFile par fichier, dans l'ordre reçu."""
+    """
+    Un PreparedFile par fichier, dans l'ordre reçu. column_names, s'ils
+    sont fournis, nomment les fichiers sans en-tête qui ont autant de
+    colonnes ; des noms invalides lèvent PreparationError.
+    """
+
+    if column_names:
+        column_names = normalize_column_names(column_names)
+        reason = invalid_names_reason(column_names)
+
+        if reason:
+            raise PreparationError(f"Noms de colonnes fournis : {reason}.")
 
     prepared: dict[str, PreparedFile] = {}
     # Fichiers sans en-tête regroupés par structure compatible.
@@ -175,7 +198,7 @@ def prepare_files(
     contracts = validated_contracts(contracts_dir)
 
     for group in groups:
-        names, dataset, source, note = _name_group(group, contracts, llm_client)
+        names, dataset, source, note = _name_group(group, contracts, llm_client, column_names)
 
         for path, raw in zip(group["files"], group["frames"]):
             destination = _prepared_path(path)
@@ -191,7 +214,16 @@ def prepare_files(
     return [prepared[path] for path in file_paths]
 
 
-def _name_group(group: dict, contracts: list[dict], llm_client):
+def _name_group(group: dict, contracts: list[dict], llm_client, column_names=None):
+    count = len(group["signature"])
+    ignored = ""
+
+    if column_names and len(column_names) == count:
+        return list(column_names), None, FROM_USER, "noms fournis par l'utilisateur"
+
+    if column_names:
+        ignored = f" ; noms fournis ignorés : {len(column_names)} noms pour {count} colonnes"
+
     contract = matching_contract(group["signature"], contracts)
 
     if contract:
@@ -199,7 +231,7 @@ def _name_group(group: dict, contracts: list[dict], llm_client):
             list(contract["columns"]),
             contract.get("dataset"),
             FROM_CONTRACT,
-            f"noms du contrat validé {contract.get('dataset')}",
+            f"noms du contrat validé {contract.get('dataset')}{ignored}",
         )
 
     # Le LLM voit le lot entier, pour des noms communs à tous ses fichiers.
@@ -207,13 +239,11 @@ def _name_group(group: dict, contracts: list[dict], llm_client):
     naming, reason = propose_column_names(llm_client, profile)
 
     if naming:
-        return naming.names, naming.dataset, FROM_LLM, "noms proposés par le LLM, à valider avec le contrat"
-
-    count = len(group["signature"])
+        return naming.names, naming.dataset, FROM_LLM, f"noms proposés par le LLM{ignored}"
 
     return (
         [f"column_{i}" for i in range(1, count + 1)],
         None,
         GENERIC,
-        f"noms génériques ({reason})",
+        f"noms génériques ({reason}){ignored}",
     )

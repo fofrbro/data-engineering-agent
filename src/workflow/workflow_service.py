@@ -9,12 +9,20 @@ Chaque validation exige un relecteur explicite.
 import json
 from pathlib import Path
 
+import pandas as pd
+
 from src.audit_parquet import export_structured_audit_to_parquet
 from src.audit_store import DEFAULT_AUDIT_PATH
 from src.contract.contract_generator import dataset_name_from_path
 from src.fabric.gold_export import export_gold_for_fabric
 from src.workflow.batch import group_files
-from src.workflow.file_preparation import FROM_FILE, prepare_files
+from src.workflow.file_preparation import (
+    FROM_CONTRACT,
+    FROM_FILE,
+    PreparationError,
+    prepare_files,
+)
+from src.workflow.instructions import interpret_instructions
 from src.tools.data_analyst import DataAnalyst, analyze_gold_data
 from src.recommendation.dashboard_review import (
     APPROVE,
@@ -30,13 +38,50 @@ from src.workflow.agent_workflow import (
     approve_destructive_transformations,
     approve_plan_contract,
     approve_plan_dashboard,
+    WorkflowError,
     decide_semantic_suggestions,
     plan_file,
     render_plan_preview,
+    review_plan_column_names,
     review_plan_semantics,
     validation_status,
 )
 from src.workflow.plan_executor import execute_plan
+
+
+SAMPLE_ROWS = 3
+
+
+def _column_naming(prepared: list[dict], files: list[str], preparations: dict) -> dict | None:
+    """
+    Étape « noms de colonnes » d'un plan dont des fichiers étaient sans
+    en-tête : noms, origine, exemples de valeurs et statut. Des noms repris
+    d'un contrat validé, ou imposés par l'en-tête d'un autre fichier du
+    lot, sont déjà validés.
+    """
+
+    if not prepared:
+        return None
+
+    first = prepared[0]
+    sample = pd.read_csv(first["path"], dtype=str, keep_default_na=False, nrows=SAMPLE_ROWS)
+    has_file_header = any(preparations[path].header_source == FROM_FILE for path in files)
+    validated = first["header_source"] == FROM_CONTRACT or has_file_header
+
+    return {
+        "names": list(sample.columns),
+        "source": first["header_source"],
+        "note": first["note"],
+        "samples": sample.values.tolist(),
+        "editable": not has_file_header,
+        "status": "VALIDATED" if validated else "PROPOSED",
+        "validated_by": (
+            f"contrat {first['dataset']}" if first["header_source"] == FROM_CONTRACT
+            else "en-tête d'un fichier du lot" if has_file_header
+            else None
+        ),
+        "validated_at": None,
+    }
 
 
 class WorkflowService:
@@ -77,6 +122,8 @@ class WorkflowService:
             "files": plan.file_paths,
             "file_previews": plan.file_previews,
             "file_preparations": plan.file_preparations,
+            "column_naming": plan.column_naming,
+            "instructions": plan.instructions,
             "contract_path": plan.contract_path,
             "contract_status": plan.contract_status,
             "contract_origin": plan.contract_origin,
@@ -118,6 +165,8 @@ class WorkflowService:
         dataset: str | None = None,
         enrichments: list[dict] | None = None,
         display_names: dict[str, str] | None = None,
+        column_names: list[str] | None = None,
+        instructions: str | None = None,
     ) -> list[dict]:
         """
         Un plan par dataset du lot (voir group_files). Les fichiers sans
@@ -127,13 +176,31 @@ class WorkflowService:
         Nom d'un groupe : celui fourni, sinon celui issu de la préparation
         (contrat reconnu ou LLM), sinon le nom d'origine de son premier
         fichier (display_names), suffixé en cas de doublon.
+
+        instructions (texte libre) est traduit par le LLM en nom de
+        dataset et noms de colonnes vérifiés ; dataset et column_names
+        fournis explicitement l'emportent.
         """
 
         display_names = display_names or {}
-        preparations = {
-            prepared.path: prepared
-            for prepared in prepare_files(file_paths, self.contracts_dir, self.llm_client)
-        }
+        interpreted = (
+            interpret_instructions(self.llm_client, instructions.strip())
+            if instructions and instructions.strip()
+            else None
+        )
+
+        if interpreted:
+            dataset = dataset or interpreted.dataset
+            column_names = column_names or interpreted.column_names
+
+        try:
+            prepared_files = prepare_files(
+                file_paths, self.contracts_dir, self.llm_client, column_names,
+            )
+        except PreparationError as exc:
+            raise WorkflowError(str(exc)) from exc
+
+        preparations = {prepared.path: prepared for prepared in prepared_files}
         views = []
         used = set()
 
@@ -152,14 +219,29 @@ class WorkflowService:
 
             used.add(unique)
             view = self.create_plan(group.files, contract_path, unique, enrichments)
-            self._plans[view["plan_id"]].file_preparations = [
+            plan = self._plans[view["plan_id"]]
+            plan.file_preparations = [
                 preparations[path].to_dict()
                 for path in group.files
                 if preparations[path].header_source != FROM_FILE
             ]
+            plan.column_naming = _column_naming(plan.file_preparations, group.files, preparations)
+            plan.instructions = interpreted.to_dict() if interpreted else None
             views.append(self.view(view["plan_id"]))
 
         return views
+
+    def review_column_names(
+        self,
+        plan_id: str,
+        reviewer: str,
+        names: list[str] | None = None,
+        dataset: str | None = None,
+        comment=None,
+    ) -> dict:
+        plan = review_plan_column_names(self.get(plan_id), reviewer, names, dataset, comment)
+        self._plans[plan_id] = plan
+        return self.view(plan_id)
 
     def approve_contract(self, plan_id: str, reviewer: str, comment=None) -> dict:
         approve_plan_contract(self.get(plan_id), reviewer, comment)

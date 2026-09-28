@@ -54,7 +54,9 @@ Lancer le serveur :
 
 Puis ouvrir http://localhost:8000 :
 
-1. uploader un ou plusieurs fichiers, ou une archive `.zip` ;
+1. uploader un ou plusieurs fichiers, ou une archive `.zip` ; en option,
+   donner des **instructions** à l'agent en langage naturel et/ou les **noms
+   de colonnes** des fichiers sans en-tête ;
 2. **« Préparer avec l'agent »** : un plan par dataset détecté, avec la
    décision prévisionnelle de chaque fichier, le contrat, le pipeline, les KPI
    et le tableau de bord ;
@@ -95,11 +97,18 @@ dans un `.zip`) devient un seul dataset avec un seul contrat :
 - un fichier délimité **sans en-tête** est détecté quand sa première ligne
   contient des nombres ou des dates là où les autres lignes en contiennent
   (un en-tête y porterait des libellés) ;
-- ses colonnes sont nommées d'après le **seul contrat validé de même
-  structure** (nombre et types de colonnes), qui est alors réutilisé ; sinon
-  par le **LLM** (noms vérifiés par le code, validés avec le contrat proposé ;
-  pour les textes comme les noms ou e-mails, seule leur forme est envoyée,
-  `Aaaaaaa Aaa`) ; sinon `column_1`, `column_2`… ;
+- ses colonnes sont nommées, par ordre de priorité : avec les **noms que
+  vous donnez** (champ « Noms de colonnes » ou instructions) ; d'après le
+  **seul contrat validé de même structure** (nombre et types de colonnes),
+  qui est alors réutilisé ; par le **LLM** (pour les textes comme les noms
+  ou e-mails, seule leur forme est envoyée, `Aaaaaaa Aaa`) ; sinon
+  `column_1`, `column_2`… Les noms sont normalisés (`numéro de commande` ->
+  `numero_de_commande`) ;
+- l'étape **« Noms de colonnes »** du plan affiche les noms avec des exemples
+  de valeurs : vous les validez ou les modifiez, **avant** de pouvoir valider
+  le contrat (des noms repris d'un contrat validé sont déjà validés). Modifier
+  les noms recalcule le plan ; si le contrat du plan est déjà validé, il faut
+  aussi changer de nom de dataset ;
 - une copie avec en-tête (`<fichier>_avec_entete.csv`) est écrite à côté du
   fichier, texte des cellules inchangé ; les fichiers de même structure ont
   les mêmes noms et forment un seul plan, chacun gardant sa décision.
@@ -112,6 +121,16 @@ mêmes totaux que `data/samples/sales.csv` ; sans contrat, le LLM a proposé
 Limite : un fichier dont l'en-tête ne contient que des nombres (années en
 colonnes, par exemple) serait pris pour un fichier sans en-tête ; le plan
 l'indique (« Fichiers sans en-tête préparés »).
+
+### Instructions à l'agent
+
+Le champ « Instructions pour l'agent » accepte du texte libre, par exemple :
+« les colonnes sont numéro de commande, ligne, date… ; appelle le dataset
+ventes_ae ». Le LLM le traduit en actions vérifiées par le code — **nom du
+dataset** et **noms de colonnes** — affichées dans le plan avec ce qui n'est
+pas pris en charge (« trier par date »…) et ce qui a été écarté. Les champs
+remplis explicitement l'emportent sur les instructions ; sans LLM, les
+instructions sont signalées comme non appliquées.
 
 ### Fichiers d'exemple
 
@@ -186,7 +205,8 @@ agrégats Gold ; la table de faits garde toutes les lignes.
 | Méthode | Route | Rôle |
 |---|---|---|
 | POST | `/api/upload` | uploader un ou plusieurs fichiers, ou une archive `.zip` |
-| POST | `/api/workflow/plan` | créer les plans d'un lot uploadé (`{"plans": [...]}`, un par dataset) |
+| POST | `/api/workflow/plan` | créer les plans d'un lot uploadé (`{"plans": [...]}`, un par dataset) ; options `column_names`, `instructions` |
+| POST | `/api/workflow/{plan_id}/column-names` | valider les noms de colonnes, ou les modifier (`names`, `dataset`) |
 | POST | `/api/workflow/ask` | demande en langage naturel (LLM → plan ou explication), un fichier à la fois |
 | GET | `/api/workflow/{plan_id}` | consulter un plan |
 | POST | `/api/workflow/{plan_id}/semantic-review` | relecture sémantique par le LLM (suggestions seulement) |

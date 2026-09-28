@@ -45,6 +45,11 @@ from src.recommendation.pipeline_recommender import (
     Transformation,
     recommend_pipeline,
 )
+from src.semantic.column_naming import (
+    DATASET_PATTERN,
+    invalid_names_reason,
+    normalize_column_names,
+)
 from src.semantic.semantic_profiler import SemanticProfile, profile_semantics
 from src.semantic.semantic_review import (
     ACCEPTED,
@@ -103,6 +108,12 @@ class AgentPlan:
     # Fichiers sans en-tête préparés avant le plan (original, copie
     # avec en-tête, origine des noms) ; vide si aucun.
     file_preparations: list[dict] = field(default_factory=list)
+    # Noms des colonnes des fichiers sans en-tête : proposés, puis validés
+    # (ou modifiés) par un relecteur avant le contrat. None sans objet.
+    column_naming: dict | None = None
+    # Instructions de l'utilisateur et leur interprétation (voir
+    # src.workflow.instructions).
+    instructions: dict | None = None
     semantic_review: SemanticReview | None = None
     # Rôles acceptés par un relecteur, par colonne : ils remplacent
     # l'interprétation déterministe à chaque recalcul du profil.
@@ -530,6 +541,9 @@ def approve_plan_contract(
     if plan.contract_status == VALIDATED:
         raise WorkflowError("Le contrat est déjà VALIDATED.")
 
+    if plan.column_naming and plan.column_naming["status"] != VALIDATED:
+        raise WorkflowError("Validez d'abord les noms de colonnes : le contrat en dépend.")
+
     path = approve_contract_file(
         plan.contract_path, reviewer, comment, plan.contracts_dir,
     )
@@ -642,6 +656,105 @@ def decide_semantic_suggestions(
     return plan
 
 
+def _rewrite_header(path: str, names: list[str]) -> None:
+    """Remplace l'en-tête d'une copie préparée ; les cellules sont inchangées."""
+
+    frame = pd.read_csv(path, dtype=str, keep_default_na=False)
+    frame.set_axis(names, axis=1).to_csv(path, index=False, encoding="utf-8")
+
+
+def review_plan_column_names(
+    plan: AgentPlan,
+    reviewer: str,
+    names: list[str] | None = None,
+    dataset: str | None = None,
+    comment: str | None = None,
+) -> AgentPlan:
+    """
+    Valide les noms de colonnes proposés, ou les remplace. Des noms
+    modifiés sont écrits dans les copies préparées et le plan est
+    recalculé (profil, contrat, recommandations) : le plan renvoyé
+    remplace l'ancien, sous le même identifiant.
+
+    Si le contrat du plan est déjà validé, les noms ne peuvent changer
+    qu'avec un autre nom de dataset : ils ne correspondraient plus à ce
+    contrat. Les noms sont normalisés (sans accent, espace ni tiret).
+    """
+
+    reviewer = _check_reviewer(reviewer)
+    naming = plan.column_naming
+
+    if naming is None:
+        raise WorkflowError("Ce plan n'a pas de noms de colonnes à valider.")
+
+    names = normalize_column_names(names) if names else list(naming["names"])
+    renamed = names != naming["names"]
+    new_dataset = dataset if dataset and dataset != plan.dataset else None
+
+    if renamed and not naming["editable"]:
+        raise WorkflowError(
+            "Un fichier du lot a un en-tête : ses noms de colonnes s'imposent aux autres."
+        )
+
+    if len(names) != len(naming["names"]):
+        raise WorkflowError(f"{len(names)} noms pour {len(naming['names'])} colonnes.")
+
+    reason = invalid_names_reason(names)
+
+    if reason:
+        raise WorkflowError(f"Noms de colonnes : {reason}.")
+
+    if new_dataset and not DATASET_PATTERN.match(new_dataset):
+        raise WorkflowError(
+            f"Nom de dataset invalide : {new_dataset} (minuscules, chiffres et _)."
+        )
+
+    if not renamed and not new_dataset:
+        naming.update(status=VALIDATED, validated_by=reviewer, validated_at=_now().isoformat())
+        _record(plan, "VALIDATE_COLUMN_NAMES", reviewer, comment)
+        return plan
+
+    if renamed and plan.contract_status == VALIDATED and not new_dataset:
+        raise WorkflowError(
+            f"Ces noms ne correspondent plus au contrat validé « {plan.dataset} » : "
+            "indiquez un autre nom de dataset."
+        )
+
+    for preparation in plan.file_preparations:
+        _rewrite_header(preparation["path"], names)
+
+    updated = plan_file(
+        plan.file_paths,
+        contract_path=plan.contract_path if plan.contract_origin == CONTRACT_PROVIDED else None,
+        dataset=new_dataset or plan.dataset,
+        contracts_dir=plan.contracts_dir,
+        enrichments=plan.enrichments,
+    )
+    updated.plan_id = plan.plan_id
+    updated.created_at = plan.created_at
+    updated.history = plan.history
+    updated.instructions = plan.instructions
+    source = "USER" if renamed else naming["source"]
+    updated.file_preparations = [
+        {**preparation, "header_source": source, "note": f"noms validés par {reviewer}"}
+        for preparation in plan.file_preparations
+    ]
+    updated.column_naming = {
+        **naming,
+        "names": names,
+        "source": source,
+        "status": VALIDATED,
+        "validated_by": reviewer,
+        "validated_at": _now().isoformat(),
+    }
+    changes = [f"noms modifiés : {', '.join(names)}"] if renamed else []
+    changes += [f"dataset {plan.dataset} -> {updated.dataset}"] if new_dataset else []
+    detail = "; ".join(changes)
+    _record(updated, "RENAME_COLUMNS", reviewer, f"{detail}. {comment}" if comment else detail)
+
+    return updated
+
+
 def approve_destructive_transformations(
     plan: AgentPlan,
     reviewer: str,
@@ -686,6 +799,11 @@ def validation_status(plan: AgentPlan) -> dict:
     destructive_approved = bool(destructive) and plan.destructive_approval is not None
     blockers = []
 
+    names_validated = plan.column_naming is None or plan.column_naming["status"] == VALIDATED
+
+    if not names_validated:
+        blockers.append("Noms de colonnes à valider, puis le contrat.")
+
     if plan.contract_status != VALIDATED:
         blockers.append(
             f"Contrat {plan.contract_status} : validation requise avant exécution."
@@ -694,6 +812,7 @@ def validation_status(plan: AgentPlan) -> dict:
     warnings = quality_warnings(plan)
 
     return {
+        "column_names_validated": names_validated,
         "contract_validated": plan.contract_status == VALIDATED,
         "quality_warnings": warnings,
         "uncorrected_warnings": [w for w in warnings if not w["corrected"]],
@@ -742,6 +861,19 @@ def render_plan_preview(plan: AgentPlan) -> str:
         source.append(
             f"  Sans en-tête : {preparation['original']} -> {preparation['path']} "
             f"({preparation['note']})"
+        )
+
+    if plan.column_naming:
+        naming = plan.column_naming
+        source.append(
+            f"Noms de colonnes ({naming['source']}, {naming['status']}) : "
+            f"{', '.join(naming['names'])}"
+        )
+
+    if plan.instructions:
+        source.append(f"Instructions : {plan.instructions['text']}")
+        source.append(
+            "  -> " + (plan.instructions.get("message") or plan.instructions.get("error") or "")
         )
 
     lines = [
