@@ -38,9 +38,11 @@ FICHIER (CSV, TSV, Excel, JSON, JSONL, Parquet, ou archive ZIP de ces fichiers)
 
 ## Démarrage rapide (Windows)
 
-Prérequis : Python 3.14 et un fichier `.env` (voir `.env.example`) contenant
-`OPENAI_API_KEY` (le serveur l'exige au démarrage ; seules la relecture
-sémantique et la demande en langage naturel appellent le LLM).
+Prérequis : Python 3.14. La clé OpenAI est **facultative** : à placer dans
+un fichier `.env` (voir `.env.example`), elle active la relecture sémantique,
+les noms de colonnes proposés, les instructions et la synthèse de l'analyse ;
+sans elle, ces fonctions se déclarent indisponibles et tout le reste
+fonctionne.
 
 ```bash
 python -m venv .venv

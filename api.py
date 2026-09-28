@@ -288,6 +288,12 @@ async def ask_workflow(request: WorkflowAskRequest):
     Le LLM traduit la demande en intention (planifier un fichier ou
     expliquer un run). Il ne peut ni valider ni exécuter.
     """
+    if llm_client is None:
+        raise HTTPException(
+            status_code=503,
+            detail="OPENAI_API_KEY non configurée : la demande en langage naturel est indisponible.",
+        )
+
     file_path = None
     dataset = None
 
