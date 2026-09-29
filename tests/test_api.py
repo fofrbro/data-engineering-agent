@@ -7,6 +7,7 @@ isolés, et le LLM est désactivé.
 import asyncio
 import io
 import json
+from datetime import datetime, timedelta
 
 import pytest
 from fastapi import HTTPException
@@ -59,6 +60,17 @@ def status_of(coroutine) -> tuple[int, str]:
 
 def test_health():
     assert run(api.health_check())["status"] == "healthy"
+
+
+def test_timestamps_are_utc(ws):
+    # Le serveur tourne en UTC, les visiteurs non : sans fuseau explicite,
+    # le navigateur prendrait l'heure du serveur pour une heure locale.
+    health = run(api.health_check())
+    upload(ws, "data/samples/ventes_2025_2026.csv")
+    listed = run(api.list_uploaded_files(workspace=ws))["files"][0]
+
+    assert datetime.fromisoformat(health["timestamp"]).utcoffset() == timedelta(0)
+    assert datetime.fromisoformat(listed["created_at"]).utcoffset() == timedelta(0)
 
 
 def test_unsupported_format_is_refused(ws):

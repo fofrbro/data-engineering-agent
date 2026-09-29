@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 import os
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -309,7 +309,7 @@ async def upload_file(
         if not files:
             raise HTTPException(status_code=400, detail="Aucun fichier fourni")
 
-        uploaded_at = datetime.now()
+        uploaded_at = datetime.now(timezone.utc)
         uploaded_files = []
 
         for file in files:
@@ -352,7 +352,7 @@ async def load_sample(key: str, workspace: Workspace = Depends(get_workspace)):
     if sample is None:
         raise HTTPException(status_code=404, detail=f"Exemple inconnu : {key}")
 
-    uploaded_at = datetime.now()
+    uploaded_at = datetime.now(timezone.utc)
     stored = _store_file(workspace, sample.file, sample.path.read_bytes(), uploaded_at)
 
     return _register_batch(workspace, stored, uploaded_at)
@@ -374,7 +374,7 @@ async def health_check():
     """Health check de l'API."""
     return {
         "status": "healthy",
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
 
