@@ -23,7 +23,7 @@ et prépare les tables pour Microsoft Fabric et Power BI.
 - **Gouvernance** : Data Contract versionné, décision INGEST / QUARANTINE /
   REJECT par fichier, qualité graduée, règles métier (commandes annulées
   exclues), audit horodaté et rapport d'observabilité.
-- **Rigueur** : 467 tests automatisés, lancés à chaque push par GitHub
+- **Rigueur** : plus de 480 tests automatisés, lancés à chaque push par GitHub
   Actions ; fonctionne sans clé OpenAI (fonctions LLM alors indisponibles).
 
 <details>
