@@ -380,6 +380,39 @@
             color: #d63384;
         }
 
+        /* Sur téléphone, rien ne doit élargir la page : les onglets passent à
+           la ligne, les tableaux défilent dans leur cadre et les longs
+           identifiants (chemins, run_id) se coupent. Placé après les styles
+           des onglets pour les remplacer. */
+        @media (max-width: 768px) {
+            .main-grid > * {
+                min-width: 0;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .tab-btn {
+                padding: 8px 12px;
+            }
+
+            table {
+                display: block;
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            code,
+            .result-item,
+            .result-item li,
+            .result-item p,
+            .result-item div {
+                overflow-wrap: anywhere;
+            }
+        }
+
         .insights {
             padding: 15px;
             background: #f0f7ff;
